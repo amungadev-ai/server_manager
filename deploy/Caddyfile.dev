@@ -1,0 +1,11 @@
+# Local development only. Production HTTPS/claim policy belongs to CL-081/082.
+http://localhost:8080 {
+    handle /api/v1/* {
+        reverse_proxy 127.0.0.1:3001
+    }
+    handle {
+        root * ../dist
+        try_files {path} /index.html
+        file_server
+    }
+}

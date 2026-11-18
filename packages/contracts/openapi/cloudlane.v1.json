@@ -1,0 +1,2459 @@
+{
+  "components": {
+    "schemas": {
+      "ApiErrorEnvelope": {
+        "additionalProperties": false,
+        "properties": {
+          "error": {
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "enum": [
+                  "VALIDATION_ERROR",
+                  "INVALID_JSON",
+                  "PAYLOAD_TOO_LARGE",
+                  "UNSUPPORTED_MEDIA_TYPE",
+                  "SESSION_REQUIRED",
+                  "FORBIDDEN",
+                  "NOT_FOUND",
+                  "METHOD_NOT_ALLOWED",
+                  "CONFLICT",
+                  "RATE_LIMITED",
+                  "NOT_IMPLEMENTED",
+                  "API_UNAVAILABLE",
+                  "INTERNAL_ERROR"
+                ],
+                "type": "string"
+              },
+              "details": {
+                "additionalProperties": false,
+                "properties": {
+                  "issues": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "code": {
+                          "maxLength": 50,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "path": {
+                          "maxLength": 120,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "path",
+                        "code"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 20,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "issues"
+                ],
+                "type": "object"
+              },
+              "message": {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              "requestId": {
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "requestId"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "type": "object"
+      },
+      "BootstrapResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "state": {
+            "enum": [
+              "owner_setup_required",
+              "mfa_setup_required",
+              "active"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "state"
+        ],
+        "type": "object"
+      },
+      "ClaimRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "description": "Opaque installer claim code. Never log or echo.",
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "type": "object"
+      },
+      "CreateDeploymentRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "framework": {
+            "enum": [
+              "static"
+            ],
+            "type": "string"
+          },
+          "sourceUploadId": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sourceUploadId",
+          "framework"
+        ],
+        "type": "object"
+      },
+      "CreateDomainRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "maxLength": 253,
+            "minLength": 3,
+            "pattern": "^(?=.{3,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z](?:[a-z0-9-]{0,61}[a-z0-9])$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "CreateOwnerRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "displayName": {
+            "maxLength": 80,
+            "minLength": 1,
+            "type": "string"
+          },
+          "email": {
+            "format": "email",
+            "maxLength": 254,
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+            "type": "string"
+          },
+          "password": {
+            "description": "Shape only. Password strength/MFA policy requires security review.",
+            "maxLength": 1024,
+            "minLength": 1,
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "email",
+          "displayName",
+          "password"
+        ],
+        "type": "object"
+      },
+      "CreateProjectRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "maxLength": 240,
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 80,
+            "minLength": 1,
+            "type": "string"
+          },
+          "slug": {
+            "maxLength": 63,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "CreateProjectResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "environment": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                "type": "string"
+              },
+              "name": {
+                "enum": [
+                  "production"
+                ],
+                "type": "string"
+              },
+              "projectId": {
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "projectId",
+              "name"
+            ],
+            "type": "object"
+          },
+          "project": {
+            "additionalProperties": false,
+            "properties": {
+              "createdAt": {
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                "type": "string"
+              },
+              "description": {
+                "maxLength": 240,
+                "type": "string"
+              },
+              "id": {
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                "type": "string"
+              },
+              "name": {
+                "maxLength": 80,
+                "minLength": 1,
+                "type": "string"
+              },
+              "slug": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                "type": "string"
+              },
+              "updatedAt": {
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                "type": "string"
+              },
+              "workspaceId": {
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "workspaceId",
+              "name",
+              "slug",
+              "description",
+              "createdAt",
+              "updatedAt"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "project",
+          "environment"
+        ],
+        "type": "object"
+      },
+      "DeploymentEvent": {
+        "additionalProperties": false,
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+            "type": "string"
+          },
+          "deploymentId": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+            "type": "string"
+          },
+          "eventId": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+            "type": "string"
+          },
+          "message": {
+            "maxLength": 4096,
+            "type": "string"
+          },
+          "requestId": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+            "type": "string"
+          },
+          "sequence": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "stage": {
+            "enum": [
+              "REQUESTED",
+              "QUEUED",
+              "FETCHING",
+              "VALIDATING",
+              "DETECTING",
+              "BUILDING",
+              "STARTING_CANDIDATE",
+              "HEALTH_CHECKING",
+              "ACTIVATING",
+              "LIVE",
+              "FAILED",
+              "CANCELLED",
+              "TIMED_OUT",
+              "ROLLBACK_REQUESTED",
+              "REACTIVATING_PREVIOUS"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "eventId",
+          "deploymentId",
+          "sequence",
+          "stage",
+          "message",
+          "createdAt",
+          "requestId"
+        ],
+        "type": "object"
+      },
+      "DeploymentRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+            "type": "string"
+          },
+          "operationId": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+            "type": "string"
+          },
+          "serviceId": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+            "type": "string"
+          },
+          "stage": {
+            "enum": [
+              "REQUESTED",
+              "QUEUED",
+              "FETCHING",
+              "VALIDATING",
+              "DETECTING",
+              "BUILDING",
+              "STARTING_CANDIDATE",
+              "HEALTH_CHECKING",
+              "ACTIVATING",
+              "LIVE",
+              "FAILED",
+              "CANCELLED",
+              "TIMED_OUT",
+              "ROLLBACK_REQUESTED",
+              "REACTIVATING_PREVIOUS"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "serviceId",
+          "operationId",
+          "stage",
+          "createdAt"
+        ],
+        "type": "object"
+      },
+      "DnsModeTransitionRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "expectedRevision": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "targetMode": {
+            "enum": [
+              "manual",
+              "managed"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "targetMode",
+          "expectedRevision"
+        ],
+        "type": "object"
+      },
+      "DomainListResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "dnsMode": {
+                  "enum": [
+                    "manual",
+                    "managed"
+                  ],
+                  "type": "string"
+                },
+                "id": {
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                  "type": "string"
+                },
+                "name": {
+                  "maxLength": 253,
+                  "minLength": 3,
+                  "pattern": "^(?=.{3,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z](?:[a-z0-9-]{0,61}[a-z0-9])$",
+                  "type": "string"
+                },
+                "revision": {
+                  "maximum": 9007199254740991,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "status": {
+                  "enum": [
+                    "pending",
+                    "verified"
+                  ],
+                  "type": "string"
+                },
+                "workspaceId": {
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "workspaceId",
+                "name",
+                "status",
+                "dnsMode",
+                "revision"
+              ],
+              "type": "object"
+            },
+            "maxItems": 100,
+            "type": "array"
+          },
+          "nextCursor": {
+            "maxLength": 512,
+            "minLength": 1,
+            "nullable": true,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "type": "object"
+      },
+      "DomainRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "dnsMode": {
+            "enum": [
+              "manual",
+              "managed"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 253,
+            "minLength": 3,
+            "pattern": "^(?=.{3,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z](?:[a-z0-9-]{0,61}[a-z0-9])$",
+            "type": "string"
+          },
+          "revision": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "verified"
+            ],
+            "type": "string"
+          },
+          "workspaceId": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "workspaceId",
+          "name",
+          "status",
+          "dnsMode",
+          "revision"
+        ],
+        "type": "object"
+      },
+      "EmptyRequest": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "EnvironmentRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+            "type": "string"
+          },
+          "name": {
+            "enum": [
+              "production"
+            ],
+            "type": "string"
+          },
+          "projectId": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "projectId",
+          "name"
+        ],
+        "type": "object"
+      },
+      "HealthResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "component": {
+            "enum": [
+              "api"
+            ],
+            "type": "string"
+          },
+          "readiness": {
+            "enum": [
+              "unconfigured"
+            ],
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ok"
+            ],
+            "type": "string"
+          },
+          "version": {
+            "maxLength": 40,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "component",
+          "version",
+          "readiness"
+        ],
+        "type": "object"
+      },
+      "InstallationStatus": {
+        "additionalProperties": false,
+        "properties": {
+          "ownerConfigured": {
+            "enum": [
+              false
+            ],
+            "type": "boolean"
+          },
+          "setupAvailable": {
+            "enum": [
+              false
+            ],
+            "type": "boolean"
+          },
+          "state": {
+            "enum": [
+              "unconfigured"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "ownerConfigured",
+          "setupAvailable"
+        ],
+        "type": "object"
+      },
+      "LoginRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "format": "email",
+            "maxLength": 254,
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object"
+      },
+      "LogoutResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "signedOut": {
+            "enum": [
+              true
+            ],
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "signedOut"
+        ],
+        "type": "object"
+      },
+      "OperationAccepted": {
+        "additionalProperties": false,
+        "properties": {
+          "operationId": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "queued"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "operationId",
+          "status"
+        ],
+        "type": "object"
+      },
+      "OverviewResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "activity": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "detail": {
+                  "maxLength": 240,
+                  "type": "string"
+                },
+                "id": {
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "application",
+                    "database",
+                    "cron",
+                    "storage",
+                    "domain"
+                  ],
+                  "type": "string"
+                },
+                "timeLabel": {
+                  "maxLength": 80,
+                  "type": "string"
+                },
+                "title": {
+                  "maxLength": 160,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "detail",
+                "timeLabel",
+                "kind"
+              ],
+              "type": "object"
+            },
+            "maxItems": 100,
+            "type": "array"
+          },
+          "domains": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "connections": {
+                  "maximum": 10000,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "dnsMode": {
+                  "enum": [
+                    "manual",
+                    "managed"
+                  ],
+                  "type": "string"
+                },
+                "id": {
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                  "type": "string"
+                },
+                "name": {
+                  "maxLength": 253,
+                  "minLength": 3,
+                  "pattern": "^(?=.{3,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z](?:[a-z0-9-]{0,61}[a-z0-9])$",
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "verified",
+                    "pending"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "status",
+                "dnsMode",
+                "connections"
+              ],
+              "type": "object"
+            },
+            "maxItems": 1000,
+            "type": "array"
+          },
+          "projects": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "description": {
+                  "maxLength": 240,
+                  "type": "string"
+                },
+                "id": {
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                  "type": "string"
+                },
+                "name": {
+                  "maxLength": 80,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "updatedLabel": {
+                  "maxLength": 80,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "updatedLabel"
+              ],
+              "type": "object"
+            },
+            "maxItems": 1000,
+            "type": "array"
+          },
+          "server": {
+            "additionalProperties": false,
+            "nullable": true,
+            "properties": {
+              "cpuPercent": {
+                "maximum": 100,
+                "minimum": 0,
+                "type": "number"
+              },
+              "diskTotalGb": {
+                "exclusiveMinimum": true,
+                "minimum": 0,
+                "type": "number"
+              },
+              "diskUsedGb": {
+                "minimum": 0,
+                "type": "number"
+              },
+              "health": {
+                "enum": [
+                  "healthy",
+                  "degraded",
+                  "offline"
+                ],
+                "type": "string"
+              },
+              "memoryTotalMb": {
+                "exclusiveMinimum": true,
+                "minimum": 0,
+                "type": "number"
+              },
+              "memoryUsedMb": {
+                "minimum": 0,
+                "type": "number"
+              },
+              "name": {
+                "maxLength": 80,
+                "minLength": 1,
+                "type": "string"
+              },
+              "observedAt": {
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                "type": "string"
+              },
+              "os": {
+                "maxLength": 80,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "os",
+              "health",
+              "observedAt",
+              "cpuPercent",
+              "memoryUsedMb",
+              "memoryTotalMb",
+              "diskUsedGb",
+              "diskTotalGb"
+            ],
+            "type": "object"
+          },
+          "services": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "framework": {
+                  "maxLength": 80,
+                  "type": "string"
+                },
+                "id": {
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "application",
+                    "database",
+                    "cron",
+                    "storage"
+                  ],
+                  "type": "string"
+                },
+                "name": {
+                  "maxLength": 80,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "projectId": {
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "running",
+                    "active",
+                    "stopped",
+                    "failed"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "projectId",
+                "name",
+                "kind",
+                "framework",
+                "status"
+              ],
+              "type": "object"
+            },
+            "maxItems": 1000,
+            "type": "array"
+          }
+        },
+        "required": [
+          "projects",
+          "services",
+          "domains",
+          "activity",
+          "server"
+        ],
+        "type": "object"
+      },
+      "PaginationQuery": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "maxLength": 512,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "limit"
+        ],
+        "type": "object"
+      },
+      "ProjectListResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "createdAt": {
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "type": "string"
+                },
+                "description": {
+                  "maxLength": 240,
+                  "type": "string"
+                },
+                "id": {
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                  "type": "string"
+                },
+                "name": {
+                  "maxLength": 80,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "slug": {
+                  "maxLength": 63,
+                  "minLength": 1,
+                  "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "type": "string"
+                },
+                "workspaceId": {
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "workspaceId",
+                "name",
+                "slug",
+                "description",
+                "createdAt",
+                "updatedAt"
+              ],
+              "type": "object"
+            },
+            "maxItems": 100,
+            "type": "array"
+          },
+          "nextCursor": {
+            "maxLength": 512,
+            "minLength": 1,
+            "nullable": true,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "type": "object"
+      },
+      "ProjectRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 240,
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 80,
+            "minLength": 1,
+            "type": "string"
+          },
+          "slug": {
+            "maxLength": 63,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+            "type": "string"
+          },
+          "workspaceId": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "workspaceId",
+          "name",
+          "slug",
+          "description",
+          "createdAt",
+          "updatedAt"
+        ],
+        "type": "object"
+      },
+      "ResourceId": {
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+        "type": "string"
+      },
+      "RollbackRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "targetDeploymentId": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "targetDeploymentId"
+        ],
+        "type": "object"
+      },
+      "SessionResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "authenticated": {
+            "enum": [
+              true
+            ],
+            "type": "boolean"
+          },
+          "user": {
+            "additionalProperties": false,
+            "properties": {
+              "displayName": {
+                "maxLength": 80,
+                "minLength": 1,
+                "type": "string"
+              },
+              "email": {
+                "format": "email",
+                "maxLength": 254,
+                "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+                "type": "string"
+              },
+              "id": {
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                "type": "string"
+              },
+              "role": {
+                "enum": [
+                  "owner"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "email",
+              "displayName",
+              "role"
+            ],
+            "type": "object"
+          },
+          "workspace": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                "type": "string"
+              },
+              "name": {
+                "maxLength": 80,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "authenticated",
+          "user",
+          "workspace"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "contact": {},
+    "description": "Development contract. Only health and unconfigured installation status are implemented. All other documented operations validate shape and return 501. Success response schemas are drafts, not evidence of operational authentication or infrastructure. The same-origin API is served by NestJS on the VPS, not by the static preview host.",
+    "title": "Cloudlane API",
+    "version": "0.1.0-draft.1"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/auth/login": {
+      "post": {
+        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "operationId": "login",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON body too large."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON content type required."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Current result for valid requests. No operation is performed."
+          }
+        },
+        "summary": "Owner login",
+        "tags": [
+          "Authentication — unavailable"
+        ],
+        "x-cloudlane-implementation": "unavailable"
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "operationId": "logout",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmptyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON body too large."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON content type required."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Current result for valid requests. No operation is performed."
+          }
+        },
+        "summary": "End owner session",
+        "tags": [
+          "Authentication — unavailable"
+        ],
+        "x-cloudlane-implementation": "unavailable"
+      }
+    },
+    "/api/v1/auth/session": {
+      "get": {
+        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "operationId": "getSession",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Current result for valid requests. No operation is performed."
+          }
+        },
+        "summary": "Owner session",
+        "tags": [
+          "Authentication — unavailable"
+        ],
+        "x-cloudlane-implementation": "unavailable"
+      }
+    },
+    "/api/v1/bootstrap/claim": {
+      "post": {
+        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "operationId": "claimInstallation",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BootstrapResponse"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON body too large."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON content type required."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Current result for valid requests. No operation is performed."
+          }
+        },
+        "summary": "Claim installation",
+        "tags": [
+          "Authentication — unavailable"
+        ],
+        "x-cloudlane-implementation": "unavailable"
+      }
+    },
+    "/api/v1/bootstrap/owner": {
+      "post": {
+        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "operationId": "createOwner",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOwnerRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BootstrapResponse"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON body too large."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON content type required."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Current result for valid requests. No operation is performed."
+          }
+        },
+        "summary": "Create initial owner",
+        "tags": [
+          "Authentication — unavailable"
+        ],
+        "x-cloudlane-implementation": "unavailable"
+      }
+    },
+    "/api/v1/deployments/{deploymentId}": {
+      "get": {
+        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "operationId": "getDeployment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "deploymentId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeploymentRecord"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Current result for valid requests. No operation is performed."
+          }
+        },
+        "summary": "Read observed deployment state",
+        "tags": [
+          "Resources — unavailable"
+        ],
+        "x-cloudlane-implementation": "unavailable"
+      }
+    },
+    "/api/v1/domains": {
+      "get": {
+        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "operationId": "listDomains",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "maxLength": 512,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainListResponse"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Current result for valid requests. No operation is performed."
+          }
+        },
+        "summary": "List globally registered workspace domains",
+        "tags": [
+          "Resources — unavailable"
+        ],
+        "x-cloudlane-implementation": "unavailable"
+      },
+      "post": {
+        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "operationId": "createDomain",
+        "parameters": [
+          {
+            "description": "UUID v4 retry key. Persistence/deduplication is not implemented.",
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDomainRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainRecord"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON body too large."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON content type required."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Current result for valid requests. No operation is performed."
+          }
+        },
+        "summary": "Register a pending domain with Manual DNS",
+        "tags": [
+          "Resources — unavailable"
+        ],
+        "x-cloudlane-implementation": "unavailable"
+      }
+    },
+    "/api/v1/domains/{zoneId}/dns-mode-transitions": {
+      "post": {
+        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "operationId": "transitionDnsMode",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "zoneId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          },
+          {
+            "description": "UUID v4 retry key. Persistence/deduplication is not implemented.",
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DnsModeTransitionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationAccepted"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON body too large."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON content type required."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Current result for valid requests. No operation is performed."
+          }
+        },
+        "summary": "Stage a DNS mode change from domain Settings",
+        "tags": [
+          "Resources — unavailable"
+        ],
+        "x-cloudlane-implementation": "unavailable"
+      }
+    },
+    "/api/v1/domains/{zoneId}/verify": {
+      "post": {
+        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "operationId": "verifyDomain",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "zoneId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          },
+          {
+            "description": "UUID v4 retry key. Persistence/deduplication is not implemented.",
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmptyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationAccepted"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON body too large."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON content type required."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Current result for valid requests. No operation is performed."
+          }
+        },
+        "summary": "Request actual DNS ownership verification",
+        "tags": [
+          "Resources — unavailable"
+        ],
+        "x-cloudlane-implementation": "unavailable"
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "description": "Implemented read-only platform endpoint.",
+        "operationId": "getHealth",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description": "Current response."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          }
+        },
+        "summary": "API liveness, distinct from readiness",
+        "tags": [
+          "Platform"
+        ],
+        "x-cloudlane-implementation": "implemented"
+      }
+    },
+    "/api/v1/installation/status": {
+      "get": {
+        "description": "Implemented read-only platform endpoint.",
+        "operationId": "getInstallationStatus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstallationStatus"
+                }
+              }
+            },
+            "description": "Current response."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          }
+        },
+        "summary": "Public-safe installation status",
+        "tags": [
+          "Platform"
+        ],
+        "x-cloudlane-implementation": "implemented"
+      }
+    },
+    "/api/v1/overview": {
+      "get": {
+        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "operationId": "getOverview",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverviewResponse"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Current result for valid requests. No operation is performed."
+          }
+        },
+        "summary": "Workspace overview projection",
+        "tags": [
+          "Resources — unavailable"
+        ],
+        "x-cloudlane-implementation": "unavailable"
+      }
+    },
+    "/api/v1/projects": {
+      "get": {
+        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "operationId": "listProjects",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "maxLength": 512,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectListResponse"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Current result for valid requests. No operation is performed."
+          }
+        },
+        "summary": "List projects in the authenticated workspace",
+        "tags": [
+          "Resources — unavailable"
+        ],
+        "x-cloudlane-implementation": "unavailable"
+      },
+      "post": {
+        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "operationId": "createProject",
+        "parameters": [
+          {
+            "description": "UUID v4 retry key. Persistence/deduplication is not implemented.",
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProjectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateProjectResponse"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON body too large."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON content type required."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Current result for valid requests. No operation is performed."
+          }
+        },
+        "summary": "Create a project and production environment",
+        "tags": [
+          "Resources — unavailable"
+        ],
+        "x-cloudlane-implementation": "unavailable"
+      }
+    },
+    "/api/v1/projects/{projectId}": {
+      "get": {
+        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "operationId": "getProject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectRecord"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Current result for valid requests. No operation is performed."
+          }
+        },
+        "summary": "Read an owned project",
+        "tags": [
+          "Resources — unavailable"
+        ],
+        "x-cloudlane-implementation": "unavailable"
+      }
+    },
+    "/api/v1/services/{serviceId}/deployments": {
+      "post": {
+        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "operationId": "createDeployment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "serviceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          },
+          {
+            "description": "UUID v4 retry key. Persistence/deduplication is not implemented.",
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDeploymentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationAccepted"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON body too large."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON content type required."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Current result for valid requests. No operation is performed."
+          }
+        },
+        "summary": "Queue a static ZIP deployment",
+        "tags": [
+          "Resources — unavailable"
+        ],
+        "x-cloudlane-implementation": "unavailable"
+      }
+    },
+    "/api/v1/services/{serviceId}/rollbacks": {
+      "post": {
+        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "operationId": "rollbackDeployment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "serviceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          },
+          {
+            "description": "UUID v4 retry key. Persistence/deduplication is not implemented.",
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RollbackRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationAccepted"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON body too large."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON content type required."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Current result for valid requests. No operation is performed."
+          }
+        },
+        "summary": "Queue rollback to a prior healthy release",
+        "tags": [
+          "Resources — unavailable"
+        ],
+        "x-cloudlane-implementation": "unavailable"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": []
+}

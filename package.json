@@ -1,0 +1,49 @@
+{
+  "name": "cloudlane",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "npm@11.9.0",
+  "engines": {
+    "node": ">=24.22.3 <25",
+    "npm": ">=11.9.0 <12"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/contracts",
+    "tools/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @cloudlane/dashboard",
+    "dev:api": "npm run build:api && npm run start --workspace @cloudlane/api",
+    "build:contracts": "npm run build --workspace @cloudlane/contracts",
+    "build:api": "npm run build:contracts && npm run build --workspace @cloudlane/api",
+    "check": "npm run build:api && npm run check:boundaries && npm run check:ci && npm run check:e2e && npm run check --workspaces --if-present && node tools/contract-generator/generate.mjs --check && python3 scripts/validate_progress.py",
+    "build": "npm run build:api && npm run build --workspace @cloudlane/dashboard && node scripts/verify_static.mjs http",
+    "build:preview": "npm run build:api && npm run build:preview --workspace @cloudlane/dashboard && node scripts/verify_static.mjs demo",
+    "lint": "prettier --check apps packages tools scripts/*.mjs tests playwright.config.ts *.json *.js .github/workflows/*.yml",
+    "format": "prettier --write apps packages tools scripts/*.mjs tests playwright.config.ts *.json *.js .github/workflows/*.yml",
+    "test": "npm run build:api && node --test apps/api/test/*.test.mjs tests/*.test.mjs packages/contracts/test/*.test.mjs && python3 -m unittest discover -s tests -p \"test_*.py\"",
+    "verify": "npm run check && npm test && npm run build",
+    "check:boundaries": "node scripts/check-boundaries.mjs",
+    "contracts:generate": "npm run build:api && node tools/contract-generator/generate.mjs && npm run build:contracts",
+    "contracts:check": "npm run build:api && node tools/contract-generator/generate.mjs --check",
+    "check:ci": "node scripts/validate-ci.mjs",
+    "check:e2e": "tsc -p tests/e2e/tsconfig.json",
+    "test:ci": "npm run build:api && node scripts/run-unit-tests.mjs",
+    "test:e2e:prepare": "node scripts/prepare-e2e.mjs",
+    "test:e2e:list": "node scripts/run-browser-tests.mjs --list --reporter=list",
+    "test:e2e:ci": "node scripts/run-browser-tests.mjs",
+    "test:e2e": "npm run test:e2e:prepare && node scripts/run-browser-tests.mjs"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "@types/node": "24.19.2",
+    "@types/express": "5.0.6",
+    "prettier": "3.10.1",
+    "prettier-plugin-svelte": "4.2.0",
+    "@playwright/test": "1.65.1",
+    "@axe-core/playwright": "4.14.0",
+    "yaml": "2.9.1"
+  }
+}

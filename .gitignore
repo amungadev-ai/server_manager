@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.svelte-kit/
+.env
+.env.*
+!.env.example
+.sites-runtime/
+.sites/
+coverage/
+test-results/
+*.tar.gz
+*.tgz
+__pycache__/
+*.pyc
+playwright-report/

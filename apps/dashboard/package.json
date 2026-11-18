@@ -1,0 +1,28 @@
+{
+  "name": "@cloudlane/dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "build": "vite build",
+    "build:preview": "vite build --mode preview"
+  },
+  "dependencies": {
+    "@cloudlane/contracts": "0.1.0",
+    "@fontsource/inter": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "svelte": "5.58.0"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "4.0.1",
+    "@sveltejs/kit": "3.3.1",
+    "@sveltejs/vite-plugin-svelte": "7.3.1",
+    "svelte-check": "4.7.8",
+    "vite": "8.3.8"
+  },
+  "imports": {
+    "#lib/*": "./src/lib/*"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@cloudlane/contract-generator",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "openapi-typescript": "7.13.0",
+    "typescript": "5.9.3",
+    "@apidevtools/swagger-parser": "13.1.0",
+    "zod": "4.6.7",
+    "@cloudlane/contracts": "0.1.0"
+  }
+}

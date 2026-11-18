@@ -1,0 +1,12 @@
+node_modules
+dist
+.svelte-kit
+package-lock.json
+reference-cloudlane-v1.13.html
+docs
+tasks
+PROJECT_PROGRESS.md
+
+packages/contracts/src/generated/
+packages/contracts/openapi/
+packages/contracts/schema/

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="liveness truthfully distinguishes an unconfigured platform from a ready one" time="0.128711" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/apps/api/test/app.test.mjs"/>
+	<testcase name="installation status is public-safe and contains no bootstrap material" time="0.006673" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/apps/api/test/app.test.mjs"/>
+	<testcase name="valid resource, owner and login requests cannot report operational success" time="0.044045" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/apps/api/test/app.test.mjs"/>
+	<testcase name="request validation blocks caller authority fields and keeps Add Domain one-field" time="0.014868" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/apps/api/test/app.test.mjs"/>
+	<testcase name="body size, content type and malformed JSON have safe consistent errors" time="0.007625" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/apps/api/test/app.test.mjs"/>
+	<testcase name="query, UUID and retry headers are validated rather than trusted" time="0.012358" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/apps/api/test/app.test.mjs"/>
+	<testcase name="deployment and routing declarations remain unavailable and reject command injection" time="0.008574" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/apps/api/test/app.test.mjs"/>
+	<testcase name="unknown routes return JSON errors and request IDs are server-owned" time="0.003256" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/apps/api/test/app.test.mjs"/>
+	<testcase name="OpenAPI is valid, matches generated artifacts and labels unavailable endpoints" time="0.486072" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/apps/api/test/app.test.mjs"/>
+	<testcase name="the local API documentation is readable with request submission disabled" time="0.002675" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/apps/api/test/app.test.mjs"/>
+	<testcase name="resource IDs reject demo identifiers, nil values and non-v4 UUIDs" time="0.022787" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/packages/contracts/test/contracts.test.mjs"/>
+	<testcase name="create-project accepts bounded data but never caller workspace/owner authority" time="0.050661" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/packages/contracts/test/contracts.test.mjs"/>
+	<testcase name="Add Domain is exactly one field, with no mode or verification shortcut" time="0.000980" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/packages/contracts/test/contracts.test.mjs"/>
+	<testcase name="pagination limits and opaque cursor syntax are bounded" time="0.011933" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/packages/contracts/test/contracts.test.mjs"/>
+	<testcase name="static deployment requests cannot inject a host command or container options" time="0.003927" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/packages/contracts/test/contracts.test.mjs"/>
+	<testcase name="agent structure accepts a typed candidate, without claiming signature/expiry/ownership verification" time="0.055523" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/packages/contracts/test/contracts.test.mjs"/>
+	<testcase name="agent contract rejects generic operations, unsafe mounts, injected fields and inverted timestamps" time="0.020142" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/packages/contracts/test/contracts.test.mjs"/>
+	<testcase name="boundaries allow a portable contract and separate consumers" time="0.005453" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/boundaries.test.mjs"/>
+	<testcase name="boundaries reject a browser import of API implementation or agent contract" time="0.003030" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/boundaries.test.mjs"/>
+	<testcase name="boundaries reject Node-only contract imports and direct API host execution" time="0.002615" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/boundaries.test.mjs"/>
+	<testcase name="required gate rejects failed, cancelled, skipped and missing jobs" time="0.008459" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/ci-gates.test.mjs"/>
+	<testcase name="progress event selection uses validated base SHAs for PRs, merge queues and pushes" time="0.024268" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/ci-gates.test.mjs"/>
+	<testcase name="discovery and missing browser markers cannot count as browser execution" time="0.005571" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/ci-gates.test.mjs"/>
+	<testcase name="workflow validation accepts the actual policy and rejects weakened gates" time="0.414858" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/ci-gates.test.mjs"/>
+	<testcase name="CI command capture preserves nonzero status and records a failed step" time="0.320668" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/ci-gates.test.mjs"/>
+	<testcase name="browser job reruns retain the verified artifact identity" time="0.106451" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/ci-gates.test.mjs"/>
+	<testcase name="loopback harness separates static/demo, typed HTTP fixtures and the real unconfigured API" time="0.684739" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/e2e-server.test.mjs"/>
+	<testcase name="HTTP requests validate a real session before fetching protected data and include cookies" time="0.019482" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/http-adapter.test.mjs"/>
+	<testcase name="a rejected session does not request protected data or fall back to fixtures" time="0.003737" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/http-adapter.test.mjs"/>
+	<testcase name="HTML and malformed JSON are reported as invalid API responses" time="0.002395" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/http-adapter.test.mjs"/>
+	<testcase name="a forged or malformed success session cannot unlock the overview request" time="0.002426" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/http-adapter.test.mjs"/>
+	<testcase name="HTTP overview data rejects synthetic IDs, unbounded metrics and unknown fields" time="0.005376" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/http-adapter.test.mjs"/>
+	<testcase name="malformed server error envelopes never surface arbitrary response text" time="0.000661" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/http-adapter.test.mjs"/>
+	<testcase name="streamed responses are bounded even without a Content-Length header" time="0.004024" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/http-adapter.test.mjs"/>
+	<testcase name="request cancellation propagates instead of becoming a network error" time="0.000402" classname="test" file="/workspace/scratch/5ec9969ee156/cloudlane/.sites-runtime/ci-clean-checkout/tests/http-adapter.test.mjs"/>
+	<!-- tests 35 -->
+	<!-- suites 0 -->
+	<!-- pass 35 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 2227.555206 -->
+</testsuites>

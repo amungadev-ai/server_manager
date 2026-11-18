@@ -1,0 +1,530 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "additionalProperties": false,
+      "properties": {
+        "authorization": {
+          "additionalProperties": false,
+          "properties": {
+            "keyId": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            },
+            "proof": {
+              "maxLength": 512,
+              "minLength": 32,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "type": "string"
+            },
+            "scheme": {
+              "maxLength": 32,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9-]*$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "scheme",
+            "keyId",
+            "proof"
+          ],
+          "type": "object"
+        },
+        "commandId": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        },
+        "commandVersion": {
+          "const": 1,
+          "type": "number"
+        },
+        "desiredGeneration": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "expiresAt": {
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+          "type": "string"
+        },
+        "idempotencyKey": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        },
+        "issuedAt": {
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+          "type": "string"
+        },
+        "operation": {
+          "const": "release.startCandidate",
+          "type": "string"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "deploymentId": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            },
+            "imageDigest": {
+              "pattern": "^sha256:[a-f0-9]{64}$",
+              "type": "string"
+            },
+            "internalPort": {
+              "maximum": 65535,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "limits": {
+              "additionalProperties": false,
+              "properties": {
+                "cpuMilli": {
+                  "maximum": 256000,
+                  "minimum": 10,
+                  "type": "integer"
+                },
+                "memoryMb": {
+                  "maximum": 1048576,
+                  "minimum": 16,
+                  "type": "integer"
+                },
+                "pids": {
+                  "maximum": 4096,
+                  "minimum": 1,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "memoryMb",
+                "cpuMilli",
+                "pids"
+              ],
+              "type": "object"
+            },
+            "volumes": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "mountPoint": {
+                    "enum": [
+                      "/data",
+                      "/app/uploads",
+                      "/app/storage"
+                    ],
+                    "type": "string"
+                  },
+                  "volumeId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "volumeId",
+                  "mountPoint"
+                ],
+                "type": "object"
+              },
+              "maxItems": 8,
+              "type": "array"
+            }
+          },
+          "required": [
+            "deploymentId",
+            "imageDigest",
+            "internalPort",
+            "limits",
+            "volumes"
+          ],
+          "type": "object"
+        },
+        "resourceId": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        },
+        "serverId": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        },
+        "workspaceId": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "commandVersion",
+        "commandId",
+        "workspaceId",
+        "serverId",
+        "resourceId",
+        "desiredGeneration",
+        "idempotencyKey",
+        "issuedAt",
+        "expiresAt",
+        "authorization",
+        "operation",
+        "payload"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "authorization": {
+          "additionalProperties": false,
+          "properties": {
+            "keyId": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            },
+            "proof": {
+              "maxLength": 512,
+              "minLength": 32,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "type": "string"
+            },
+            "scheme": {
+              "maxLength": 32,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9-]*$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "scheme",
+            "keyId",
+            "proof"
+          ],
+          "type": "object"
+        },
+        "commandId": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        },
+        "commandVersion": {
+          "const": 1,
+          "type": "number"
+        },
+        "desiredGeneration": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "expiresAt": {
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+          "type": "string"
+        },
+        "idempotencyKey": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        },
+        "issuedAt": {
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+          "type": "string"
+        },
+        "operation": {
+          "const": "release.stopCandidate",
+          "type": "string"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "deploymentId": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "deploymentId"
+          ],
+          "type": "object"
+        },
+        "resourceId": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        },
+        "serverId": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        },
+        "workspaceId": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "commandVersion",
+        "commandId",
+        "workspaceId",
+        "serverId",
+        "resourceId",
+        "desiredGeneration",
+        "idempotencyKey",
+        "issuedAt",
+        "expiresAt",
+        "authorization",
+        "operation",
+        "payload"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "authorization": {
+          "additionalProperties": false,
+          "properties": {
+            "keyId": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            },
+            "proof": {
+              "maxLength": 512,
+              "minLength": 32,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "type": "string"
+            },
+            "scheme": {
+              "maxLength": 32,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9-]*$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "scheme",
+            "keyId",
+            "proof"
+          ],
+          "type": "object"
+        },
+        "commandId": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        },
+        "commandVersion": {
+          "const": 1,
+          "type": "number"
+        },
+        "desiredGeneration": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "expiresAt": {
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+          "type": "string"
+        },
+        "idempotencyKey": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        },
+        "issuedAt": {
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+          "type": "string"
+        },
+        "operation": {
+          "const": "release.inspect",
+          "type": "string"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "deploymentId": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "deploymentId"
+          ],
+          "type": "object"
+        },
+        "resourceId": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        },
+        "serverId": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        },
+        "workspaceId": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "commandVersion",
+        "commandId",
+        "workspaceId",
+        "serverId",
+        "resourceId",
+        "desiredGeneration",
+        "idempotencyKey",
+        "issuedAt",
+        "expiresAt",
+        "authorization",
+        "operation",
+        "payload"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "authorization": {
+          "additionalProperties": false,
+          "properties": {
+            "keyId": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            },
+            "proof": {
+              "maxLength": 512,
+              "minLength": 32,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "type": "string"
+            },
+            "scheme": {
+              "maxLength": 32,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9-]*$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "scheme",
+            "keyId",
+            "proof"
+          ],
+          "type": "object"
+        },
+        "commandId": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        },
+        "commandVersion": {
+          "const": 1,
+          "type": "number"
+        },
+        "desiredGeneration": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "expiresAt": {
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+          "type": "string"
+        },
+        "idempotencyKey": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        },
+        "issuedAt": {
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+          "type": "string"
+        },
+        "operation": {
+          "const": "route.promote",
+          "type": "string"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "bindingId": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            },
+            "candidateDeploymentId": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            },
+            "expectedActiveDeploymentId": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "bindingId",
+            "candidateDeploymentId",
+            "expectedActiveDeploymentId"
+          ],
+          "type": "object"
+        },
+        "resourceId": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        },
+        "serverId": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        },
+        "workspaceId": {
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "commandVersion",
+        "commandId",
+        "workspaceId",
+        "serverId",
+        "resourceId",
+        "desiredGeneration",
+        "idempotencyKey",
+        "issuedAt",
+        "expiresAt",
+        "authorization",
+        "operation",
+        "payload"
+      ],
+      "type": "object"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "@cloudlane/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "node ../../scripts/build-contracts.mjs",
+    "check": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "zod": "4.6.7"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/index.js"
+    },
+    "./api": {
+      "types": "./dist/api.d.ts",
+      "import": "./dist/esm/api.js",
+      "require": "./dist/api.js"
+    },
+    "./preview": {
+      "types": "./dist/preview.d.ts",
+      "import": "./dist/esm/preview.js",
+      "require": "./dist/preview.js"
+    },
+    "./agent": {
+      "types": "./dist/agent.d.ts",
+      "import": "./dist/esm/agent.js",
+      "require": "./dist/agent.js"
+    },
+    "./client-types": {
+      "types": "./dist/generated/http.d.ts",
+      "import": "./dist/esm/generated/http.js",
+      "require": "./dist/generated/http.js"
+    }
+  }
+}

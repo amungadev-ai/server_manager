@@ -1,0 +1,46 @@
+{
+  "session": {
+    "authenticated": true,
+    "user": {
+      "id": "10000000-0000-4000-8000-000000000001",
+      "email": "test-owner@example.test",
+      "displayName": "Test owner fixture",
+      "role": "owner"
+    },
+    "workspace": {
+      "id": "10000000-0000-4000-8000-000000000002",
+      "name": "Test-only workspace"
+    }
+  },
+  "overview": {
+    "projects": [
+      {
+        "id": "20000000-0000-4000-8000-000000000001",
+        "name": "Test Fixture Project",
+        "description": "Synthetic API fixture, no live infrastructure",
+        "updatedLabel": "Fixed test timestamp"
+      }
+    ],
+    "services": [
+      {
+        "id": "30000000-0000-4000-8000-000000000001",
+        "projectId": "20000000-0000-4000-8000-000000000001",
+        "name": "fixture-api",
+        "kind": "application",
+        "framework": "Static test fixture",
+        "status": "stopped"
+      }
+    ],
+    "domains": [
+      {
+        "id": "40000000-0000-4000-8000-000000000001",
+        "name": "fixture.example",
+        "status": "pending",
+        "dnsMode": "manual",
+        "connections": 0
+      }
+    ],
+    "activity": [],
+    "server": null
+  }
+}
