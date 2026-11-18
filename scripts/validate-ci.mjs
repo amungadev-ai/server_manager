@@ -59,6 +59,14 @@ export function validateWorkflow(source) {
       '${{ steps.static_fixtures.outputs.artifact-id }}',
     'Verification must expose the actual static fixture artifact ID',
   );
+  const fixtureUpload = jobs.verify?.steps?.find(
+    (step) => step.id === 'static_fixtures',
+  );
+  fail(
+    fixtureUpload?.uses?.startsWith('actions/upload-artifact@') &&
+      fixtureUpload?.with?.path === 'test-results/e2e-site/',
+    'Static fixture output must resolve to the actual upload step',
+  );
   const download = jobs.e2e?.steps?.find((step) =>
     step.uses?.startsWith('actions/download-artifact@'),
   );
@@ -101,6 +109,13 @@ export function validateWorkflow(source) {
             `${name}: checkout credentials cannot persist`,
           );
         if (step.uses.startsWith('actions/upload-artifact@')) {
+          fail(
+            typeof step.with?.name === 'string' &&
+              step.with.name.includes('${{ github.run_attempt }}') &&
+              !('artifact-ids' in step.with) &&
+              !('merge-multiple' in step.with),
+            `${name}: uploads require an explicit attempt name and upload action inputs`,
+          );
           fail(
             step.if === '${{ always() }}' ||
               step.name === 'Upload static browser fixtures',

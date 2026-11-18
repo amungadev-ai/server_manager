@@ -29,7 +29,12 @@ export async function navigate(page: Page, label: string) {
     exact: true,
   });
   if (await menu.isVisible()) await menu.click();
-  await page.getByRole('link', { name: label, exact: true }).click();
+  // Navigation counts contribute to the accessible name, e.g. "Projects 2".
+  const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  await page
+    .getByRole('navigation')
+    .getByRole('link', { name: new RegExp(`^${escaped}(?:\\s+\\d+)?$`) })
+    .click();
 }
 export async function noHorizontalOverflow(page: Page) {
   const dimensions = await page.evaluate(() => ({
