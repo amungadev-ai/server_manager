@@ -1,6 +1,6 @@
 # CI and test harness
 
-CL-004/006 implement the repository workflow and harness. The user selected [amungadev-ai/server_manager](https://github.com/amungadev-ai/server_manager), initially an empty public repository. Its import commit `cc2bd6da1f9ae27d0de21d9ab2a579e21d71a03e` has the exact prepared source tree. The [first hosted run](https://github.com/amungadev-ai/server_manager/actions/runs/44401133855) passed progress/build/unit checks and uploaded evidence; 18/20 browser cases passed, exposing a navigation-selector mismatch now being corrected. The private design preview retains its owner-only audience. See the activation checklist below for remaining acceptance.
+CL-004/006 implement the repository workflow and harness. The user selected [amungadev-ai/server_manager](https://github.com/amungadev-ai/server_manager), initially an empty public repository. Its import commit `cc2bd6da1f9ae27d0de21d9ab2a579e21d71a03e` has the exact prepared source tree. The [passing hosted run](https://github.com/amungadev-ai/server_manager/actions/runs/44403166607) verifies 46 unit/HTTP/gate tests, both static builds and 20 desktop/mobile browser cases. The counted-navigation selector and fixture-upload inputs found during initial activation are corrected. Browser-only rerun attempt 2 passed using the original static artifact ID. See `evidence/ci-hosted-checks.md` and `evidence/ci-hosted/` for source/run/report identity. The private design preview retains its owner-only audience.
 
 ## Commands
 
@@ -53,8 +53,8 @@ Unit/integration jobs emit logs, Node/Python JUnit, exit-code summaries and a so
 - [x] Select the actual GitHub Cloudlane repository and integration branch; confirm source before syncing. The empty repository was initialized with an exact tree match; source histories have distinct commit IDs.
 - [x] Enable GitHub Actions and allow the pinned official actions on a supported hosted runner; the first run executed the configured actions.
 - [x] Push the prepared source and run the workflow; import/run references appear above. Passing end-to-end acceptance is separate.
-- [ ] Run a fixture PR changing implementation without a task checkpoint; confirm `Progress gate` and `Required checks` fail. Add the checkpoint and rerun.
-- [ ] Confirm both desktop/mobile browser jobs execute, pass and upload screenshots/traces/reports. Check the execution markers and viewport evidence. Rerun a browser job alone and confirm it downloads the original verified artifact ID.
+- [x] Run a fixture PR changing implementation without a task checkpoint; confirm both gates fail. [Negative run](https://github.com/amungadev-ai/server_manager/actions/runs/44402797421) fails as intended; the subsequent checkpoint and full run pass.
+- [x] Confirm desktop/mobile execution, passing markers/viewports, reports/screenshots and failure-only traces. [Run 44403166607](https://github.com/amungadev-ai/server_manager/actions/runs/44403166607) passes 10 cases per project without retries; desktop-only rerun downloads original artifact ID `14473971831` and passes again. Failure traces were verified on the initial failed run.
 - [ ] Require the exact `Required checks` status from this workflow's first actual run. Do not guess a repository-specific status context before it exists.
 - [ ] Require reviewed pull requests and up-to-date/merge-queue checks; include administrators where repository policy permits.
 - [ ] Configure actual CODEOWNERS/reviewers for workflows, security/agent code and contracts. Do not invent GitHub identities.

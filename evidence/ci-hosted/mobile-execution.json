@@ -1,0 +1,161 @@
+{
+  "status": "passed",
+  "runId": "267800e2-9a35-487f-bf3d-0e2f5d270ca8",
+  "commit": "4270d5cc883bca5d47eb85dbd647452019dd08c4",
+  "cases": [
+    {
+      "id": "90cda532ab82d274b30b-a48d4b1d50c16b941469",
+      "title": " / mobile / dashboard.spec.ts / demo overview is explicitly labelled and fits the viewport",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-demo-overview-is-8e02c-elled-and-fits-the-viewport-mobile/attachments/rendered-page-8a7d89a7fcff730883fdbf120dc5f274eec3e706.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-a0ec65cbab8fff43ee52",
+      "title": " / mobile / dashboard.spec.ts / project search, detail navigation and reload use the static SPA fallback",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-project-search-d-0fd8b-use-the-static-SPA-fallback-mobile/attachments/rendered-page-85adb2e4f8782d6d17ab8f971371dcfb1fa6f5e8.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-2d25a08f4d048084c697",
+      "title": " / mobile / dashboard.spec.ts / Add Domain has one field, stays unavailable and returns focus on Escape",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-Add-Domain-has-o-a9e67-and-returns-focus-on-Escape-mobile/attachments/rendered-page-0df10baa6fc4188afb14efce7603fa059a63ee9b.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-85568d57170c5300bbbc",
+      "title": " / mobile / dashboard.spec.ts / domain detail has exactly seven sections and DNS mode is in Settings",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-domain-detail-ha-71658-and-DNS-mode-is-in-Settings-mobile/attachments/rendered-page-15ad74d180dda1991ab58a4e269b8a59ab1ef9ef.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-81c0b3c58d1b18e75a2e",
+      "title": " / mobile / dashboard.spec.ts / appearance persists across reload for every palette and theme",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-appearance-persi-5ffd4-for-every-palette-and-theme-mobile/attachments/rendered-page-3e34903d2c3baa999a8cf33d65c763c35a592292.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-e0f8d0c1f446227bc9dc",
+      "title": " / mobile / dashboard.spec.ts / default overview has no serious or critical automated accessibility violations",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "axe-results",
+          "path": null
+        },
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-default-overview-cedf1-ed-accessibility-violations-mobile/attachments/rendered-page-d31f28c1e4fe00200c5f8213814b660d0e78b2c4.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-675803a9ff3c5964cc77",
+      "title": " / mobile / dashboard.spec.ts / HTTP fixture data is rendered without demo fallback or invented server health",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-HTTP-fixture-dat-cccde-k-or-invented-server-health-mobile/attachments/rendered-page-18b1c27b2f912b2390c03763c3b5220e7516af47.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-3d7104f827dba581be47",
+      "title": " / mobile / dashboard.spec.ts / a rejected fixture session prevents overview loading",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-a-rejected-fixtu-cbfce-n-prevents-overview-loading-mobile/attachments/rendered-page-0d0b48d4d27fd95af6e3a409ad315650db0a2657.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-4404876d4b2be62d684c",
+      "title": " / mobile / dashboard.spec.ts / malformed HTTP fixture data becomes an explicit connection error",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-malformed-HTTP-f-e1884-n-explicit-connection-error-mobile/attachments/rendered-page-25c428469a2def071ffcb0aac74d5d8b107ce5ba.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-5d12c15ce027fc323191",
+      "title": " / mobile / dashboard.spec.ts / actual unconfigured NestJS API never masquerades as an owner session",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-actual-unconfigu-79043-uerades-as-an-owner-session-mobile/attachments/rendered-page-0619ff85f364774a247177967c43b91fdafdde57.png"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "label": "verify",
+  "commit": "4270d5cc883bca5d47eb85dbd647452019dd08c4",
+  "workingTreeDirty": false,
+  "recordedUtc": "2026-11-18T21:37:04.514Z",
+  "node": "v24.22.3",
+  "npm": "11.9.0",
+  "lockSha256": "995a7d9e75bd59283169a2ef0da2af23833c33c653783196407f62391bf2306a",
+  "github": {
+    "runId": "44403166607",
+    "attempt": "1",
+    "event": "pull_request"
+  },
+  "browser": {
+    "execution": "not-run",
+    "reportStatus": "missing"
+  },
+  "files": [
+    {
+      "path": "test-results/ci/browser-discovery.log",
+      "bytes": 2351,
+      "sha256": "b953c80d42b088d02166fc664d978b28753de07375f20ba271689540fdca17c3"
+    },
+    {
+      "path": "test-results/ci/checks.log",
+      "bytes": 1375,
+      "sha256": "cd00f7159a286971c0a084b55c7fdc02df13917ae3e86a1a39549e3735b6be15"
+    },
+    {
+      "path": "test-results/ci/formatting.log",
+      "bytes": 207,
+      "sha256": "0e80747c90a163462cc823d3d2621c0021612d230cfe0203ebf03b305d62711a"
+    },
+    {
+      "path": "test-results/ci/static-builds.log",
+      "bytes": 49327,
+      "sha256": "48ff66be5cbac07784a585510a5ac64205ce8be75537dd6ed1fa358b3b5663c6"
+    },
+    {
+      "path": "test-results/ci/steps.json",
+      "bytes": 1168,
+      "sha256": "36a1d9f277d1576cd16c06000b907c6d7d22190fec43c6598e6a94af5b54e9d2"
+    },
+    {
+      "path": "test-results/ci/unit.log",
+      "bytes": 5381,
+      "sha256": "09fbad85bf459cf73f8d1f7b7e9a3615a49654161a7480bc427f3d2eaaf9ef26"
+    },
+    {
+      "path": "test-results/e2e/discovery.json",
+      "bytes": 163,
+      "sha256": "7c097990bff9aa978ca7e6ac7aaaa39f23530be26ec23f4c03d11bfba8018e8f"
+    },
+    {
+      "path": "test-results/unit/node-junit.xml",
+      "bytes": 7856,
+      "sha256": "198ab897cc34b6d89238cfd2e72ef71131100489c98ba417bbbb77c23429fce8"
+    },
+    {
+      "path": "test-results/unit/python-junit.xml",
+      "bytes": 1487,
+      "sha256": "8796d205ed2c528c38f68a9c0e5ace6a9bd7a179bbf69c60766c5fc87664fcd5"
+    },
+    {
+      "path": "test-results/unit/summary.json",
+      "bytes": 852,
+      "sha256": "9be502fdff0712286a4b9f48212e911a13500e3cb671ef7710c673222283a3cc"
+    }
+  ]
+}

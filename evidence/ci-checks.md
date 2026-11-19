@@ -1,5 +1,7 @@
 # CL-004 / CL-006 verification — 2026-11-18
 
+Historical local-only checkpoint. Hosted activation has since passed 46 unit/HTTP/gate and 20 actual browser cases, including an isolated browser-job rerun. Current evidence: [ci-hosted-checks.md](ci-hosted-checks.md). The original results below retain their original source/time scope.
+
 Environment: Node 24.22.3, npm 11.9.0, TypeScript 6.0.3, Playwright 1.65.1 (package only; no browser installed here).
 
 | Check | Result |
