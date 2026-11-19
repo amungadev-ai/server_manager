@@ -1,6 +1,6 @@
 # Cloudlane — integration progress
 
-Recorded: 2026-11-19 (Africa/Nairobi). Foundation/CI is integrated; prototype and API/PostgreSQL foundations are ready for review in PR #3/#4; the isolated owner-auth candidate is prepared for independent review in PR #5. No production release, independent security approval or live resource operation is claimed.
+Recorded: 2026-11-19 (Africa/Nairobi). Foundation/CI is integrated; prototype and API/PostgreSQL foundations are ready for review in PR #3/#4; the owner-auth/MFA candidates are prepared for independent review in PR #5/#6. No production release, independent security approval or live resource operation is claimed.
 
 | Area | Current state |
 | --- | --- |
@@ -12,7 +12,8 @@ Recorded: 2026-11-19 (Africa/Nairobi). Foundation/CI is integrated; prototype an
 | PostgreSQL foundation | CL-031/PR #4 adds atomic checksummed migrations and installation/user/session/workspace/project/environment tables. Initial hosted SQL run passes 13 cases, with retained hashed reports. Corrected driver configuration passes 65 local unit/HTTP/progress cases; final combined checks/review are tracked by PR #4 |
 | Security threat model | Separate draft PR #2; independent review remains pending |
 | Owner claim and login | CL-032/033 isolated development candidate in PR #5; default API authentication remains disabled pending independent security review |
-| MFA, auth UI and project CRUD | CL-034–036 remain later gates; no production auth, recovery or mutation is claimed |
+| MFA and authentication screens | CL-034/035 implementation candidate in PR #6; normal activation and independent security review remain gated |
+| Authenticated project CRUD | CL-036 is the next feature batch; no real project mutation is enabled |
 | Installer, agent, pg-boss and real resources | Not implemented; no VPS, Docker, TLS, DNS, mail or storage operation is claimed |
 
 The [private dashboard preview](https://cloudlane-foundation.spiritedghat4.chatgpt.site) hosts static Svelte output. It cannot host the separate Nest/PostgreSQL platform. Authentication and resource data are never persisted in browser localStorage; UI preferences only.

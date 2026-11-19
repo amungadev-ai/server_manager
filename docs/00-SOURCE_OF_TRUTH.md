@@ -23,11 +23,12 @@
 | --- | --- |
 | Cloudlane v1.13 standalone HTML | Interactive localStorage UI simulation, tested for major screen navigation |
 | SvelteKit dashboard | Prototype parity corrected in PR #3; 40 direct screenshot comparisons and 32 browser cases pass. Resource actions remain memory-only simulation |
-| NestJS API, PostgreSQL migrations, pg-boss | CL-030/031 add default-deny API guards, readiness and transactional PostgreSQL schema; exact checks in the batch evidence. Login, resource CRUD and pg-boss remain unavailable |
+| NestJS API, PostgreSQL migrations, pg-boss | CL-030/031 add default-deny API guards, readiness and transactional PostgreSQL schema; exact checks in the batch evidence. Normal authentication, resource CRUD and pg-boss remain unavailable |
 | Go agent and Docker provisioning | Not implemented yet |
-| Installer and first-owner flow | Documented proposal, not implemented |
+| Installer and first-owner flow | Claim/owner/MFA development candidate in PR #5/#6; operational installer not implemented |
 | Caddy public IP HTTPS / DNS / certificates | Planned and subject to live integration tests |
-| Real auth, GitHub webhook, storage, mail, DNS | Not implemented |
+| Owner authentication | Isolated PostgreSQL/HTTPS candidate under ADR-019/020; normal activation disabled pending independent security review |
+| GitHub webhook, storage, mail, DNS | Not implemented |
 | Documentation and task/handoff templates | Prepared in this kit; not proof of running infrastructure |
 
 ## Files to consult for common questions
@@ -63,7 +64,7 @@ The initial pack inventory has been updated for the repository foundation. Exact
 
 ## Isolated owner authentication candidate
 
-[PR #5](https://github.com/amungadev-ai/server_manager/pull/5) prepares CL-032/033 under [ADR-019](adr/019-owner-auth-review-profile.md). It implements a concrete PostgreSQL/HTTPS development candidate with negative-path evidence. The normal API entry point keeps authentication disabled and the factory rejects production activation. Independent CL-005 review, MFA, installer/Caddy integration and real VPS acceptance remain open. See [the review evidence](evidence/OWNER_AUTH_REVIEW.md) and current PR checks for exact source scope.
+[PR #5](https://github.com/amungadev-ai/server_manager/pull/5) prepares CL-032/033 under [ADR-019](adr/019-owner-auth-review-profile.md). It implements a concrete PostgreSQL/HTTPS development candidate with negative-path evidence. The normal API entry point keeps authentication disabled and the factory rejects production activation. Independent CL-005 review, installer/Caddy integration and real VPS acceptance remain open. MFA is now added by the later ADR-020 candidate below. See [the review evidence](evidence/OWNER_AUTH_REVIEW.md) and current PR checks for exact source scope.
 
 ## Mandatory MFA and authentication screens
 

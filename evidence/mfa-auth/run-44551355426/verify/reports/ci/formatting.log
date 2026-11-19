@@ -1,0 +1,6 @@
+
+> cloudlane@0.1.0 lint
+> prettier --check apps packages tools scripts/*.mjs tests playwright.config.ts *.json *.js .github/workflows/*.yml
+
+Checking formatting...
+All matched files use Prettier code style!

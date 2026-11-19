@@ -14,7 +14,7 @@ Normal MFA verification issues a new owner cookie after checking challenge expir
 
 Recovery-code regeneration requires an authenticated session, CSRF, current password and fresh TOTP. It revokes older codes/sessions and produces a new acknowledge-before-session flow. No public MFA-disable, email recovery or unauthenticated reset is added. Local administrator recovery is specified in `docs/security/LOCAL_OWNER_RECOVERY_CONTRACT.md`; the executable root/installation-identity integration remains an installer task, not a pretend working command.
 
-All business denials persist bounded challenge attempts/audit state under the transaction rather than rolling attempts back. Global/source throttling precedes challenge work. Existing exact Host/Origin/custom-header, cookie flags, JSON limits and query-secret rejection remain enforced. Session/context authority is server-derived; clients never promote a password-stage response to owner state.
+Invalid proof/stage denials commit bounded challenge attempts and audit state rather than rolling attempts back. Transport/CSRF validation precedes factor-proof work. Global/source throttling precedes challenge work. Existing exact Host/Origin/custom-header, cookie flags, JSON limits and query-secret rejection remain enforced. Session/context authority is server-derived; clients never promote a password-stage response to owner state.
 
 ## UI
 

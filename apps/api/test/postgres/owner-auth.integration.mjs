@@ -12,6 +12,7 @@ const { Pool } = require('pg');
 const { TOTP, Secret } = require('otpauth');
 const mfaEncryptionKey = randomBytes(32);
 let authenticator = '',
+  enrolledToken = '',
   recoveryCodes = [];
 const { databaseConfig } = require('./dist/database/config.js');
 const { migrate } = require('./dist/database/migrations.js');
@@ -164,9 +165,10 @@ async function enroll(challenge, options = {}) {
   );
   assert.equal(started.status, 200);
   authenticator = started.body.secret;
+  enrolledToken = await totp();
   const confirmed = await post(
     'auth/mfa/confirm',
-    { code: await totp() },
+    { code: enrolledToken },
     { ...options, headers: authHeaders(challenge) },
   );
   assert.equal(confirmed.status, 200);
@@ -224,6 +226,7 @@ before(async () => {
 });
 beforeEach(async () => {
   authenticator = '';
+  enrolledToken = '';
   recoveryCodes = [];
   await pool.query('DROP SCHEMA IF EXISTS cloudlane CASCADE');
   await migrate(pool);
@@ -994,13 +997,14 @@ test('TOTP replay is rejected across password challenges; an unused adjacent ste
   denied(
     await post(
       'auth/mfa/verify',
-      { code: await totp() },
+      { code: enrolledToken },
       { headers: authHeaders(c) },
     ),
   );
+  const nextToken = await totp(1);
   const done = await post(
     'auth/mfa/verify',
-    { code: await totp(1) },
+    { code: nextToken },
     { headers: authHeaders(c) },
   );
   assert.equal(done.status, 200);
@@ -1009,7 +1013,7 @@ test('TOTP replay is rejected across password challenges; an unused adjacent ste
   denied(
     await post(
       'auth/mfa/verify',
-      { code: await totp(1) },
+      { code: nextToken },
       { headers: authHeaders(next) },
     ),
   );
@@ -1151,7 +1155,7 @@ test('recovery-code regeneration requires password, CSRF and fresh TOTP; old cod
   denied(
     await post(
       'auth/recovery/regenerate',
-      { password: owner.password, code: await totp() },
+      { password: owner.password, code: enrolledToken },
       { headers: authHeaders(s) },
     ),
   );

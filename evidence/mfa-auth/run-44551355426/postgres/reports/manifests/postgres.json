@@ -1,0 +1,45 @@
+{
+  "label": "postgres",
+  "commit": "27fd092eadb6926d075855ade146fc0fbbb172d0",
+  "workingTreeDirty": false,
+  "recordedUtc": "2026-11-19T15:09:23.857Z",
+  "node": "v24.22.3",
+  "npm": "11.9.0",
+  "lockSha256": "cbd7ea4e6d8b0892ef5d766871785360bb2698d6ab8e49b0157cd58eaff9df5d",
+  "github": {
+    "runId": "44551355426",
+    "attempt": "1",
+    "event": "pull_request"
+  },
+  "browser": {
+    "execution": "not-run",
+    "reportStatus": "missing"
+  },
+  "files": [
+    {
+      "path": "test-results/ci/postgres.log",
+      "bytes": 5388,
+      "sha256": "336ea269d8a6412d32f8000399a0f8432e6b0c9d54fcbc1f2c25d4756f12b237"
+    },
+    {
+      "path": "test-results/ci/steps.json",
+      "bytes": 238,
+      "sha256": "b1c5498e19ffe0a639615280992e623be2912c6942a143e8902376c0a9621bed"
+    },
+    {
+      "path": "test-results/postgres/junit.xml",
+      "bytes": 11541,
+      "sha256": "4605ea40870d445ceb2514fa87649c1b4c5435ed876795047b43817eff302f94"
+    },
+    {
+      "path": "test-results/postgres/server.json",
+      "bytes": 96,
+      "sha256": "c96a056114d4bb22c3764e078528787a21c2ab31853ffaede9b0a97bbac33de2"
+    },
+    {
+      "path": "test-results/postgres/summary.json",
+      "bytes": 196,
+      "sha256": "fa2de9bcc12592d3a8731666c88bcb396f90402d012292dc5abcafbda20c2986"
+    }
+  ]
+}

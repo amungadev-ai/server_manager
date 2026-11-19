@@ -8,7 +8,7 @@ Local root recovery is a documented installer contract only. No working root rec
 
 ## Verification checkpoint
 
-Initial compile/schema/Svelte checks pass (0 errors/warnings). Initial unit/HTTP/progress suite passes 65 Node plus 10 Python tests. Additional API, MFA, client, real-SQL and browser cases are now added; the final full checks, build and hosted run will be recorded after execution. This checkpoint is not evidence of those pending suites.
+PASS local npm run check (0 Svelte errors/warnings), npm test (70 Node + 10 Python), supported HTTP build, npm run build:preview, progress validation and diff whitespace checks. [Run 44551355426](https://github.com/amungadev-ai/server_manager/actions/runs/44551355426) passes all six jobs for implementation checkpoint `a60d11bf9ebc7a5783fed3688da022dd4e930a02`: 80 unit/HTTP/progress cases, 46 real PostgreSQL/HTTPS cases, 44 actual browser cases and 40 direct prototype screenshot comparisons. Both browser projects pass all 22 cases without retries. [Retained evidence](../../evidence/mfa-auth/README.md) binds reports to the tested head/tree, archive digests and file hashes. Final PR checks cover the later evidence/hand-off and token-replay test improvement.
 
 The hosted PostgreSQL suite uses real PostgreSQL and Node HTTPS with an explicitly trusted isolated certificate. Browser auth cases use a virtual HTTPS route-fulfillment contract fixture and real rendered Svelte UI; this proves UI requests/states and is explicitly **not** browser-to-PostgreSQL/public-TLS evidence. Existing desktop/mobile prototype comparisons continue against the immutable supplied HTML.
 
