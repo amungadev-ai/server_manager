@@ -222,7 +222,9 @@
     const url = URL.createObjectURL(
       new Blob(
         [
-          'Cloudlane recovery codes — keep private. Each code works once with your password.\n\n' +
+          (demo
+            ? 'Cloudlane preview codes — synthetic; these grant no access.\n\n'
+            : 'Cloudlane recovery codes — keep private. Each code works once with your password.\n\n') +
             codes.join('\n') +
             '\n',
         ],
@@ -231,7 +233,9 @@
     );
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'cloudlane-recovery-codes.txt';
+    a.download = demo
+      ? 'cloudlane-preview-recovery-codes.txt'
+      : 'cloudlane-recovery-codes.txt';
     a.click();
     URL.revokeObjectURL(url);
     notice = 'Recovery code download prepared.';
@@ -309,7 +313,7 @@
 </svelte:head>
 <div class="auth-page">
   <header class="auth-brand">
-    <a href="/" aria-label="Cloudlane home">
+    <a href="/">
       <span class="auth-logo" aria-hidden="true">C</span><span>
         Cloudlane<small>YOUR INFRASTRUCTURE, SIMPLIFIED</small>
       </span>
@@ -507,7 +511,7 @@
               bind:value={recoveryCode}
               required
               maxlength="39"
-              pattern="[0-9a-fA-F]{4}(-[0-9a-fA-F]{4}){7}"
+              pattern={'[0-9a-fA-F]{4}(-[0-9a-fA-F]{4}){7}'}
               disabled={demo || busy}
               placeholder="0000-0000-0000-0000-0000-0000-0000-0000"
             />
@@ -568,7 +572,7 @@
               class="auth-mono"
               inputmode="numeric"
               autocomplete="one-time-code"
-              pattern="[0-9]{6}"
+              pattern={'[0-9]{6}'}
               minlength="6"
               maxlength="6"
               bind:value={code}

@@ -225,6 +225,10 @@ test('HTTPS UI contract setup validates passwords, generates QR locally and ackn
   expect(
     calls.find((c) => c.path === '/bootstrap/owner')?.headers['x-csrf-token'],
   ).toBe(csrf);
+  await expect(page.getByLabel('Authenticator code')).toHaveAttribute(
+    'pattern',
+    '[0-9]{6}',
+  );
   await page.getByLabel('Authenticator code').fill('123456');
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await expect(page.getByLabel('Authenticator setup key')).toHaveCount(0);
@@ -269,6 +273,10 @@ test('HTTPS UI contract login requires MFA and exposes safe retry errors with fo
   await expect(page.getByRole('link', { name: 'Open workspace' })).toHaveCount(
     0,
   );
+  await expect(page.getByLabel('Authenticator code')).toHaveAttribute(
+    'pattern',
+    '[0-9]{6}',
+  );
   await page.getByLabel('Authenticator code').fill('123456');
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('Verification failed');
@@ -304,6 +312,9 @@ test('HTTPS UI contract recovery still verifies password and sends one code thro
     page.getByRole('heading', { name: 'Recover owner access' }),
   ).toBeVisible();
   await password(page);
+  await expect(
+    page.getByLabel('Recovery code', { exact: true }),
+  ).toHaveAttribute('pattern', '[0-9a-fA-F]{4}(-[0-9a-fA-F]{4}){7}');
   await page.getByLabel('Recovery code', { exact: true }).fill(codes[0]!);
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await expect(
@@ -334,6 +345,10 @@ test('HTTPS UI contract security requires step-up and auth form has no serious a
     ),
   ).toEqual([]);
   await page.getByLabel('Current password').fill('a synthetic owner password');
+  await expect(page.getByLabel('Authenticator code')).toHaveAttribute(
+    'pattern',
+    '[0-9]{6}',
+  );
   await page.getByLabel('Authenticator code').fill('123456');
   await page.getByRole('button', { name: 'Replace recovery codes' }).click();
   await expect(
