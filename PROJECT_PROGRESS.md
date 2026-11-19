@@ -9,7 +9,7 @@ Recorded: 2026-11-19 (Africa/Nairobi). Foundation/CI is integrated; prototype pa
 | CI and desktop/mobile harness | CL-004/006 integrated through PR #1; branch-protection administration remains outstanding |
 | Prototype v1.13 parity | PR #3 corrects the Svelte rendering, screens, forms and sample state. Its required run passes 32 browser cases and 40 direct source screenshot comparisons. Resource actions remain simulated |
 | API authorization foundation | CL-030/PR #4 adds global default-deny policy, a disabled session resolver, request-local server-derived context and safe readiness. It issues/accepts no owner sessions |
-| PostgreSQL foundation | CL-031/PR #4 adds atomic checksummed migrations and installation/user/session/workspace/project/environment tables. Local checks/builds pass; hosted database execution and review are tracked by PR #4 |
+| PostgreSQL foundation | CL-031/PR #4 adds atomic checksummed migrations and installation/user/session/workspace/project/environment tables. Initial hosted SQL run passes 13 cases, with retained hashed reports. Corrected driver configuration passes 65 local unit/HTTP/progress cases; final combined checks/review are tracked by PR #4 |
 | Security threat model | Separate draft PR #2; independent review remains pending |
 | Owner claim, login, MFA and project CRUD | CL-032–036 not implemented; bootstrap/session gates depend on the security review |
 | Installer, agent, pg-boss and real resources | Not implemented; no VPS, Docker, TLS, DNS, mail or storage operation is claimed |

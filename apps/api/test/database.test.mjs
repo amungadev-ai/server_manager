@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { spawnSync } from 'node:child_process';
 const require = createRequire(import.meta.url);
+const { Client } = require('pg');
 const { databaseConfig } = require('../dist/database/config.js');
 const { PlatformDatabase } = require('../dist/database/database.js');
 const {
@@ -26,6 +27,7 @@ test('database configuration has no ambient defaults, remote hosts or URL overri
     'postgres://unit:unit-only@db.example.com/cloudlane',
     'postgres://localhost/cloudlane',
     'postgres://unit:unit-only@localhost/',
+    'postgres://unit:unit-only@localhost:0/cloudlane',
     'postgres://unit:unit-only@localhost/cloudlane?options=-csearch_path=evil',
     'postgres://unit:unit-only@localhost/cloudlane?sslmode=no-verify',
   ])
@@ -33,6 +35,42 @@ test('database configuration has no ambient defaults, remote hosts or URL overri
       () => databaseConfig(value),
       (error) => !error.message.includes('unit-only'),
     );
+});
+test('host PG environment settings cannot replace the configured identity, port or TLS policy', () => {
+  const environment = {
+    PGHOST: 'remote.example.test',
+    PGPORT: '6544',
+    PGDATABASE: 'foreign',
+    PGUSER: 'forged',
+    PGPASSWORD: 'private-env-test-value',
+    PGSSLMODE: 'no-verify',
+    PGSSLNEGOTIATION: 'direct',
+    PGOPTIONS: '-c search_path=untrusted',
+    PGREPLICATION: 'database',
+  };
+  const previous = Object.fromEntries(
+    Object.keys(environment).map((key) => [key, process.env[key]]),
+  );
+  try {
+    Object.assign(process.env, environment);
+    const client = new Client(
+      databaseConfig('postgresql://unit:unit-only@127.0.0.1/cloudlane'),
+    );
+    const p = client.connectionParameters;
+    assert.equal(p.host, '127.0.0.1');
+    assert.equal(p.port, 5432);
+    assert.equal(p.user, 'unit');
+    assert.equal(p.password, 'unit-only');
+    assert.equal(p.database, 'cloudlane');
+    assert.equal(p.ssl, false);
+    assert.equal(p.sslnegotiation, 'postgres');
+    assert.equal(p.replication, 'false');
+    assert.equal(p.options, '-c search_path=pg_catalog');
+  } finally {
+    for (const [key, value] of Object.entries(previous))
+      if (value === undefined) delete process.env[key];
+      else process.env[key] = value;
+  }
 });
 test('an unconfigured database does not connect using PG environment fallbacks', async () => {
   const db = new PlatformDatabase();

@@ -27,6 +27,8 @@ node --env-file=/path/to/private/runtime.env apps/api/dist/main.js
 
 `npm run db:migrate` builds and migrates when the database URL is already supplied through a private process environment. The fixed migration list lives in `apps/api/migrations/`; include that directory alongside `dist/` when packaging the API. The CLI accepts no SQL/path arguments and prints no database connection details.
 
+This foundation uses authenticated, non-TLS loopback TCP with explicit connection identity, port and TLS policy; host `PG*` identity/port/TLS settings cannot override it. Remote databases or a different TLS policy require a separately reviewed configuration change.
+
 Use a migration role with ownership/create privileges and a separate runtime role. The runtime only checks readiness in this batch, so grant it `USAGE` on schema `cloudlane` and `SELECT` on `cloudlane.schema_migrations`. The database administrator must create and configure the roles locally; the API does not create privileged roles or run migrations on startup. Later repositories require explicitly reviewed CRUD grants. The migration revokes PUBLIC schema/table privileges. No user/session/resource is seeded and no default password is created.
 
 Migrations acquire a bounded transaction-level advisory lock and apply atomically with a checksum ledger. Rerunning a current release makes no schema/data change and preserves the installation identity. A changed, missing or newer history fails closed; investigate and restore or introduce a reviewed forward migration. There is no reset/down command. Back up and verify restoration before changing a populated installation.
