@@ -26,3 +26,7 @@ Initial failure artifacts are retained for seven days by GitHub: [desktop 144739
 ## Branch protection
 
 The branch response reports `main.protected=false`. Protection administration/read returns `403 Resource not accessible by integration`. The observed check context is `Required checks`, produced by GitHub Actions app ID `15368`. No rule was applied. `.github/branch-protection.main.json` and `docs/CI_AND_TESTING.md` contain a concrete administrator payload/command and reviewer-policy consequences. Effective settings and rejection behavior must be verified after administration.
+
+## Repeatability correction
+
+The later evidence/payload checkpoint run [44429870803](https://github.com/amungadev-ai/server_manager/actions/runs/44429870803) passed build/unit and desktop but timed out in mobile project navigation on both attempts. The downloaded failure archive SHA-256 and trace show the immediate menu visibility probe returned false before the mobile UI was ready; the subsequent Projects click stayed outside the viewport. The helper now uses the configured `isMobile` fixture and waits for the menu to expand. No timeout/retry/assertion was weakened. Current confirmation is pending; the earlier 20-case pass above is historical and does not by itself establish repeatability. Trace facts are retained in `ci-hosted/mobile-readiness-failure.json`.

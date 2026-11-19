@@ -23,12 +23,16 @@ export const test = base.extend<{ browserRuntime: void }>({
   ],
 });
 export { expect };
-export async function navigate(page: Page, label: string) {
+export async function navigate(page: Page, label: string, isMobile = false) {
   const menu = page.getByRole('button', {
     name: 'Open navigation',
     exact: true,
   });
-  if (await menu.isVisible()) await menu.click();
+  // Await the configured mobile UI instead of probing visibility before it is ready.
+  if (isMobile) {
+    await menu.click();
+    await expect(menu).toHaveAttribute('aria-expanded', 'true');
+  }
   // Navigation counts contribute to the accessible name, e.g. "Projects 2".
   const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   await page
