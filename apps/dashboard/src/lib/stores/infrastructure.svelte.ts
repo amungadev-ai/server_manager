@@ -3,23 +3,28 @@ import type {
   InfrastructureSnapshot,
 } from '@cloudlane/contracts/preview';
 import { HttpInfrastructureApi } from '#lib/api/http.ts';
+import type { PreviewModel } from '#lib/preview-model.ts';
 
 export const infrastructure = $state({
   mode: import.meta.env.VITE_CLOUDLANE_DATA_MODE === 'demo' ? 'demo' : 'http',
   status: 'loading' as 'loading' | 'ready' | 'error',
   data: null as InfrastructureSnapshot | null,
   error: '',
+  preview: null as PreviewModel | null,
 });
 
 export async function loadInfrastructure(signal?: AbortSignal) {
   infrastructure.status = 'loading';
   infrastructure.error = '';
   infrastructure.data = null;
+  infrastructure.preview = null;
   try {
     let api: InfrastructureApi = new HttpInfrastructureApi();
     if (import.meta.env.VITE_CLOUDLANE_DATA_MODE === 'demo') {
       const { DemoInfrastructureApi } = await import('#lib/api/demo.ts');
-      api = new DemoInfrastructureApi();
+      const demo = new DemoInfrastructureApi();
+      api = demo;
+      infrastructure.preview = demo.details;
     }
     const data = await api.getSnapshot(signal);
     if (signal?.aborted) return;

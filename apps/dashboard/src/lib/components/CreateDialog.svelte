@@ -1,117 +1,203 @@
 <script lang="ts">
-  import { ui } from '#lib/stores/ui.svelte.ts';
+  import { ui, openDialog } from '#lib/stores/ui.svelte.ts';
+  import { infrastructure } from '#lib/stores/infrastructure.svelte.ts';
   import Dialog from './Dialog.svelte';
   import Icon from './Icon.svelte';
-  const titles = {
-    create: 'Create new',
-    project: 'New project',
-    domain: 'Add domain',
-    application: 'Deploy an application',
-    database: 'Create database',
-    cron: 'Schedule a cron job',
-    storage: 'Connect object storage',
-    assistant: 'Cloudlane Assistant',
+  import ResourceForm from '#lib/features/ResourceForm.svelte';
+  import DomainForm from '#lib/features/DomainForm.svelte';
+  import StorageForm from '#lib/features/StorageForm.svelte';
+  import AccountDialog from '#lib/features/AccountDialog.svelte';
+  const titles: Record<string, [string, string]> = {
+    create: [
+      'Create something new',
+      'Choose what you want to run on your infrastructure.',
+    ],
+    project: [
+      'Create project',
+      'A project groups environments, applications and services.',
+    ],
+    application: [
+      'Deploy application',
+      'Use a ZIP archive or a GitHub repository.',
+    ],
+    database: [
+      'Provision database',
+      'Create a standalone database for any application.',
+    ],
+    cron: [
+      'Create cron job',
+      'Schedule an HTTP callback independently of your app.',
+    ],
+    storage: [
+      'Create object storage',
+      'Scoped resource management · simulation',
+    ],
+    domain: [
+      'Add domain',
+      'Enter your domain now. Configure DNS afterward under Manage → Settings.',
+    ],
+    domainAttach: [
+      'Connect registered domain',
+      'Choose an available hostname from your verified domains.',
+    ],
+    subdomain: ['Create subdomain', 'Add a new hostname to this domain.'],
+    dnsRecord: [
+      'DNS record',
+      'Edit simulated DNS records in the central registry.',
+    ],
+    verifyZone: [
+      'Verify domain ownership',
+      'Simulate ownership verification after configuring your DNS provider.',
+    ],
+    dnsModeChange: [
+      'Change DNS management',
+      'Review a safe transition before changing the current mode.',
+    ],
+    deleteZone: [
+      'Remove domain',
+      'Remove this simulated domain and its resources.',
+    ],
+    mailbox: [
+      'Create mailbox',
+      'Provision a simulated email account for this domain.',
+    ],
+    mailAlias: [
+      'Create email alias',
+      'Forward email from an alias to an existing mailbox.',
+    ],
+    inbox: [
+      'Demo webmail',
+      'Preview a sample inbox without sending or receiving real mail.',
+    ],
+    variable: [
+      'Add environment variable',
+      'Secure configuration belongs to an individual service.',
+    ],
+    dbExternal: [
+      'Database network access',
+      'Restrict which external addresses can connect.',
+    ],
+    dbAdmin: [
+      'Database administration',
+      'Explore an administration preview for this database.',
+    ],
+    dbUser: [
+      'Add database user',
+      'Create a dedicated user with scoped privileges.',
+    ],
+    dbPrivileges: [
+      'User privileges',
+      'Choose what this database user is allowed to do.',
+    ],
+    apiKey: [
+      'Generate demo API key',
+      'Design preview: scope and revoke an external automation credential.',
+    ],
+    reset: [
+      'Reset prototype data',
+      'Restore the sample workspace and remove local changes.',
+    ],
+    bucketCreate: [
+      'Create storage bucket',
+      'Scoped resource management · simulation',
+    ],
+    storageFolder: [
+      'Create virtual folder',
+      'Scoped resource management · simulation',
+    ],
+    objectUpload: [
+      'Upload file (demo)',
+      'Scoped resource management · simulation',
+    ],
+    storageGrant: [
+      'Grant bucket access',
+      'Scoped resource management · simulation',
+    ],
+    volumeCreate: [
+      'Allocate persistent volume',
+      'Scoped resource management · simulation',
+    ],
+    objectDetails: [
+      'Object details',
+      'Scoped resource management · simulation',
+    ],
   };
-  let name = $state('');
   const choices = [
-    {
-      kind: 'application',
-      icon: 'rocket',
-      label: 'Application',
-      description: 'Deploy from ZIP or GitHub',
-    },
-    {
-      kind: 'database',
-      icon: 'database',
-      label: 'Database',
-      description: 'Private, project-scoped data',
-    },
-    {
-      kind: 'cron',
-      icon: 'clock',
-      label: 'Cron job',
-      description: 'Scheduled HTTP callbacks or tasks',
-    },
-    {
-      kind: 'storage',
-      icon: 'storage',
-      label: 'Object storage',
-      description: 'An external S3-compatible provider',
-    },
-  ] as const;
+    [
+      'application',
+      'rocket',
+      'Application',
+      'Websites, APIs and workers',
+      'mint',
+    ],
+    ['database', 'database', 'Database', 'PostgreSQL, MySQL, MariaDB', 'mint'],
+    ['cron', 'clock', 'Cron Job', 'Scheduled HTTPS callbacks', 'gold'],
+    [
+      'storage',
+      'bucket',
+      'Object Storage',
+      'Private buckets and media files',
+      'gold',
+    ],
+  ];
+  const title = $derived(
+    ui.modal === 'dbUser' && ui.modalData.id
+      ? 'Manage database user'
+      : (titles[ui.modal ?? '']?.[0] ?? ''),
+  );
 </script>
 
 <Dialog
   open={ui.modal !== null}
-  title={ui.modal ? titles[ui.modal] : ''}
-  onclose={() => {
-    ui.modal = null;
-    name = '';
-  }}
+  {title}
+  description={titles[ui.modal ?? '']?.[1] ?? ''}
+  wide={ui.modal === 'application' || ui.modal === 'dbPrivileges'}
+  closeIconSize={ui.modal === 'dnsModeChange'
+    ? 17
+    : [
+          'storage',
+          'bucketCreate',
+          'storageFolder',
+          'objectUpload',
+          'storageGrant',
+          'volumeCreate',
+          'objectDetails',
+          'apiKey',
+        ].includes(ui.modal ?? '')
+      ? 16
+      : 18}
+  onclose={() => (ui.modal = null)}
 >
-  {#if ui.modal === 'create'}
-    <p class="muted dialog-intro">Choose a resource for your project.</p>
-    <div class="create-options">
-      {#each choices as choice}<button
-          class="create-option"
-          onclick={() => (ui.modal = choice.kind)}
-        >
-          <span class="resource-icon"><Icon name={choice.icon} /></span><span>
-            <strong>{choice.label}</strong><small>{choice.description}</small>
-          </span><Icon name="chevron" size={16} />
-        </button>{/each}
-    </div>
-  {:else if ui.modal === 'domain' || ui.modal === 'project'}
-    <p class="muted dialog-intro">
-      {ui.modal === 'domain'
-        ? 'Register a domain once, then connect it to your services.'
-        : 'A shared home for your applications, databases and services.'}
-    </p>
-    <label class="field">
-      {ui.modal === 'domain' ? 'Domain name' : 'Project name'}<input
-        bind:value={name}
-        placeholder={ui.modal === 'domain' ? 'example.com' : 'My project'}
-        autocomplete="off"
+  {#key `${ui.modal}:${JSON.stringify(ui.modalData)}`}{#if ui.modal === 'create'}<div
+        class="tile-options"
+      >
+        {#each choices as [kind, icon, label, description, tone]}<button
+            class="tile-option"
+            onclick={() => openDialog(kind, ui.modalData)}
+          >
+            <span class="status-icon {tone}">
+              <Icon name={icon} size={20} />
+            </span><span>
+              <strong>{label}</strong><br /><span>{description}</span>
+            </span><Icon name="chevron" size={14} />
+          </button>{/each}
+      </div>
+      <p class="hint" style="margin-top:19px">
+        Mobile app build and distribution features are intentionally deferred to
+        a later phase.
+      </p>
+    {:else if ui.modal && ['project', 'application', 'database', 'cron', 'storage'].includes(ui.modal)}<ResourceForm
+        kind={ui.modal}
       />
-    </label>
-    <p class="notice">
-      <Icon name="info" size={17} /><span>
-        {ui.modal === 'domain'
-          ? 'Domains start with Manual DNS. DNS mode lives in domain Settings. Domain registration will be available when the API is connected.'
-          : 'Project creation will be available after owner authentication and persistent storage are connected.'}
-      </span>
-    </p>
-    <div class="dialog-footer">
-      <button class="button" onclick={() => (ui.modal = null)}>
-        Cancel
-      </button><button class="button primary" disabled>
-        {ui.modal === 'domain' ? 'Add domain' : 'Create project'}
-      </button>
-    </div>
-  {:else if ui.modal === 'assistant'}
-    <div class="empty-icon"><Icon name="sparkles" size={25} /></div>
-    <h3 class="center">A little guidance, right here.</h3>
-    <p class="muted center">
-      Contextual diagnosis and approval-based infrastructure plans are planned.
-      The Assistant is not connected in this foundation build.
-    </p>
-  {:else}
-    <div class="notice">
-      <Icon name="info" size={19} /><span>
-        This resource is not available in the foundation build. It will use the
-        real API and deployment engine once they are implemented.
-      </span>
-    </div>
-    <p class="muted">
-      You can explore the sample projects and domain screens while the platform
-      foundation is being built.
-    </p>
-    <div class="dialog-footer">
-      <button class="button" onclick={() => (ui.modal = 'create')}>
-        Back to resources
-      </button><button class="button primary" onclick={() => (ui.modal = null)}>
-        Got it
-      </button>
-    </div>
-  {/if}
+    {:else if ui.modal && ['domain', 'domainAttach', 'subdomain', 'dnsRecord', 'verifyZone', 'dnsModeChange', 'deleteZone', 'mailbox', 'mailAlias'].includes(ui.modal)}<DomainForm
+        kind={ui.modal}
+      />
+    {:else if ui.modal && ['bucketCreate', 'storageFolder', 'objectUpload', 'storageGrant', 'volumeCreate', 'objectDetails'].includes(ui.modal)}<StorageForm
+        kind={ui.modal}
+      />
+    {:else if ui.modal}<AccountDialog kind={ui.modal} />{/if}{/key}
+  {#if infrastructure.mode !== 'demo' && ui.modal !== 'create'}<p class="hint">
+      This operation requires the connected Cloudlane API. No changes can be
+      applied here.
+    </p>{/if}
 </Dialog>

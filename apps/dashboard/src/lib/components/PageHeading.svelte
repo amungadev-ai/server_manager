@@ -13,11 +13,13 @@
   } = $props();
 </script>
 
-<div class="page-heading">
+<div class="heading">
   <div>
     <p class="eyebrow">{eyebrow}</p>
     <h1>{title}</h1>
     <p class="subtitle">{description}</p>
   </div>
-  {#if actions}<div class="heading-actions">{@render actions()}</div>{/if}
+  <div class="head-actions">
+    {#if actions}{@render actions()}{/if}
+  </div>
 </div>
