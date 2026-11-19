@@ -3,7 +3,17 @@ import type { Pool, PoolClient, QueryResultRow } from 'pg';
 import { ApiException } from '../common/errors';
 import { opaque, verifier } from './policy';
 
-type Action = 'claim' | 'owner' | 'login' | 'rotate' | 'logout';
+type Action =
+  | 'claim'
+  | 'owner'
+  | 'login'
+  | 'rotate'
+  | 'logout'
+  | 'mfa_enroll'
+  | 'mfa_verify'
+  | 'recovery_use'
+  | 'recovery_ack'
+  | 'recovery_regenerate';
 type Outcome<T> = { ok: true; value: T } | { ok: false };
 const yes = <T>(value: T): Outcome<T> => ({ ok: true, value });
 const no = (): Outcome<never> => ({ ok: false });
@@ -25,6 +35,9 @@ export interface SessionRecord extends QueryResultRow {
   authorization_expires_at: Date;
   absolute_expires_at: Date;
   rotated: boolean;
+  mfa_epoch: string;
+  mfa_verified_at: Date;
+  authentication_method: 'totp' | 'recovery';
 }
 export interface LoginUser extends QueryResultRow {
   id: string;
@@ -40,7 +53,7 @@ export interface NewSession {
 export class AuthStore {
   constructor(readonly pool: Pool) {}
 
-  private async transaction<T>(
+  async transaction<T>(
     operation: (client: PoolClient) => Promise<T>,
   ): Promise<T> {
     const client = await this.pool.connect().catch(() => {
@@ -67,7 +80,7 @@ export class AuthStore {
     }
   }
 
-  private async audit(
+  async audit(
     client: PoolClient,
     action: Action,
     requestId: string,
@@ -82,19 +95,32 @@ export class AuthStore {
   }
 
   async budget(
-    purpose: Exclude<Action, 'logout'>,
+    purpose: 'claim' | 'owner' | 'login' | 'rotate' | 'mfa' | 'recovery',
     source: string,
     identity?: string,
   ): Promise<void> {
-    const globalLimit = { claim: 20, owner: 10, login: 100, rotate: 60 }[
-      purpose
-    ];
-    const sourceLimit = { claim: 10, owner: 5, login: 30, rotate: 20 }[purpose];
+    const globalLimit = {
+      claim: 20,
+      owner: 10,
+      login: 100,
+      rotate: 60,
+      mfa: 100,
+      recovery: 60,
+    }[purpose];
+    const sourceLimit = {
+      claim: 10,
+      owner: 5,
+      login: 30,
+      rotate: 20,
+      mfa: 50,
+      recovery: 30,
+    }[purpose];
     const buckets: [string, number, number][] = [
       ['global', globalLimit, 60],
       [`source:${source}`, sourceLimit, 600],
     ];
-    if (identity !== undefined) buckets.push([`identity:${identity}`, 5, 900]);
+    if (identity !== undefined)
+      buckets.push([`identity:${identity}`, purpose === 'mfa' ? 10 : 5, 900]);
     await this.pool.query(`DELETE FROM cloudlane.auth_rate_limits WHERE ctid IN
       (SELECT ctid FROM cloudlane.auth_rate_limits WHERE expires_at <= clock_timestamp() LIMIT 100)`);
     for (const [key, limit, seconds] of buckets) {
@@ -297,20 +323,21 @@ export class AuthStore {
     return rows[0] ?? null;
   }
 
-  private async insertSession(
+  async insertSession(
     client: PoolClient,
     userId: string,
     workspaceId: string,
     familyId: string,
+    proof: { epoch: string; verifiedAt: Date; method: 'totp' | 'recovery' },
     absolute?: Date,
   ): Promise<NewSession> {
     const credential = opaque(),
       csrf = randomBytes(32);
     const { rows } = await client.query<{ id: string }>(
       `INSERT INTO cloudlane.sessions
-      (user_id, workspace_id, family_id, token_hash, csrf_token, idle_expires_at, absolute_expires_at)
+      (user_id, workspace_id, family_id, token_hash, csrf_token, idle_expires_at, absolute_expires_at, mfa_epoch, mfa_verified_at, authentication_method)
       VALUES ($1, $2, $3, $4, $5, LEAST(clock_timestamp() + interval '30 minutes', COALESCE($6::timestamptz, clock_timestamp() + interval '12 hours')),
-        COALESCE($6::timestamptz, clock_timestamp() + interval '12 hours')) RETURNING id`,
+        COALESCE($6::timestamptz, clock_timestamp() + interval '12 hours'), $7, $8, $9) RETURNING id`,
       [
         userId,
         workspaceId,
@@ -318,66 +345,14 @@ export class AuthStore {
         verifier('session', credential),
         csrf,
         absolute ?? null,
+        proof.epoch,
+        proof.verifiedAt,
+        proof.method,
       ],
     );
     const row = await this.lookup(credential, false, client);
     if (!rows[0] || !row) throw new ApiException(503, 'API_UNAVAILABLE');
     return { credential, csrf, row };
-  }
-
-  async login(
-    user: LoginUser | null,
-    verified: boolean,
-    priorCredential: string | null,
-    requestId: string,
-  ): Promise<NewSession | null> {
-    return this.transaction(async (client) => {
-      const { rows } = await client.query<LoginUser & { workspace_id: string }>(
-        `SELECT u.id, u.password_hash, u.disabled_at, w.id AS workspace_id
-        FROM cloudlane.users u JOIN cloudlane.workspaces w ON w.owner_user_id = u.id
-        JOIN cloudlane.installations i ON i.id = u.installation_id
-        WHERE u.id = $1 AND u.role = 'owner' AND i.state = 'active' ORDER BY w.created_at, w.id LIMIT 1 FOR UPDATE OF u`,
-        [user?.id ?? null],
-      );
-      const current = rows[0];
-      if (
-        !verified ||
-        !user ||
-        !current ||
-        current.disabled_at ||
-        current.password_hash !== user.password_hash
-      ) {
-        await this.audit(client, 'login', requestId, false);
-        return null;
-      }
-      if (priorCredential) {
-        const previous = await client.query<{ family_id: string }>(
-          'SELECT family_id FROM cloudlane.sessions WHERE token_hash = $1 AND user_id = $2 AND family_id IS NOT NULL',
-          [verifier('session', priorCredential), current.id],
-        );
-        if (previous.rows[0])
-          await this.revokeFamily(client, previous.rows[0].family_id, 'login');
-      }
-      const families = await client.query<{ id: string }>(
-        'SELECT id FROM cloudlane.session_families WHERE user_id = $1 AND revoked_at IS NULL ORDER BY created_at DESC, id DESC OFFSET 9',
-        [current.id],
-      );
-      for (const family of families.rows)
-        await this.revokeFamily(client, family.id, 'limit');
-      const familyId = randomUUID();
-      await client.query(
-        'INSERT INTO cloudlane.session_families (id, user_id, workspace_id) VALUES ($1, $2, $3)',
-        [familyId, current.id, current.workspace_id],
-      );
-      const session = await this.insertSession(
-        client,
-        current.id,
-        current.workspace_id,
-        familyId,
-      );
-      await this.audit(client, 'login', requestId, true, current.id);
-      return session;
-    });
   }
 
   async lookup(
@@ -392,7 +367,9 @@ export class AuthStore {
       FROM cloudlane.sessions s JOIN cloudlane.session_families f ON f.id = s.family_id AND f.user_id = s.user_id AND f.workspace_id = s.workspace_id
       JOIN cloudlane.users u ON u.id = s.user_id JOIN cloudlane.workspaces w ON w.id = s.workspace_id AND w.owner_user_id = u.id
       JOIN cloudlane.installations i ON i.id = u.installation_id
+      JOIN cloudlane.mfa_factors m ON m.user_id = u.id AND m.installation_id = i.id AND m.state = 'active' AND m.auth_epoch = s.mfa_epoch
       WHERE s.token_hash = $1 AND s.csrf_token IS NOT NULL AND s.absolute_expires_at > clock_timestamp()
+        AND s.mfa_verified_at IS NOT NULL AND s.authentication_method IS NOT NULL
         AND f.revoked_at IS NULL AND u.disabled_at IS NULL AND u.role = 'owner' AND i.state = 'active'
         AND ((s.revoked_at IS NULL AND s.idle_expires_at > clock_timestamp()) OR ($2 AND s.revocation_reason = 'rotated'))`,
       [verifier('session', credential), logout],
@@ -412,7 +389,7 @@ export class AuthStore {
     return rowCount === 1;
   }
 
-  private async revokeFamily(
+  async revokeFamily(
     client: PoolClient,
     familyId: string,
     reason: 'login' | 'logout' | 'limit',
@@ -455,6 +432,11 @@ export class AuthStore {
         session.user_id,
         session.workspace_id,
         session.family_id,
+        {
+          epoch: session.mfa_epoch,
+          verifiedAt: session.mfa_verified_at,
+          method: session.authentication_method,
+        },
         rows[0].absolute_expires_at,
       );
       await this.audit(client, 'rotate', requestId, true, session.user_id);

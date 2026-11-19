@@ -1,7 +1,7 @@
 import { test, before, beforeEach, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
-import { randomUUID } from 'node:crypto';
+import { randomUUID, randomBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import https from 'node:https';
 import http from 'node:http';
@@ -9,6 +9,10 @@ import { once } from 'node:events';
 import { assertDisposableDatabase } from '../../../../scripts/run-postgres-tests.mjs';
 const require = createRequire(new URL('../../package.json', import.meta.url));
 const { Pool } = require('pg');
+const { TOTP, Secret } = require('otpauth');
+const mfaEncryptionKey = randomBytes(32);
+let authenticator = '',
+  recoveryCodes = [];
 const { databaseConfig } = require('./dist/database/config.js');
 const { migrate } = require('./dist/database/migrations.js');
 const { PlatformDatabase } = require('./dist/database/database.js');
@@ -16,6 +20,7 @@ const { OwnerAuthReview } = require('./dist/auth/review.js');
 const {
   SESSION_COOKIE,
   SETUP_COOKIE,
+  CHALLENGE_COOKIE,
   verifier,
 } = require('./dist/auth/policy.js');
 const { createApp } = require('./dist/app.js');
@@ -128,12 +133,69 @@ async function owned() {
   assert.equal((await createOwner(lease)).status, 200);
   return lease;
 }
-async function login(headers = {}) {
+async function passwordChallenge(headers = {}, options = {}) {
   const response = await post(
     'auth/login',
     { email: owner.email, password: owner.password },
-    { headers },
+    { ...options, headers },
   );
+  assert.equal(response.status, 200);
+  return {
+    response,
+    cookie: cookie(response, CHALLENGE_COOKIE),
+    csrf: response.body.csrfToken,
+  };
+}
+async function totp(offset = 0, seed = authenticator) {
+  const { rows } = await pool.query('SELECT clock_timestamp() AS now');
+  return TOTP.generate({
+    secret: Secret.fromBase32(seed),
+    timestamp: rows[0].now.getTime() + offset * 30000,
+    digits: 6,
+    period: 30,
+    algorithm: 'SHA1',
+  });
+}
+async function enroll(challenge, options = {}) {
+  const started = await post(
+    'auth/mfa/enroll',
+    {},
+    { ...options, headers: authHeaders(challenge) },
+  );
+  assert.equal(started.status, 200);
+  authenticator = started.body.secret;
+  const confirmed = await post(
+    'auth/mfa/confirm',
+    { code: await totp() },
+    { ...options, headers: authHeaders(challenge) },
+  );
+  assert.equal(confirmed.status, 200);
+  recoveryCodes = [...confirmed.body.codes];
+  return {
+    response: confirmed,
+    cookie: cookie(confirmed, CHALLENGE_COOKIE),
+    csrf: confirmed.body.csrfToken,
+  };
+}
+async function login(headers = {}, options = {}) {
+  let challenge = await passwordChallenge(headers, options),
+    response;
+  if (challenge.response.body.state === 'mfa_setup_required') {
+    challenge = await enroll(challenge, options);
+    response = await post(
+      'auth/recovery/acknowledge',
+      { acknowledged: true },
+      { ...options, headers: authHeaders(challenge) },
+    );
+  } else {
+    const code = recoveryCodes.shift();
+    assert.ok(code, 'Test helper needs an unused recovery code');
+    response = await post(
+      'auth/recovery/use',
+      { code },
+      { ...options, headers: authHeaders(challenge) },
+    );
+  }
   assert.equal(response.status, 200);
   return {
     response,
@@ -146,7 +208,7 @@ const authHeaders = (session) => ({
   'X-CSRF-Token': session.csrf,
 });
 before(async () => {
-  review = new OwnerAuthReview(pool, origin);
+  review = new OwnerAuthReview(pool, origin, { mfaEncryptionKey });
   app = await createApp({
     documentation: false,
     ownerAuthReview: review,
@@ -161,6 +223,8 @@ before(async () => {
   plainPort = plain.address().port;
 });
 beforeEach(async () => {
+  authenticator = '';
+  recoveryCodes = [];
   await pool.query('DROP SCHEMA IF EXISTS cloudlane CASCADE');
   await migrate(pool);
 });
@@ -358,7 +422,7 @@ test('login rechecks a password hash changed after credential verification', asy
     replacement,
   ]);
   assert.equal(
-    await review.store.login(snapshot, true, null, randomUUID()),
+    await review.mfa.beginLogin(snapshot, true, null, randomUUID()),
     null,
   );
   assert.equal(
@@ -669,7 +733,7 @@ test('durable throttling is shared by independent runtimes and expires without r
         password: 'incorrect synthetic password',
       }),
     );
-  const other = new OwnerAuthReview(pool, origin);
+  const other = new OwnerAuthReview(pool, origin, { mfaEncryptionKey });
   await assert.rejects(
     other.store.budget('login', '127.0.0.1', owner.email.toLowerCase()),
     (e) => e.code === 'RATE_LIMITED',
@@ -730,7 +794,9 @@ test('audit rows and database verifiers contain no raw password, session or clai
   );
 });
 test('IP-host TLS cookies have the same flags and cannot change server-derived workspace scope', async () => {
-  const ipReview = new OwnerAuthReview(pool, 'https://127.0.0.1');
+  const ipReview = new OwnerAuthReview(pool, 'https://127.0.0.1', {
+    mfaEncryptionKey,
+  });
   const ipApp = await createApp({
     documentation: false,
     ownerAuthReview: ipReview,
@@ -754,11 +820,7 @@ test('IP-host TLS cookies have the same flags and cannot change server-derived w
       },
     });
     assert.equal(made.status, 200);
-    const logged = await post(
-      'auth/login',
-      { email: owner.email, password: owner.password },
-      { targetPort, ipHost: true },
-    );
+    const logged = (await login({}, { targetPort, ipHost: true })).response;
     assert.equal(logged.status, 200);
     for (const flag of ['Secure', 'HttpOnly', 'SameSite=Strict', 'Path=/'])
       assert.ok(logged.headers['set-cookie'][0].includes(flag));
@@ -789,4 +851,484 @@ test('IP-host TLS cookies have the same flags and cannot change server-derived w
   } finally {
     await ipApp.close();
   }
+});
+
+test('password success issues only a short-lived challenge; it cannot authorize resources or skip CSRF', async () => {
+  await owned();
+  const c = await passwordChallenge();
+  assert.equal(c.response.body.state, 'mfa_setup_required');
+  assert.equal(c.response.body.authenticated, undefined);
+  assert.equal(cookie(c.response, SESSION_COOKIE), '');
+  assert.ok(Date.parse(c.response.body.expiresAt) - Date.now() <= 300000);
+  denied(
+    await call('auth/session', { headers: authHeaders(c) }),
+    401,
+    'SESSION_REQUIRED',
+  );
+  denied(
+    await call('projects', { headers: authHeaders(c) }),
+    401,
+    'SESSION_REQUIRED',
+  );
+  denied(
+    await post('auth/mfa/enroll', {}, { headers: { Cookie: c.cookie } }),
+    403,
+    'FORBIDDEN',
+  );
+  assert.equal(
+    (await pool.query('SELECT count(*)::integer AS n FROM cloudlane.sessions'))
+      .rows[0].n,
+    0,
+  );
+});
+test('enrollment secret is encrypted and displayed once per challenge; replacement needs a new password challenge', async () => {
+  await owned();
+  const c = await passwordChallenge();
+  const started = await post(
+    'auth/mfa/enroll',
+    {},
+    { headers: authHeaders(c) },
+  );
+  assert.equal(started.status, 200);
+  assert.match(started.body.secret, /^[A-Z2-7]{32}$/);
+  assert.ok(started.body.uri.startsWith('otpauth://totp/Cloudlane:'));
+  denied(
+    await post('auth/mfa/enroll', {}, { headers: authHeaders(c) }),
+    409,
+    'CONFLICT',
+  );
+  const factor = (await pool.query('SELECT * FROM cloudlane.mfa_factors'))
+    .rows[0];
+  assert.equal(factor.encrypted_seed.length, 20);
+  assert.equal(factor.seed_nonce.length, 12);
+  assert.equal(factor.seed_tag.length, 16);
+  assert.notEqual(
+    factor.encrypted_seed.toString('hex'),
+    Secret.fromBase32(started.body.secret).hex.toLowerCase(),
+  );
+  assert.ok(!JSON.stringify(factor).includes(started.body.secret));
+  const next = await passwordChallenge();
+  denied(
+    await post(
+      'auth/mfa/confirm',
+      { code: await totp(0, started.body.secret) },
+      { headers: authHeaders(c) },
+    ),
+  );
+  const replacement = await post(
+    'auth/mfa/enroll',
+    {},
+    { headers: authHeaders(next) },
+  );
+  assert.equal(replacement.status, 200);
+  assert.notEqual(replacement.body.secret, started.body.secret);
+});
+test('MFA proof rotates challenge and nonce; codes must be acknowledged before any owner session', async () => {
+  await owned();
+  const c = await passwordChallenge();
+  denied(
+    await post(
+      'auth/recovery/acknowledge',
+      { acknowledged: true },
+      { headers: authHeaders(c) },
+    ),
+  );
+  const batch = await enroll(c);
+  assert.equal(batch.response.body.state, 'recovery_codes_required');
+  assert.equal(batch.response.body.codes.length, 10);
+  assert.equal(new Set(batch.response.body.codes).size, 10);
+  assert.notEqual(batch.cookie, c.cookie);
+  assert.notEqual(batch.csrf, c.csrf);
+  for (const code of batch.response.body.codes)
+    assert.match(code, /^[0-9a-f]{4}(-[0-9a-f]{4}){7}$/);
+  denied(
+    await call('auth/session', { headers: authHeaders(batch) }),
+    401,
+    'SESSION_REQUIRED',
+  );
+  denied(
+    await post(
+      'auth/recovery/acknowledge',
+      { acknowledged: true },
+      { headers: authHeaders(c) },
+    ),
+  );
+  denied(
+    await post(
+      'auth/recovery/acknowledge',
+      { acknowledged: true },
+      { headers: { Cookie: batch.cookie, 'X-CSRF-Token': c.csrf } },
+    ),
+    403,
+    'FORBIDDEN',
+  );
+  denied(
+    await post(
+      'auth/recovery/acknowledge',
+      { acknowledged: false },
+      { headers: authHeaders(batch) },
+    ),
+    400,
+    'VALIDATION_ERROR',
+  );
+  const done = await post(
+    'auth/recovery/acknowledge',
+    { acknowledged: true },
+    { headers: authHeaders(batch) },
+  );
+  assert.equal(done.status, 200);
+  assert.equal(done.body.mfaVerified, true);
+  assert.equal(done.body.authenticationMethod, 'totp');
+  denied(
+    await post(
+      'auth/recovery/acknowledge',
+      { acknowledged: true },
+      { headers: authHeaders(batch) },
+    ),
+  );
+});
+test('TOTP replay is rejected across password challenges; an unused adjacent step can complete authentication', async () => {
+  await owned();
+  await login();
+  const c = await passwordChallenge();
+  denied(
+    await post(
+      'auth/mfa/verify',
+      { code: await totp() },
+      { headers: authHeaders(c) },
+    ),
+  );
+  const done = await post(
+    'auth/mfa/verify',
+    { code: await totp(1) },
+    { headers: authHeaders(c) },
+  );
+  assert.equal(done.status, 200);
+  assert.equal(done.body.authenticationMethod, 'totp');
+  const next = await passwordChallenge();
+  denied(
+    await post(
+      'auth/mfa/verify',
+      { code: await totp(1) },
+      { headers: authHeaders(next) },
+    ),
+  );
+});
+test('five bad proofs persist the attempt ceiling; expiry and changed passwords invalidate challenges', async () => {
+  await owned();
+  await login();
+  const c = await passwordChallenge();
+  const valid = await totp(1),
+    wrong = valid === '000000' ? '999999' : '000000';
+  for (let i = 0; i < 5; i++)
+    denied(
+      await post(
+        'auth/mfa/verify',
+        { code: wrong },
+        { headers: authHeaders(c) },
+      ),
+    );
+  assert.equal(
+    (
+      await pool.query(
+        'SELECT attempts FROM cloudlane.auth_challenges WHERE verifier_hash=$1',
+        [verifier('challenge', value(c.cookie))],
+      )
+    ).rows[0].attempts,
+    5,
+  );
+  denied(
+    await post('auth/mfa/verify', { code: valid }, { headers: authHeaders(c) }),
+  );
+  const expired = await passwordChallenge();
+  await pool.query(
+    "UPDATE cloudlane.auth_challenges SET created_at=clock_timestamp()-interval '6 minutes',expires_at=clock_timestamp()-interval '1 minute'",
+  );
+  denied(
+    await post(
+      'auth/mfa/verify',
+      { code: valid },
+      { headers: authHeaders(expired) },
+    ),
+  );
+  const changed = await passwordChallenge();
+  await pool.query('UPDATE cloudlane.users SET password_hash=$1', [
+    await review.passwords.hash('a different synthetic long password'),
+  ]);
+  denied(
+    await post(
+      'auth/mfa/verify',
+      { code: valid },
+      { headers: authHeaders(changed) },
+    ),
+  );
+});
+test('wrong wrapping key and modified ciphertext fail closed without owner cookies', async () => {
+  await owned();
+  const c = await passwordChallenge();
+  const started = await post(
+    'auth/mfa/enroll',
+    {},
+    { headers: authHeaders(c) },
+  );
+  authenticator = started.body.secret;
+  const wrong = new OwnerAuthReview(pool, origin, {
+    mfaEncryptionKey: randomBytes(32),
+  });
+  await assert.rejects(
+    wrong.mfa.verify(value(c.cookie), c.csrf, await totp(), true, randomUUID()),
+    (e) => e.status === 503 || e.getStatus?.() === 503,
+  );
+  await pool.query(
+    'UPDATE cloudlane.mfa_factors SET encrypted_seed=set_byte(encrypted_seed,0,get_byte(encrypted_seed,0) # 1)',
+  );
+  denied(
+    await post(
+      'auth/mfa/confirm',
+      { code: await totp() },
+      { headers: authHeaders(c) },
+    ),
+    503,
+    'API_UNAVAILABLE',
+  );
+  assert.equal(
+    (await pool.query('SELECT count(*)::integer AS n FROM cloudlane.sessions'))
+      .rows[0].n,
+    0,
+  );
+});
+test('concurrent recovery-code use has one winner, consumes the verifier and revokes every old family', async () => {
+  await owned();
+  const s = await login();
+  const c = await passwordChallenge(),
+    code = recoveryCodes.shift();
+  const results = await Promise.all([
+    post('auth/recovery/use', { code }, { headers: authHeaders(c) }),
+    post('auth/recovery/use', { code }, { headers: authHeaders(c) }),
+  ]);
+  assert.equal(results.filter((x) => x.status === 200).length, 1);
+  denied(results.find((x) => x.status !== 200));
+  const winner = results.find((x) => x.status === 200);
+  assert.equal(winner.body.authenticationMethod, 'recovery');
+  denied(
+    await call('auth/session', { headers: authHeaders(s) }),
+    401,
+    'SESSION_REQUIRED',
+  );
+  const next = await passwordChallenge();
+  denied(
+    await post('auth/recovery/use', { code }, { headers: authHeaders(next) }),
+  );
+  const data = (await pool.query('SELECT * FROM cloudlane.mfa_recovery_codes'))
+    .rows;
+  assert.equal(data.filter((x) => x.consumed_at).length, 1);
+  assert.ok(!JSON.stringify(data).includes(code));
+  const epoch = (
+    await pool.query('SELECT auth_epoch FROM cloudlane.mfa_factors')
+  ).rows[0].auth_epoch;
+  assert.equal(epoch, '2');
+});
+test('recovery-code regeneration requires password, CSRF and fresh TOTP; old codes/sessions become invalid', async () => {
+  await owned();
+  const s = await login(),
+    oldCode = recoveryCodes[0];
+  denied(
+    await post(
+      'auth/recovery/regenerate',
+      { password: owner.password, code: await totp(1) },
+      { headers: { Cookie: s.cookie } },
+    ),
+    403,
+    'FORBIDDEN',
+  );
+  denied(
+    await post(
+      'auth/recovery/regenerate',
+      { password: 'incorrect', code: await totp(1) },
+      { headers: authHeaders(s) },
+    ),
+  );
+  denied(
+    await post(
+      'auth/recovery/regenerate',
+      { password: owner.password, code: await totp() },
+      { headers: authHeaders(s) },
+    ),
+  );
+  const next = await post(
+    'auth/recovery/regenerate',
+    { password: owner.password, code: await totp(1) },
+    { headers: authHeaders(s) },
+  );
+  assert.equal(next.status, 200);
+  assert.equal(next.body.codes.length, 10);
+  assert.ok(!next.body.codes.includes(oldCode));
+  denied(
+    await call('auth/session', { headers: authHeaders(s) }),
+    401,
+    'SESSION_REQUIRED',
+  );
+  const batch = {
+    cookie: cookie(next, CHALLENGE_COOKIE),
+    csrf: next.body.csrfToken,
+  };
+  const done = await post(
+    'auth/recovery/acknowledge',
+    { acknowledged: true },
+    { headers: authHeaders(batch) },
+  );
+  assert.equal(done.status, 200);
+  const c = await passwordChallenge();
+  denied(
+    await post(
+      'auth/recovery/use',
+      { code: oldCode },
+      { headers: authHeaders(c) },
+    ),
+  );
+  assert.equal(
+    (
+      await post(
+        'auth/recovery/use',
+        { code: next.body.codes[0] },
+        { headers: authHeaders(c) },
+      )
+    ).status,
+    200,
+  );
+});
+test('lost recovery-code display can be replaced after fresh password and TOTP; the old generation cannot acknowledge', async () => {
+  await owned();
+  const first = await enroll(await passwordChallenge());
+  const c = await passwordChallenge();
+  const next = await post(
+    'auth/mfa/verify',
+    { code: await totp(1) },
+    { headers: authHeaders(c) },
+  );
+  assert.equal(next.status, 200);
+  assert.notDeepEqual(next.body.codes, first.response.body.codes);
+  denied(
+    await post(
+      'auth/recovery/acknowledge',
+      { acknowledged: true },
+      { headers: authHeaders(first) },
+    ),
+  );
+  const batch = {
+    cookie: cookie(next, CHALLENGE_COOKIE),
+    csrf: next.body.csrfToken,
+  };
+  assert.equal(
+    (
+      await post(
+        'auth/recovery/acknowledge',
+        { acknowledged: true },
+        { headers: authHeaders(batch) },
+      )
+    ).status,
+    200,
+  );
+  const recovery = await passwordChallenge();
+  denied(
+    await post(
+      'auth/recovery/use',
+      { code: first.response.body.codes[0] },
+      { headers: authHeaders(recovery) },
+    ),
+  );
+});
+test('legacy password-only rows and stale factor epochs never authorize, including rotation', async () => {
+  await owned();
+  const s = await login();
+  await pool.query(
+    'UPDATE cloudlane.sessions SET mfa_epoch=NULL,mfa_verified_at=NULL,authentication_method=NULL',
+  );
+  denied(
+    await call('auth/session', { headers: authHeaders(s) }),
+    401,
+    'SESSION_REQUIRED',
+  );
+  denied(
+    await post('auth/session/rotate', {}, { headers: authHeaders(s) }),
+    401,
+    'SESSION_REQUIRED',
+  );
+  const current = await login();
+  await pool.query('UPDATE cloudlane.mfa_factors SET auth_epoch=auth_epoch+1');
+  denied(
+    await call('auth/session', { headers: authHeaders(current) }),
+    401,
+    'SESSION_REQUIRED',
+  );
+});
+test('MFA endpoints retain HTTPS, exact Origin, no-query and duplicate-cookie boundaries and expose no secret retrieval', async () => {
+  await owned();
+  const c = await passwordChallenge();
+  for (const headers of [
+    { Origin: 'https://attacker.test' },
+    { 'X-Cloudlane-Request': null },
+  ])
+    denied(
+      await post(
+        'auth/mfa/enroll',
+        {},
+        { headers: { ...authHeaders(c), ...headers } },
+      ),
+      403,
+      'FORBIDDEN',
+    );
+  denied(
+    await post(
+      'auth/mfa/enroll',
+      {},
+      { plaintext: true, headers: authHeaders(c) },
+    ),
+    403,
+    'FORBIDDEN',
+  );
+  denied(
+    await post(
+      'auth/mfa/enroll?secret=forbidden',
+      {},
+      { headers: authHeaders(c) },
+    ),
+    403,
+    'FORBIDDEN',
+  );
+  denied(
+    await post(
+      'auth/mfa/enroll',
+      {},
+      { headers: { ...authHeaders(c), Cookie: c.cookie + '; ' + c.cookie } },
+    ),
+  );
+  for (const path of [
+    'auth/mfa/enroll',
+    'auth/recovery/codes',
+    'auth/mfa/secret',
+  ]) {
+    const response = await call(path, { headers: authHeaders(c) });
+    assert.ok(response.status >= 400);
+    assert.equal(response.body.secret, undefined);
+    assert.equal(response.body.codes, undefined);
+  }
+});
+test('MFA audit contains no secret, code, challenge credential or nonce', async () => {
+  const lease = await owned(),
+    batch = await enroll(await passwordChallenge());
+  const serialized = JSON.stringify(
+    (await pool.query('SELECT * FROM cloudlane.auth_audit')).rows,
+  );
+  for (const secret of [
+    owner.password,
+    lease.code,
+    authenticator,
+    value(batch.cookie),
+    batch.csrf,
+    ...recoveryCodes,
+  ])
+    assert.ok(!serialized.includes(secret));
+  assert.ok(serialized.includes('mfa_verify'));
+  assert.ok(serialized.includes('mfa_enroll'));
 });

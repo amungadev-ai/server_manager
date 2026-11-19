@@ -14,7 +14,7 @@ export interface AppliedMigration {
 export const migrationChecksum = (sql: string) =>
   createHash('sha256').update(sql).digest('hex');
 export function loadMigrations(): readonly Migration[] {
-  return ['0001_control_plane', '0002_owner_auth'].map((id) => ({
+  return ['0001_control_plane', '0002_owner_auth', '0003_mfa'].map((id) => ({
     id,
     sql: readFileSync(resolve(__dirname, `../../migrations/${id}.sql`), 'utf8'),
   }));

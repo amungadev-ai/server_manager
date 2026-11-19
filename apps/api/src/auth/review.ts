@@ -4,16 +4,22 @@ import {
   SessionResponseSchema,
   BootstrapResponseSchema,
   LogoutResponseSchema,
+  AuthChallengeResponseSchema,
+  RecoveryCodesResponseSchema,
+  MfaEnrollmentResponseSchema,
 } from '@cloudlane/contracts/api';
 import { OwnerSessionResolver } from '../common/authorization';
 import { ApiException } from '../common/errors';
 import { AuthStore, type SessionRecord } from './store';
 import { Passwords } from './passwords';
+import { MfaCrypto } from './mfa-crypto';
+import { MfaStore, type NewChallenge, type ProofResult } from './mfa-store';
 import {
   AuthBoundary,
   CSRF_HEADER,
   SESSION_COOKIE,
   SETUP_COOKIE,
+  CHALLENGE_COOKIE,
   clearCredential,
   readCredential,
   sameNonce,
@@ -26,15 +32,25 @@ const invalid = (): never => {
 export class OwnerAuthReview extends OwnerSessionResolver {
   readonly store: AuthStore;
   readonly boundary: AuthBoundary;
+  readonly mfa: MfaStore;
   readonly passwords = new Passwords();
   private readonly sessions = new WeakMap<Request, SessionRecord>();
 
-  constructor(pool: Pool, panelOrigin: string) {
+  constructor(
+    pool: Pool,
+    panelOrigin: string,
+    options: { mfaEncryptionKey?: Buffer } = {},
+  ) {
     super();
     this.store = new AuthStore(pool);
     this.boundary = new AuthBoundary(panelOrigin);
+    this.mfa = new MfaStore(
+      this.store,
+      new MfaCrypto(options.mfaEncryptionKey),
+    );
   }
   async prepare(): Promise<void> {
+    this.mfa.crypto.assertReady();
     await this.passwords.prepare();
   }
   private async run<T>(work: () => Promise<T>): Promise<T> {
@@ -59,6 +75,8 @@ export class OwnerAuthReview extends OwnerSessionResolver {
   private view(session: SessionRecord) {
     return SessionResponseSchema.parse({
       authenticated: true,
+      mfaVerified: true,
+      authenticationMethod: session.authentication_method,
       user: {
         id: session.user_id,
         email: session.email,
@@ -160,15 +178,138 @@ export class OwnerAuthReview extends OwnerSessionResolver {
         user?.password_hash ?? null,
         body.password,
       );
-      const session = await this.store.login(
+      const challenge = await this.mfa.beginLogin(
         user,
         verified,
         readCredential(request, SESSION_COOKIE),
         this.requestId(response),
       );
-      if (!session) return invalid();
-      setCredential(response, SESSION_COOKIE, session.credential, 43200);
-      return this.view(session.row);
+      if (!challenge) return invalid();
+      this.challengeCookie(response, challenge);
+      return AuthChallengeResponseSchema.parse({
+        state: challenge.stage,
+        csrfToken: challenge.csrf.toString('base64url'),
+        expiresAt: challenge.expiresAt.toISOString(),
+      });
+    });
+  }
+  private challengeCookie(response: Response, challenge: NewChallenge) {
+    setCredential(
+      response,
+      CHALLENGE_COOKIE,
+      challenge.credential,
+      Math.max(
+        1,
+        Math.floor((challenge.expiresAt.getTime() - Date.now()) / 1000),
+      ),
+    );
+  }
+  private proofView(response: Response, result: ProofResult | null) {
+    if (!result) return invalid();
+    if ('session' in result) {
+      clearCredential(response, CHALLENGE_COOKIE);
+      setCredential(response, SESSION_COOKIE, result.session.credential, 43200);
+      return this.view(result.session.row);
+    }
+    this.challengeCookie(response, result.challenge);
+    return RecoveryCodesResponseSchema.parse({
+      state: 'recovery_codes_required',
+      codes: result.codes,
+      csrfToken: result.challenge.csrf.toString('base64url'),
+      expiresAt: result.challenge.expiresAt.toISOString(),
+    });
+  }
+  private async challengeBudget(request: Request, purpose: 'mfa' | 'recovery') {
+    const credential = readCredential(request, CHALLENGE_COOKIE);
+    await this.store.budget(
+      purpose,
+      this.source(request),
+      credential ?? 'missing',
+    );
+    return credential;
+  }
+  async enroll(request: Request, response: Response) {
+    return this.run(async () => {
+      const credential = await this.challengeBudget(request, 'mfa');
+      const enrollment = await this.mfa.enroll(
+        credential,
+        request.headers[CSRF_HEADER],
+        this.requestId(response),
+      );
+      if (!enrollment) return invalid();
+      return MfaEnrollmentResponseSchema.parse(enrollment);
+    });
+  }
+  async verifyMfa(
+    request: Request,
+    response: Response,
+    body: { code: string },
+    enrollment = false,
+  ) {
+    return this.run(async () => {
+      const credential = await this.challengeBudget(request, 'mfa');
+      return this.proofView(
+        response,
+        await this.mfa.verify(
+          credential,
+          request.headers[CSRF_HEADER],
+          body.code,
+          enrollment,
+          this.requestId(response),
+        ),
+      );
+    });
+  }
+  async recover(request: Request, response: Response, body: { code: string }) {
+    return this.run(async () => {
+      const credential = await this.challengeBudget(request, 'recovery');
+      const session = await this.mfa.recover(
+        credential,
+        request.headers[CSRF_HEADER],
+        body.code,
+        this.requestId(response),
+      );
+      return this.proofView(response, session ? { session } : null);
+    });
+  }
+  async acknowledge(request: Request, response: Response) {
+    return this.run(async () => {
+      const credential = await this.challengeBudget(request, 'recovery');
+      const session = await this.mfa.acknowledge(
+        credential,
+        request.headers[CSRF_HEADER],
+        this.requestId(response),
+      );
+      return this.proofView(response, session ? { session } : null);
+    });
+  }
+  async regenerate(
+    request: Request,
+    response: Response,
+    body: { password: string; code: string },
+  ) {
+    return this.run(async () => {
+      const session = this.sessionRecord(request);
+      await this.store.budget(
+        'recovery',
+        this.source(request),
+        session.user_id,
+      );
+      const user = await this.store.findUser(session.email);
+      const verified = await this.passwords.verify(
+        user?.password_hash ?? null,
+        body.password,
+      );
+      const result = await this.mfa.regenerate(
+        session,
+        user,
+        verified,
+        body.code,
+        this.requestId(response),
+      );
+      if (!result) return invalid();
+      clearCredential(response, SESSION_COOKIE);
+      return this.proofView(response, result);
     });
   }
   async rotate(request: Request, response: Response) {

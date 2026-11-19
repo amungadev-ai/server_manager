@@ -82,6 +82,33 @@
         ],
         "type": "object"
       },
+      "AuthChallengeResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "csrfToken": {
+            "pattern": "^[A-Za-z0-9_-]{43}$",
+            "type": "string"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "mfa_setup_required",
+              "mfa_required"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "csrfToken",
+          "expiresAt"
+        ],
+        "type": "object"
+      },
       "BootstrapResponse": {
         "additionalProperties": false,
         "properties": {
@@ -774,6 +801,175 @@
         ],
         "type": "object"
       },
+      "MfaCodeRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "pattern": "^[0-9]{6}$",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "type": "object"
+      },
+      "MfaEnrollmentResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "expiresAt": {
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+            "type": "string"
+          },
+          "secret": {
+            "description": "Displayed once; do not log or persist in the browser.",
+            "pattern": "^[A-Z2-7]{32}$",
+            "type": "string"
+          },
+          "uri": {
+            "format": "starts_with",
+            "maxLength": 1024,
+            "pattern": "^otpauth:\\/\\/totp\\/.*",
+            "type": "string"
+          }
+        },
+        "required": [
+          "secret",
+          "uri",
+          "expiresAt"
+        ],
+        "type": "object"
+      },
+      "MfaProofResponse": {
+        "anyOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "authenticated": {
+                "enum": [
+                  true
+                ],
+                "type": "boolean"
+              },
+              "authenticationMethod": {
+                "enum": [
+                  "totp",
+                  "recovery"
+                ],
+                "type": "string"
+              },
+              "csrfToken": {
+                "pattern": "^[A-Za-z0-9_-]{43}$",
+                "type": "string"
+              },
+              "mfaVerified": {
+                "enum": [
+                  true
+                ],
+                "type": "boolean"
+              },
+              "user": {
+                "additionalProperties": false,
+                "properties": {
+                  "displayName": {
+                    "maxLength": 80,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "email": {
+                    "format": "email",
+                    "maxLength": 254,
+                    "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+                    "type": "string"
+                  },
+                  "id": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                    "type": "string"
+                  },
+                  "role": {
+                    "enum": [
+                      "owner"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "email",
+                  "displayName",
+                  "role"
+                ],
+                "type": "object"
+              },
+              "workspace": {
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                    "type": "string"
+                  },
+                  "name": {
+                    "maxLength": 80,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "authenticated",
+              "user",
+              "workspace"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "codes": {
+                "items": {
+                  "pattern": "^[0-9a-fA-F]{4}(?:-[0-9a-fA-F]{4}){7}$",
+                  "type": "string"
+                },
+                "maxItems": 10,
+                "minItems": 10,
+                "type": "array"
+              },
+              "csrfToken": {
+                "pattern": "^[A-Za-z0-9_-]{43}$",
+                "type": "string"
+              },
+              "expiresAt": {
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                "type": "string"
+              },
+              "state": {
+                "enum": [
+                  "recovery_codes_required"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "state",
+              "csrfToken",
+              "expiresAt",
+              "codes"
+            ],
+            "type": "object"
+          }
+        ]
+      },
       "OperationAccepted": {
         "additionalProperties": false,
         "properties": {
@@ -1227,6 +1423,92 @@
         ],
         "type": "object"
       },
+      "RecoveryAcknowledgeRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "acknowledged": {
+            "enum": [
+              true
+            ],
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "acknowledged"
+        ],
+        "type": "object"
+      },
+      "RecoveryCodesResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "codes": {
+            "items": {
+              "pattern": "^[0-9a-fA-F]{4}(?:-[0-9a-fA-F]{4}){7}$",
+              "type": "string"
+            },
+            "maxItems": 10,
+            "minItems": 10,
+            "type": "array"
+          },
+          "csrfToken": {
+            "pattern": "^[A-Za-z0-9_-]{43}$",
+            "type": "string"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "recovery_codes_required"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "csrfToken",
+          "expiresAt",
+          "codes"
+        ],
+        "type": "object"
+      },
+      "RecoveryRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "pattern": "^[0-9a-fA-F]{4}(?:-[0-9a-fA-F]{4}){7}$",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "type": "object"
+      },
+      "RegenerateRecoveryRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "pattern": "^[0-9]{6}$",
+            "type": "string",
+            "writeOnly": true
+          },
+          "password": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "password",
+          "code"
+        ],
+        "type": "object"
+      },
       "ResourceId": {
         "format": "uuid",
         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
@@ -1255,9 +1537,22 @@
             ],
             "type": "boolean"
           },
+          "authenticationMethod": {
+            "enum": [
+              "totp",
+              "recovery"
+            ],
+            "type": "string"
+          },
           "csrfToken": {
             "pattern": "^[A-Za-z0-9_-]{43}$",
             "type": "string"
+          },
+          "mfaVerified": {
+            "enum": [
+              true
+            ],
+            "type": "boolean"
           },
           "user": {
             "additionalProperties": false,
@@ -1341,7 +1636,7 @@
   "paths": {
     "/api/v1/auth/login": {
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "login",
         "parameters": [],
         "requestBody": {
@@ -1359,7 +1654,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SessionResponse"
+                  "$ref": "#/components/schemas/AuthChallengeResponse"
                 }
               }
             },
@@ -1406,7 +1701,7 @@
             "description": "Result for valid requests after required authorization. No operation is performed."
           }
         },
-        "summary": "Owner login",
+        "summary": "Owner password challenge",
         "tags": [
           "Authentication — unavailable"
         ],
@@ -1417,7 +1712,7 @@
     },
     "/api/v1/auth/logout": {
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "logout",
         "parameters": [],
         "requestBody": {
@@ -1526,9 +1821,500 @@
         "x-cloudlane-review-candidate": true
       }
     },
+    "/api/v1/auth/mfa/confirm": {
+      "post": {
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "operationId": "confirmMfa",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaCodeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MfaProofResponse"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON body too large."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON content type required."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          }
+        },
+        "summary": "Confirm authenticator and receive recovery codes once",
+        "tags": [
+          "Authentication — unavailable"
+        ],
+        "x-cloudlane-access": "public",
+        "x-cloudlane-implementation": "unavailable",
+        "x-cloudlane-review-candidate": true
+      }
+    },
+    "/api/v1/auth/mfa/enroll": {
+      "post": {
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "operationId": "enrollMfa",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmptyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MfaEnrollmentResponse"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON body too large."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON content type required."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          }
+        },
+        "summary": "Begin mandatory authenticator enrollment",
+        "tags": [
+          "Authentication — unavailable"
+        ],
+        "x-cloudlane-access": "public",
+        "x-cloudlane-implementation": "unavailable",
+        "x-cloudlane-review-candidate": true
+      }
+    },
+    "/api/v1/auth/mfa/verify": {
+      "post": {
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "operationId": "verifyMfa",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaCodeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MfaProofResponse"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON body too large."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON content type required."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          }
+        },
+        "summary": "Verify authenticator challenge",
+        "tags": [
+          "Authentication — unavailable"
+        ],
+        "x-cloudlane-access": "public",
+        "x-cloudlane-implementation": "unavailable",
+        "x-cloudlane-review-candidate": true
+      }
+    },
+    "/api/v1/auth/recovery/acknowledge": {
+      "post": {
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "operationId": "acknowledgeRecoveryCodes",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoveryAcknowledgeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON body too large."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON content type required."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          }
+        },
+        "summary": "Acknowledge saved recovery codes before owner access",
+        "tags": [
+          "Authentication — unavailable"
+        ],
+        "x-cloudlane-access": "public",
+        "x-cloudlane-implementation": "unavailable",
+        "x-cloudlane-review-candidate": true
+      }
+    },
+    "/api/v1/auth/recovery/regenerate": {
+      "post": {
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "operationId": "regenerateRecoveryCodes",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegenerateRecoveryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecoveryCodesResponse"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Owner session required; current default for protected operations."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Actor or route policy denied."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON body too large."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON content type required."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Session verifier unavailable; access denied."
+          }
+        },
+        "security": [
+          {
+            "ownerSession": []
+          }
+        ],
+        "summary": "Replace codes after password and fresh TOTP step-up",
+        "tags": [
+          "Authentication — unavailable"
+        ],
+        "x-cloudlane-access": "owner",
+        "x-cloudlane-implementation": "unavailable",
+        "x-cloudlane-review-candidate": true
+      }
+    },
+    "/api/v1/auth/recovery/use": {
+      "post": {
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "operationId": "useRecoveryCode",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoveryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Planned success response; not emitted by the current scaffold."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON body too large."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "JSON content type required."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          }
+        },
+        "summary": "Use one recovery code after password verification",
+        "tags": [
+          "Authentication — unavailable"
+        ],
+        "x-cloudlane-access": "public",
+        "x-cloudlane-implementation": "unavailable",
+        "x-cloudlane-review-candidate": true
+      }
+    },
     "/api/v1/auth/session": {
       "get": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "getSession",
         "parameters": [],
         "responses": {
@@ -1609,7 +2395,7 @@
     },
     "/api/v1/auth/session/rotate": {
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "rotateSession",
         "parameters": [],
         "requestBody": {
@@ -1720,7 +2506,7 @@
     },
     "/api/v1/bootstrap/claim": {
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "claimInstallation",
         "parameters": [],
         "requestBody": {
@@ -1796,7 +2582,7 @@
     },
     "/api/v1/bootstrap/owner": {
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "createOwner",
         "parameters": [],
         "requestBody": {

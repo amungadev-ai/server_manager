@@ -10,8 +10,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Owner login
-         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.
+         * Owner password challenge
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["login"];
         delete?: never;
@@ -31,9 +31,129 @@ export interface paths {
         put?: never;
         /**
          * End owner session
-         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["logout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/mfa/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Confirm authenticator and receive recovery codes once
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         */
+        post: operations["confirmMfa"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/mfa/enroll": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Begin mandatory authenticator enrollment
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         */
+        post: operations["enrollMfa"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/mfa/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Verify authenticator challenge
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         */
+        post: operations["verifyMfa"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/recovery/acknowledge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Acknowledge saved recovery codes before owner access
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         */
+        post: operations["acknowledgeRecoveryCodes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/recovery/regenerate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Replace codes after password and fresh TOTP step-up
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         */
+        post: operations["regenerateRecoveryCodes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/recovery/use": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Use one recovery code after password verification
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         */
+        post: operations["useRecoveryCode"];
         delete?: never;
         options?: never;
         head?: never;
@@ -49,7 +169,7 @@ export interface paths {
         };
         /**
          * Owner session
-         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         get: operations["getSession"];
         put?: never;
@@ -71,7 +191,7 @@ export interface paths {
         put?: never;
         /**
          * Rotate owner session and CSRF nonce (review candidate)
-         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["rotateSession"];
         delete?: never;
@@ -91,7 +211,7 @@ export interface paths {
         put?: never;
         /**
          * Claim installation
-         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["claimInstallation"];
         delete?: never;
@@ -111,7 +231,7 @@ export interface paths {
         put?: never;
         /**
          * Create initial owner
-         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["createOwner"];
         delete?: never;
@@ -387,6 +507,13 @@ export interface components {
                 requestId: string;
             };
         };
+        AuthChallengeResponse: {
+            csrfToken: string;
+            /** Format: date-time */
+            expiresAt: string;
+            /** @enum {string} */
+            state: "mfa_setup_required" | "mfa_required";
+        };
         BootstrapResponse: {
             csrfToken?: string;
             /** @enum {string} */
@@ -553,6 +680,47 @@ export interface components {
             /** @enum {boolean} */
             signedOut: true;
         };
+        MfaCodeRequest: {
+            code: string;
+        };
+        MfaEnrollmentResponse: {
+            /** Format: date-time */
+            expiresAt: string;
+            /** @description Displayed once; do not log or persist in the browser. */
+            secret: string;
+            /** Format: starts_with */
+            uri: string;
+        };
+        MfaProofResponse: {
+            /** @enum {boolean} */
+            authenticated: true;
+            /** @enum {string} */
+            authenticationMethod?: "totp" | "recovery";
+            csrfToken?: string;
+            /** @enum {boolean} */
+            mfaVerified?: true;
+            user: {
+                displayName: string;
+                /** Format: email */
+                email: string;
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                role: "owner";
+            };
+            workspace: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+            };
+        } | {
+            codes: string[];
+            csrfToken: string;
+            /** Format: date-time */
+            expiresAt: string;
+            /** @enum {string} */
+            state: "recovery_codes_required";
+        };
         OperationAccepted: {
             /** Format: uuid */
             operationId: string;
@@ -654,6 +822,25 @@ export interface components {
             /** @enum {string} */
             status: "not_ready";
         };
+        RecoveryAcknowledgeRequest: {
+            /** @enum {boolean} */
+            acknowledged: true;
+        };
+        RecoveryCodesResponse: {
+            codes: string[];
+            csrfToken: string;
+            /** Format: date-time */
+            expiresAt: string;
+            /** @enum {string} */
+            state: "recovery_codes_required";
+        };
+        RecoveryRequest: {
+            code: string;
+        };
+        RegenerateRecoveryRequest: {
+            code: string;
+            password: string;
+        };
         /** Format: uuid */
         ResourceId: string;
         RollbackRequest: {
@@ -663,7 +850,11 @@ export interface components {
         SessionResponse: {
             /** @enum {boolean} */
             authenticated: true;
+            /** @enum {string} */
+            authenticationMethod?: "totp" | "recovery";
             csrfToken?: string;
+            /** @enum {boolean} */
+            mfaVerified?: true;
             user: {
                 displayName: string;
                 /** Format: email */
@@ -707,7 +898,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SessionResponse"];
+                    "application/json": components["schemas"]["AuthChallengeResponse"];
                 };
             };
             /** @description Invalid request or JSON. */
@@ -826,6 +1017,393 @@ export interface operations {
             };
             /** @description Session verifier unavailable; access denied. */
             503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+        };
+    };
+    confirmMfa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaCodeRequest"];
+            };
+        };
+        responses: {
+            /** @description Planned success response; not emitted by the current scaffold. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MfaProofResponse"];
+                };
+            };
+            /** @description Invalid request or JSON. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description JSON body too large. */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description JSON content type required. */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Result for valid requests after required authorization. No operation is performed. */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+        };
+    };
+    enrollMfa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EmptyRequest"];
+            };
+        };
+        responses: {
+            /** @description Planned success response; not emitted by the current scaffold. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MfaEnrollmentResponse"];
+                };
+            };
+            /** @description Invalid request or JSON. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description JSON body too large. */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description JSON content type required. */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Result for valid requests after required authorization. No operation is performed. */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+        };
+    };
+    verifyMfa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaCodeRequest"];
+            };
+        };
+        responses: {
+            /** @description Planned success response; not emitted by the current scaffold. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MfaProofResponse"];
+                };
+            };
+            /** @description Invalid request or JSON. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description JSON body too large. */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description JSON content type required. */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Result for valid requests after required authorization. No operation is performed. */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+        };
+    };
+    acknowledgeRecoveryCodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecoveryAcknowledgeRequest"];
+            };
+        };
+        responses: {
+            /** @description Planned success response; not emitted by the current scaffold. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionResponse"];
+                };
+            };
+            /** @description Invalid request or JSON. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description JSON body too large. */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description JSON content type required. */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Result for valid requests after required authorization. No operation is performed. */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+        };
+    };
+    regenerateRecoveryCodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegenerateRecoveryRequest"];
+            };
+        };
+        responses: {
+            /** @description Planned success response; not emitted by the current scaffold. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecoveryCodesResponse"];
+                };
+            };
+            /** @description Invalid request or JSON. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Owner session required; current default for protected operations. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Actor or route policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description JSON body too large. */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description JSON content type required. */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Result for valid requests after required authorization. No operation is performed. */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Session verifier unavailable; access denied. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+        };
+    };
+    useRecoveryCode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecoveryRequest"];
+            };
+        };
+        responses: {
+            /** @description Planned success response; not emitted by the current scaffold. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionResponse"];
+                };
+            };
+            /** @description Invalid request or JSON. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description JSON body too large. */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description JSON content type required. */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Result for valid requests after required authorization. No operation is performed. */
+            501: {
                 headers: {
                     [name: string]: unknown;
                 };

@@ -73,6 +73,24 @@ test('readiness is a safe 503 while dependencies and authentication are unconfig
   });
   assert.equal(response.headers.get('set-cookie'), null);
 });
+test('normal entry point keeps all MFA and recovery operations disabled', async () => {
+  for (const [path, body] of [
+    ['auth/mfa/enroll', {}],
+    ['auth/mfa/confirm', { code: '123456' }],
+    ['auth/mfa/verify', { code: '123456' }],
+    ['auth/recovery/use', { code: 'aaaa-aaaa-aaaa-aaaa-aaaa-aaaa-aaaa-aaaa' }],
+    ['auth/recovery/acknowledge', { acknowledged: true }],
+  ])
+    await expectError(await post(path, body), 501, 'NOT_IMPLEMENTED');
+  await expectError(
+    await post('auth/recovery/regenerate', {
+      password: 'synthetic',
+      code: '123456',
+    }),
+    401,
+    'SESSION_REQUIRED',
+  );
+});
 test('public owner-setup and login declarations cannot report operational success', async () => {
   for (const [path, body] of [
     ['bootstrap/claim', { code: 'private-test-claim' }],

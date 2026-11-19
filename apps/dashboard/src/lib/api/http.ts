@@ -35,7 +35,7 @@ export class InfrastructureError extends Error {
     this.requestId = requestId;
   }
 }
-async function readJson(
+export async function readJson(
   response: Response,
   signal?: AbortSignal,
 ): Promise<unknown> {

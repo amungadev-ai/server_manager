@@ -162,12 +162,55 @@ export const BootstrapResponseSchema = z.strictObject({
     .regex(/^[A-Za-z0-9_-]{43}$/)
     .optional(),
 });
+const CsrfTokenSchema = z.string().regex(/^[A-Za-z0-9_-]{43}$/);
+export const AuthChallengeResponseSchema = z.strictObject({
+  state: z.enum(['mfa_setup_required', 'mfa_required']),
+  csrfToken: CsrfTokenSchema,
+  expiresAt: TimestampSchema,
+});
+export const MfaCodeRequestSchema = z.strictObject({
+  code: z
+    .string()
+    .regex(/^[0-9]{6}$/)
+    .meta({ writeOnly: true }),
+});
+export const MfaEnrollmentResponseSchema = z.strictObject({
+  secret: z
+    .string()
+    .regex(/^[A-Z2-7]{32}$/)
+    .meta({
+      description: 'Displayed once; do not log or persist in the browser.',
+    }),
+  uri: z.string().max(1024).startsWith('otpauth://totp/'),
+  expiresAt: TimestampSchema,
+});
+export const RecoveryCodeSchema = z
+  .string()
+  .regex(/^[0-9a-fA-F]{4}(?:-[0-9a-fA-F]{4}){7}$/);
+export const RecoveryRequestSchema = z.strictObject({
+  code: RecoveryCodeSchema.meta({ writeOnly: true }),
+});
+export const RecoveryCodesResponseSchema = z.strictObject({
+  state: z.literal('recovery_codes_required'),
+  csrfToken: CsrfTokenSchema,
+  expiresAt: TimestampSchema,
+  codes: z.array(RecoveryCodeSchema).length(10),
+});
+export const RecoveryAcknowledgeRequestSchema = z.strictObject({
+  acknowledged: z.literal(true),
+});
+export const RegenerateRecoveryRequestSchema = z.strictObject({
+  password: z.string().min(1).max(1024).meta({ writeOnly: true }),
+  code: MfaCodeRequestSchema.shape.code,
+});
 export const EmptyRequestSchema = z.strictObject({});
 export const LogoutResponseSchema = z.strictObject({
   signedOut: z.literal(true),
 });
 export const SessionResponseSchema = z.strictObject({
   authenticated: z.literal(true),
+  mfaVerified: z.literal(true).optional(),
+  authenticationMethod: z.enum(['totp', 'recovery']).optional(),
   csrfToken: z
     .string()
     .regex(/^[A-Za-z0-9_-]{43}$/)
@@ -183,6 +226,11 @@ export const SessionResponseSchema = z.strictObject({
     name: z.string().min(1).max(80),
   }),
 });
+
+export const MfaProofResponseSchema = z.union([
+  SessionResponseSchema,
+  RecoveryCodesResponseSchema,
+]);
 
 // ASCII/Punycode hostname; ownership, public-suffix handling and DNS are separate checks.
 const DomainNameSchema = z
@@ -338,6 +386,14 @@ export const httpSchemas = {
   PaginationQuery: PaginationQuerySchema,
   ProjectListResponse: ProjectListResponseSchema,
   LoginRequest: LoginRequestSchema,
+  AuthChallengeResponse: AuthChallengeResponseSchema,
+  MfaCodeRequest: MfaCodeRequestSchema,
+  MfaEnrollmentResponse: MfaEnrollmentResponseSchema,
+  MfaProofResponse: MfaProofResponseSchema,
+  RecoveryRequest: RecoveryRequestSchema,
+  RecoveryCodesResponse: RecoveryCodesResponseSchema,
+  RecoveryAcknowledgeRequest: RecoveryAcknowledgeRequestSchema,
+  RegenerateRecoveryRequest: RegenerateRecoveryRequestSchema,
   ClaimRequest: ClaimRequestSchema,
   CreateOwnerRequest: CreateOwnerRequestSchema,
   BootstrapResponse: BootstrapResponseSchema,

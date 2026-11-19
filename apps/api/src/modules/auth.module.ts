@@ -21,6 +21,10 @@ import {
   CreateOwnerRequestSchema,
   EmptyRequestSchema,
   LoginRequestSchema,
+  MfaCodeRequestSchema,
+  RecoveryRequestSchema,
+  RecoveryAcknowledgeRequestSchema,
+  RegenerateRecoveryRequestSchema,
 } from '@cloudlane/contracts/api';
 import { RouteContract } from '../common/documentation';
 import { unavailable } from '../common/errors';
@@ -58,7 +62,7 @@ class AuthController {
   }
 
   @Post('auth/login')
-  @RouteContract('login', 'Owner login', 'SessionResponse', {
+  @RouteContract('login', 'Owner password challenge', 'AuthChallengeResponse', {
     body: 'LoginRequest',
     access: 'public',
     review: true,
@@ -70,6 +74,92 @@ class AuthController {
     body: { email: string; password: string },
   ) {
     return this.runtime().login(request, response, body);
+  }
+
+  @Post('auth/mfa/enroll')
+  @RouteContract(
+    'enrollMfa',
+    'Begin mandatory authenticator enrollment',
+    'MfaEnrollmentResponse',
+    { body: 'EmptyRequest', access: 'public', review: true },
+  )
+  enroll(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+    @Body(new SchemaPipe(EmptyRequestSchema)) _body: unknown,
+  ) {
+    return this.runtime().enroll(request, response);
+  }
+  @Post('auth/mfa/confirm')
+  @RouteContract(
+    'confirmMfa',
+    'Confirm authenticator and receive recovery codes once',
+    'MfaProofResponse',
+    { body: 'MfaCodeRequest', access: 'public', review: true },
+  )
+  confirm(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+    @Body(new SchemaPipe(MfaCodeRequestSchema)) body: { code: string },
+  ) {
+    return this.runtime().verifyMfa(request, response, body, true);
+  }
+  @Post('auth/mfa/verify')
+  @RouteContract(
+    'verifyMfa',
+    'Verify authenticator challenge',
+    'MfaProofResponse',
+    { body: 'MfaCodeRequest', access: 'public', review: true },
+  )
+  verify(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+    @Body(new SchemaPipe(MfaCodeRequestSchema)) body: { code: string },
+  ) {
+    return this.runtime().verifyMfa(request, response, body);
+  }
+  @Post('auth/recovery/use')
+  @RouteContract(
+    'useRecoveryCode',
+    'Use one recovery code after password verification',
+    'SessionResponse',
+    { body: 'RecoveryRequest', access: 'public', review: true },
+  )
+  recover(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+    @Body(new SchemaPipe(RecoveryRequestSchema)) body: { code: string },
+  ) {
+    return this.runtime().recover(request, response, body);
+  }
+  @Post('auth/recovery/acknowledge')
+  @RouteContract(
+    'acknowledgeRecoveryCodes',
+    'Acknowledge saved recovery codes before owner access',
+    'SessionResponse',
+    { body: 'RecoveryAcknowledgeRequest', access: 'public', review: true },
+  )
+  acknowledge(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+    @Body(new SchemaPipe(RecoveryAcknowledgeRequestSchema)) _body: unknown,
+  ) {
+    return this.runtime().acknowledge(request, response);
+  }
+  @Post('auth/recovery/regenerate')
+  @RouteContract(
+    'regenerateRecoveryCodes',
+    'Replace codes after password and fresh TOTP step-up',
+    'RecoveryCodesResponse',
+    { body: 'RegenerateRecoveryRequest', review: true },
+  )
+  regenerate(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+    @Body(new SchemaPipe(RegenerateRecoveryRequestSchema))
+    body: { password: string; code: string },
+  ) {
+    return this.runtime().regenerate(request, response, body);
   }
 
   @Post('auth/logout')

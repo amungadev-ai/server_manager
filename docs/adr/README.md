@@ -15,3 +15,5 @@ Locked product decisions remain in `docs/13-ADR_AND_OPEN_DECISIONS.md`. This dir
 New decisions use `TEMPLATE.md`. Record context, scope, alternatives, compatibility, security/resource effects and reproducible acceptance evidence. Changes to a locked product decision need an explicit product-owner decision. Security-sensitive protocols need the designated security review and negative-path tests before becoming operational.
 
 The task claimant records the implementation. A maintainer checks integration evidence. A separate reviewer is required before declaring security-sensitive work production-ready. No individual reviewer or GitHub approval is invented when one has not been configured.
+
+| [ADR-020: MFA, recovery and auth screens](020-mfa-recovery-and-auth-ui.md) | Proposed development candidate; mandatory second factor, production activation disabled | CL-034, CL-035 |
