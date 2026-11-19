@@ -10,17 +10,37 @@ import { PlatformModule } from './modules/platform.module';
 import { AuthContractModule } from './modules/auth.module';
 import { ResourceContractModule } from './modules/resources.module';
 import { createOpenApiDocument } from './openapi';
+import { AuthorizationModule } from './common/authorization';
+import { DatabaseModule, PlatformDatabase } from './database/database';
 
 @Module({
-  imports: [PlatformModule, AuthContractModule, ResourceContractModule],
+  imports: [
+    AuthorizationModule,
+    PlatformModule,
+    AuthContractModule,
+    ResourceContractModule,
+  ],
 })
 class AppModule {}
 
-export async function createApp(options: { documentation?: boolean } = {}) {
-  const app = await NestFactory.create(AppModule, {
-    logger: false,
-    bodyParser: false,
-  });
+export async function createApp(
+  options: {
+    documentation?: boolean;
+    database?: PlatformDatabase;
+  } = {},
+) {
+  const app = await NestFactory.create(
+    {
+      module: AppModule,
+      imports: [
+        DatabaseModule.configure(options.database ?? new PlatformDatabase()),
+      ],
+    },
+    {
+      logger: false,
+      bodyParser: false,
+    },
+  );
   app.setGlobalPrefix(API_PREFIX.slice(1));
   app.use((_request: Request, response: Response, next: NextFunction) => {
     response.setHeader('X-Request-Id', randomUUID());
@@ -31,7 +51,10 @@ export async function createApp(options: { documentation?: boolean } = {}) {
   app.use(
     API_PREFIX,
     (request: Request, _response: Response, next: NextFunction) => {
-      if (request.method === 'POST' && !request.is('application/json'))
+      if (
+        ['POST', 'PUT', 'PATCH'].includes(request.method) &&
+        !request.is('application/json')
+      )
         return next(new ApiException(415, 'UNSUPPORTED_MEDIA_TYPE'));
       next();
     },

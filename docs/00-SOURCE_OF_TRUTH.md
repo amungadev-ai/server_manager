@@ -22,8 +22,8 @@
 | Asset | Truthful state |
 | --- | --- |
 | Cloudlane v1.13 standalone HTML | Interactive localStorage UI simulation, tested for major screen navigation |
-| SvelteKit dashboard | Static foundation and read-only preview implemented; full visual/behavioral parity pending |
-| NestJS API, PostgreSQL migrations, pg-boss | API liveness/status and validated draft contracts implemented; PostgreSQL/pg-boss not implemented |
+| SvelteKit dashboard | Prototype parity corrected in PR #3; 40 direct screenshot comparisons and 32 browser cases pass. Resource actions remain memory-only simulation |
+| NestJS API, PostgreSQL migrations, pg-boss | CL-030/031 add default-deny API guards, readiness and transactional PostgreSQL schema; exact checks in the batch evidence. Login, resource CRUD and pg-boss remain unavailable |
 | Go agent and Docker provisioning | Not implemented yet |
 | Installer and first-owner flow | Documented proposal, not implemented |
 | Caddy public IP HTTPS / DNS / certificates | Planned and subject to live integration tests |
@@ -56,3 +56,7 @@ Agents must not copy the HTML's localStorage demo data persistence, fake credent
 ## Current implementation references
 
 The initial pack inventory has been updated for the repository foundation. Exact progress/evidence lives in `tasks/progress/CL-001.md`, `CL-002.md` and `CL-003.md`. Package boundaries/review process: `docs/PACKAGE_BOUNDARIES.md` and `docs/adr/README.md`. Generated HTTP/agent schemas: `packages/contracts/`. Schema availability does not implement authentication, resource persistence or host operations. Only the attached consolidated guide and prototype were supplied; referenced historical blueprint files are not present and their contents have not been invented.
+
+## API and persistence development batch
+
+[CL-030/031 evidence](evidence/API_PERSISTENCE_BATCH.md) and [ADR-018](adr/018-api-persistence-foundations.md) describe the bounded API guard/database foundation in PR #4, stacked on the tested prototype conversion. These are development changes pending their recorded checks/review; no operational authentication, owner-claim exchange, installer or production service is implied. Canonical task records and PR checks identify current evidence.

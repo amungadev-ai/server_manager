@@ -7,6 +7,7 @@ import {
   ApiParam,
   ApiQuery,
   ApiResponse,
+  ApiCookieAuth,
 } from '@nestjs/swagger';
 import { z } from 'zod';
 import {
@@ -16,6 +17,7 @@ import {
 } from '@cloudlane/contracts/api';
 import { IdempotencyKeySchema, ResourceIdSchema } from '@cloudlane/contracts';
 import type { SchemaObject } from '@nestjs/swagger';
+import { OwnerRoute, PublicRoute } from './authorization';
 
 export const ref = (name: HttpSchemaName) => ({
   $ref: `#/components/schemas/${name}`,
@@ -29,21 +31,46 @@ export function RouteContract(
     body?: HttpSchemaName;
     status?: number;
     mutation?: boolean;
+    access?: 'public' | 'owner';
   } = {},
 ) {
   const implemented = options.implemented === true;
+  const ownerOnly = options.access !== 'public';
   return applyDecorators(
+    ownerOnly ? OwnerRoute() : PublicRoute(),
     ApiOperation({
       operationId,
       summary,
       description: implemented
         ? 'Implemented read-only platform endpoint.'
-        : 'DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.',
+        : `DECLARED, UNAVAILABLE: ${ownerOnly ? 'requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501.' : 'Validates request shape and returns 501.'} The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.`,
     }),
     ApiExtension(
       'x-cloudlane-implementation',
       implemented ? 'implemented' : 'unavailable',
     ),
+    ApiExtension('x-cloudlane-access', ownerOnly ? 'owner' : 'public'),
+    ...(ownerOnly
+      ? [
+          ApiCookieAuth('ownerSession'),
+          ApiResponse({
+            status: 401,
+            description:
+              'Owner session required; current default for protected operations.',
+            schema: ref('ApiErrorEnvelope'),
+          }),
+          ApiResponse({
+            status: 403,
+            description: 'Actor or route policy denied.',
+            schema: ref('ApiErrorEnvelope'),
+          }),
+          ApiResponse({
+            status: 503,
+            description: 'Session verifier unavailable; access denied.',
+            schema: ref('ApiErrorEnvelope'),
+          }),
+        ]
+      : []),
     ApiResponse({
       status: options.status ?? 200,
       description: implemented
@@ -61,7 +88,7 @@ export function RouteContract(
           ApiResponse({
             status: 501,
             description:
-              'Current result for valid requests. No operation is performed.',
+              'Result for valid requests after required authorization. No operation is performed.',
             schema: ref('ApiErrorEnvelope'),
           }),
         ]

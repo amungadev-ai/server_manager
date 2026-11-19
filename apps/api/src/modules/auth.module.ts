@@ -22,6 +22,7 @@ class AuthController {
   @Post('auth/login')
   @RouteContract('login', 'Owner login', 'SessionResponse', {
     body: 'LoginRequest',
+    access: 'public',
   })
   login(@Body(new SchemaPipe(LoginRequestSchema)) _body: unknown) {
     return unavailable();
@@ -40,7 +41,7 @@ class AuthController {
     'claimInstallation',
     'Claim installation',
     'BootstrapResponse',
-    { body: 'ClaimRequest' },
+    { body: 'ClaimRequest', access: 'public' },
   )
   claim(@Body(new SchemaPipe(ClaimRequestSchema)) _body: unknown) {
     return unavailable();
@@ -49,6 +50,7 @@ class AuthController {
   @Post('bootstrap/owner')
   @RouteContract('createOwner', 'Create initial owner', 'BootstrapResponse', {
     body: 'CreateOwnerRequest',
+    access: 'public',
   })
   owner(@Body(new SchemaPipe(CreateOwnerRequestSchema)) _body: unknown) {
     return unavailable();

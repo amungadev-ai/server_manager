@@ -33,14 +33,14 @@ export function validateWorkflow(source) {
     'Workflow permissions must be contents:read only',
   );
   const jobs = workflow.jobs ?? {};
-  for (const job of ['progress', 'verify', 'e2e', 'required'])
+  for (const job of ['progress', 'verify', 'postgres', 'e2e', 'required'])
     fail(!!jobs[job], `Missing ${job} job`);
   fail(
     jobs.required?.if === '${{ always() }}',
     'Required gate must always run',
   );
   fail(
-    ['progress', 'verify', 'e2e'].every((name) =>
+    ['progress', 'verify', 'postgres', 'e2e'].every((name) =>
       jobs.required?.needs?.includes(name),
     ),
     'Required gate must depend on every required job',
@@ -53,6 +53,28 @@ export function validateWorkflow(source) {
   fail(
     jobs.e2e?.strategy?.['fail-fast'] === false,
     'Both browser projects must collect their results',
+  );
+  fail(
+    /^postgres:18\.1@sha256:[a-f0-9]{64}$/.test(
+      jobs.postgres?.services?.postgres?.image ?? '',
+    ),
+    'PostgreSQL tests require a versioned, digest-pinned real database service',
+  );
+  fail(
+    jobs.postgres?.needs === 'progress' && !jobs.postgres?.if,
+    'PostgreSQL integration must run after progress without an optional condition',
+  );
+  const databaseTest = jobs.postgres?.steps?.find(
+    (step) =>
+      step.run === 'node scripts/ci-step.mjs postgres npm run test:postgres',
+  );
+  fail(
+    databaseTest?.env?.CLOUDLANE_POSTGRES_TESTS === '1' &&
+      databaseTest?.env?.CLOUDLANE_TEST_DATABASE_URL?.endsWith(
+        '@127.0.0.1:5432/cloudlane_ci',
+      ) &&
+      !databaseTest?.if,
+    'Real PostgreSQL tests require explicit disposable-database opt-in and cannot be skipped',
   );
   fail(
     jobs.verify?.outputs?.fixture_artifact_id ===

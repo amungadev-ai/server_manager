@@ -8,7 +8,17 @@ export function createOpenApiDocument(app: INestApplication) {
     .setTitle('Cloudlane API')
     .setVersion(CONTRACT_VERSION)
     .setDescription(
-      'Development contract. Only health and unconfigured installation status are implemented. All other documented operations validate shape and return 501. Success response schemas are drafts, not evidence of operational authentication or infrastructure. The same-origin API is served by NestJS on the VPS, not by the static preview host.',
+      'Development contract. Public liveness, dependency readiness and unconfigured installation status are implemented. Readiness remains 503 until authentication is implemented, even when the PostgreSQL schema is current. Protected operations require an owner session; the default resolver denies every session until CL-033. Anonymous protected requests return 401 before shape validation. Public login/bootstrap declarations return 501 for valid requests. Success schemas and the cookie scheme are drafts, not evidence of operational authentication or infrastructure. The same-origin API runs on the VPS, not the static preview host.',
+    )
+    .addCookieAuth(
+      '__Host-cloudlane_session',
+      {
+        type: 'apiKey',
+        in: 'cookie',
+        description:
+          'Proposed owner cookie; this batch does not issue or accept sessions.',
+      },
+      'ownerSession',
     )
     .addServer('/')
     .build();

@@ -34,7 +34,9 @@
     "test:e2e:prepare": "node scripts/prepare-e2e.mjs",
     "test:e2e:list": "node scripts/run-browser-tests.mjs --list --reporter=list",
     "test:e2e:ci": "node scripts/run-browser-tests.mjs",
-    "test:e2e": "npm run test:e2e:prepare && node scripts/run-browser-tests.mjs"
+    "test:e2e": "npm run test:e2e:prepare && node scripts/run-browser-tests.mjs",
+    "db:migrate": "npm run build:api && npm run db:migrate --workspace @cloudlane/api",
+    "test:postgres": "npm run build:api && node scripts/run-postgres-tests.mjs"
   },
   "devDependencies": {
     "typescript": "6.0.3",

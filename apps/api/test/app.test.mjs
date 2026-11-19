@@ -6,9 +6,17 @@ import {
   ApiErrorEnvelopeSchema,
   HealthResponseSchema,
   InstallationStatusSchema,
+  ReadinessResponseSchema,
+  CreateProjectRequestSchema,
+  CreateDomainRequestSchema,
+  CreateDeploymentRequestSchema,
+  PaginationQuerySchema,
 } from '@cloudlane/contracts/api';
 import { generateContracts } from '../../../tools/contract-generator/generate.mjs';
 const { createApp } = createRequire(import.meta.url)('../dist/app.js');
+const { SchemaPipe } = createRequire(import.meta.url)(
+  '../dist/common/schema.pipe.js',
+);
 let app, origin;
 before(async () => {
   app = await createApp();
@@ -54,10 +62,19 @@ test('installation status is public-safe and contains no bootstrap material', as
   );
   assert.equal(response.headers.get('set-cookie'), null);
 });
-test('valid resource, owner and login requests cannot report operational success', async () => {
+test('readiness is a safe 503 while dependencies and authentication are unconfigured', async () => {
+  const response = await fetch(`${origin}/api/v1/health/ready`);
+  assert.equal(response.status, 503);
+  assert.equal(response.headers.get('cache-control'), 'no-store');
+  assert.deepEqual(ReadinessResponseSchema.parse(await response.json()), {
+    status: 'not_ready',
+    database: 'unconfigured',
+    authentication: 'unavailable',
+  });
+  assert.equal(response.headers.get('set-cookie'), null);
+});
+test('public owner-setup and login declarations cannot report operational success', async () => {
   for (const [path, body] of [
-    ['projects', { name: 'Example' }],
-    ['domains', { name: 'example.com' }],
     ['bootstrap/claim', { code: 'private-test-claim' }],
     [
       'bootstrap/owner',
@@ -71,7 +88,6 @@ test('valid resource, owner and login requests cannot report operational success
       'auth/login',
       { email: 'owner@example.test', password: 'private-test-password' },
     ],
-    ['auth/logout', {}],
   ]) {
     const error = await expectError(
       await post(path, body),
@@ -82,18 +98,65 @@ test('valid resource, owner and login requests cannot report operational success
   }
   await expectError(
     await fetch(`${origin}/api/v1/auth/session`),
-    501,
-    'NOT_IMPLEMENTED',
+    401,
+    'SESSION_REQUIRED',
   );
 });
-test('request validation blocks caller authority fields and keeps Add Domain one-field', async () => {
+test('all protected resource and session routes deny anonymous and forged authority', async () => {
+  const id = randomUUID();
+  for (const path of [
+    'overview',
+    'projects',
+    `projects/${id}`,
+    'domains',
+    `deployments/${id}`,
+    'auth/session',
+  ]) {
+    await expectError(
+      await fetch(`${origin}/api/v1/${path}`, {
+        headers: {
+          Authorization: 'Bearer private-forged-owner',
+          Cookie: '__Host-cloudlane_session=private-forged-owner',
+          'X-User-Role': 'owner',
+          'X-Workspace-Id': id,
+        },
+      }),
+      401,
+      'SESSION_REQUIRED',
+    );
+  }
   for (const [path, body] of [
-    ['projects', { name: 'Example', workspaceId: randomUUID() }],
-    ['projects', { name: 'Example', ownerId: randomUUID() }],
-    ['domains', { name: 'example.com', dnsMode: 'managed' }],
-    ['domains', { name: 'example.com', status: 'verified' }],
+    ['projects', { name: 'Example' }],
+    ['domains', { name: 'example.com' }],
+    ['auth/logout', {}],
+    [`domains/${id}/verify`, {}],
+    [`services/${id}/rollbacks`, { targetDeploymentId: id }],
   ])
-    await expectError(await post(path, body), 400, 'VALIDATION_ERROR');
+    await expectError(await post(path, body), 401, 'SESSION_REQUIRED');
+});
+test('request validation blocks caller authority fields and keeps Add Domain one-field', async () => {
+  for (const [schema, body] of [
+    [
+      CreateProjectRequestSchema,
+      { name: 'Example', workspaceId: randomUUID() },
+    ],
+    [CreateProjectRequestSchema, { name: 'Example', ownerId: randomUUID() }],
+    [CreateDomainRequestSchema, { name: 'example.com', dnsMode: 'managed' }],
+    [CreateDomainRequestSchema, { name: 'example.com', status: 'verified' }],
+  ])
+    assert.throws(
+      () => new SchemaPipe(schema).transform(body),
+      (error) => error.getStatus() === 400 && error.code === 'VALIDATION_ERROR',
+    );
+  await expectError(
+    await post('auth/login', {
+      email: 'owner@example.test',
+      password: 'private-test',
+      role: 'owner',
+    }),
+    400,
+    'VALIDATION_ERROR',
+  );
 });
 test('body size, content type and malformed JSON have safe consistent errors', async () => {
   await expectError(
@@ -121,7 +184,7 @@ test('body size, content type and malformed JSON have safe consistent errors', a
   );
   assert.ok(!JSON.stringify(error).includes('private-test-secret'));
 });
-test('query, UUID and retry headers are validated rather than trusted', async () => {
+test('anonymous callers cannot probe resource validation or bypass authorization using retry headers', async () => {
   for (const path of [
     'projects?limit=101',
     'projects?limit=2&limit=3',
@@ -130,8 +193,8 @@ test('query, UUID and retry headers are validated rather than trusted', async ()
   ])
     await expectError(
       await fetch(`${origin}/api/v1/${path}`),
-      400,
-      'VALIDATION_ERROR',
+      401,
+      'SESSION_REQUIRED',
     );
   await expectError(
     await post(
@@ -139,22 +202,28 @@ test('query, UUID and retry headers are validated rather than trusted', async ()
       { name: 'Example' },
       { headers: { 'Content-Type': 'application/json' } },
     ),
-    400,
-    'VALIDATION_ERROR',
+    401,
+    'SESSION_REQUIRED',
   );
   await expectError(
     await fetch(`${origin}/api/v1/projects?limit=20`),
-    501,
-    'NOT_IMPLEMENTED',
+    401,
+    'SESSION_REQUIRED',
   );
+  for (const query of [
+    { limit: 101 },
+    { limit: ['2', '3'] },
+    { workspaceId: 'other' },
+  ])
+    assert.throws(() => new SchemaPipe(PaginationQuerySchema).transform(query));
 });
 test('deployment and routing declarations remain unavailable and reject command injection', async () => {
   const id = randomUUID(),
     path = `services/${id}/deployments`;
   await expectError(
     await post(path, { sourceUploadId: randomUUID(), framework: 'static' }),
-    501,
-    'NOT_IMPLEMENTED',
+    401,
+    'SESSION_REQUIRED',
   );
   await expectError(
     await post(path, {
@@ -162,16 +231,23 @@ test('deployment and routing declarations remain unavailable and reject command 
       framework: 'static',
       command: 'sh -c id',
     }),
-    400,
-    'VALIDATION_ERROR',
+    401,
+    'SESSION_REQUIRED',
   );
   await expectError(
     await post(`domains/${id}/dns-mode-transitions`, {
       targetMode: 'managed',
       expectedRevision: 1,
     }),
-    501,
-    'NOT_IMPLEMENTED',
+    401,
+    'SESSION_REQUIRED',
+  );
+  assert.throws(() =>
+    new SchemaPipe(CreateDeploymentRequestSchema).transform({
+      sourceUploadId: randomUUID(),
+      framework: 'static',
+      command: 'sh -c id',
+    }),
   );
 });
 test('unknown routes return JSON errors and request IDs are server-owned', async () => {
@@ -196,6 +272,24 @@ test('OpenAPI is valid, matches generated artifacts and labels unavailable endpo
     'unavailable',
   );
   assert.ok(document.paths['/api/v1/projects'].post.responses['501']);
+  assert.ok(document.paths['/api/v1/projects'].post.responses['401']);
+  assert.deepEqual(document.paths['/api/v1/projects'].post.security, [
+    { ownerSession: [] },
+  ]);
+  assert.equal(
+    document.paths['/api/v1/health'].get['x-cloudlane-access'],
+    'public',
+  );
+  for (const [path, item] of Object.entries(document.paths))
+    for (const method of ['get', 'post'])
+      if (item[method]) {
+        assert.ok(
+          ['public', 'owner'].includes(item[method]['x-cloudlane-access']),
+          `${method} ${path} lacks an explicit policy`,
+        );
+        if (item[method]['x-cloudlane-access'] === 'owner')
+          assert.ok(item[method].responses['401']);
+      }
   assert.deepEqual(
     Object.keys(document.components.schemas.CreateDomainRequest.properties),
     ['name'],
