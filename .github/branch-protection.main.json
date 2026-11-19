@@ -1,6 +1,7 @@
 {
   "required_status_checks": {
     "strict": true,
+    "contexts": [],
     "checks": [{ "context": "Required checks", "app_id": 15368 }]
   },
   "enforce_admins": true,
