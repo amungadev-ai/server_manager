@@ -7,6 +7,12 @@
   import '@fontsource/jetbrains-mono/latin-500.css';
   import '../app.css';
   import '../prototype.css';
+  import { page } from '$app/state';
+  const authRoute = $derived(
+    ['/setup', '/login', '/recover', '/auth/security'].includes(
+      page.url.pathname.replace(/\/$/, ''),
+    ),
+  );
   import AppShell from '#lib/components/AppShell.svelte';
   let { children } = $props();
 </script>
@@ -17,4 +23,6 @@
     content="Cloudlane — your projects, services and infrastructure in one workspace."
   />
 </svelte:head>
-<AppShell>{@render children()}</AppShell>
+{#if authRoute}{@render children()}{:else}<AppShell>
+    {@render children()}
+  </AppShell>{/if}

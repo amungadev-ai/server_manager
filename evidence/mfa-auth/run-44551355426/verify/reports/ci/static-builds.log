@@ -1,0 +1,351 @@
+
+> cloudlane@0.1.0 test:e2e:prepare
+> node scripts/prepare-e2e.mjs
+
+
+> cloudlane@0.1.0 build
+> npm run build:api && npm run build --workspace @cloudlane/dashboard && node scripts/verify_static.mjs http
+
+
+> cloudlane@0.1.0 build:api
+> npm run build:contracts && npm run build --workspace @cloudlane/api
+
+
+> cloudlane@0.1.0 build:contracts
+> npm run build --workspace @cloudlane/contracts
+
+
+> @cloudlane/contracts@0.1.0 build
+> node ../../scripts/build-contracts.mjs
+
+
+> @cloudlane/api@0.1.0 build
+> tsc -p tsconfig.json
+
+
+> @cloudlane/dashboard@0.1.0 build
+> vite build
+
+vite v8.3.8 building ssr environment for production...
+transforming...
+✓ 200 modules transformed.
+rendering chunks...
+computing gzip size...
+.svelte-kit/output/server/.vite/manifest.json                                                    15.47 kB │ gzip:  1.72 kB
+.svelte-kit/output/server/_app/immutable/assets/jetbrains-mono-latin-400-normal.V6pRDFza.woff2   21.16 kB
+.svelte-kit/output/server/_app/immutable/assets/jetbrains-mono-latin-500-normal.BWZEU5yA.woff2   21.83 kB
+.svelte-kit/output/server/_app/immutable/assets/inter-latin-400-normal.C38fXH4l.woff2            23.66 kB
+.svelte-kit/output/server/_app/immutable/assets/inter-latin-500-normal.Cerq10X2.woff2            24.27 kB
+.svelte-kit/output/server/_app/immutable/assets/inter-latin-700-normal.Yt3aPRUw.woff2            24.35 kB
+.svelte-kit/output/server/_app/immutable/assets/inter-latin-600-normal.LgqL8muc.woff2            24.45 kB
+.svelte-kit/output/server/_app/immutable/assets/jetbrains-mono-latin-400-normal.6-qcROiO.woff    27.49 kB
+.svelte-kit/output/server/_app/immutable/assets/jetbrains-mono-latin-500-normal.CJOVTJB7.woff    28.20 kB
+.svelte-kit/output/server/_app/immutable/assets/inter-latin-400-normal.CyCys3Eg.woff             30.69 kB
+.svelte-kit/output/server/_app/immutable/assets/inter-latin-600-normal.CiBQ2DWP.woff             31.26 kB
+.svelte-kit/output/server/_app/immutable/assets/inter-latin-500-normal.BL9OpVg8.woff             31.28 kB
+.svelte-kit/output/server/_app/immutable/assets/inter-latin-700-normal.BLAVimhd.woff             31.32 kB
+.svelte-kit/output/server/_app/immutable/assets/AuthFlow.BrAoNm2d.css                             5.57 kB │ gzip:  1.46 kB
+.svelte-kit/output/server/_app/immutable/assets/_layout.Ceiau-I3.css                             63.85 kB │ gzip: 14.11 kB
+.svelte-kit/output/server/chunks/preview-actions.js                                               0.07 kB │ gzip:  0.08 kB
+.svelte-kit/output/server/chunks/demo-deployment.js                                               0.10 kB │ gzip:  0.09 kB
+.svelte-kit/output/server/chunks/DnsGuide.js                                                      0.11 kB │ gzip:  0.09 kB
+.svelte-kit/output/server/entries/pages/_layout.ts.js                                             0.13 kB │ gzip:  0.12 kB │ map:   0.22 kB
+.svelte-kit/output/server/entries/pages/login/_page.svelte.js                                     0.27 kB │ gzip:  0.20 kB │ map:   0.29 kB
+.svelte-kit/output/server/entries/pages/setup/_page.svelte.js                                     0.27 kB │ gzip:  0.20 kB │ map:   0.29 kB
+.svelte-kit/output/server/entries/pages/recover/_page.svelte.js                                   0.27 kB │ gzip:  0.20 kB │ map:   0.29 kB
+.svelte-kit/output/server/entries/pages/auth/security/_page.svelte.js                             0.29 kB │ gzip:  0.21 kB │ map:   0.30 kB
+.svelte-kit/output/server/env.js                                                                  0.29 kB │ gzip:  0.18 kB │ map:   0.57 kB
+.svelte-kit/output/server/chunks/Badge.js                                                         0.41 kB │ gzip:  0.28 kB │ map:   0.61 kB
+.svelte-kit/output/server/chunks/index-server.js                                                  0.42 kB │ gzip:  0.26 kB │ map:   1.64 kB
+.svelte-kit/output/server/entries/fallbacks/error.svelte.js                                       0.43 kB │ gzip:  0.27 kB │ map:   0.46 kB
+.svelte-kit/output/server/chunks/navigation.js                                                    0.56 kB │ gzip:  0.27 kB │ map:   1.18 kB
+.svelte-kit/output/server/chunks/functions.js                                                     0.62 kB │ gzip:  0.36 kB │ map:   0.96 kB
+.svelte-kit/output/server/chunks/PageHeading.js                                                   0.65 kB │ gzip:  0.34 kB │ map:   0.85 kB
+.svelte-kit/output/server/chunks/MetricCard.js                                                    0.65 kB │ gzip:  0.33 kB │ map:   0.90 kB
+.svelte-kit/output/server/chunks/StorageBanner.js                                                 0.68 kB │ gzip:  0.43 kB │ map:   0.75 kB
+.svelte-kit/output/server/chunks/state.js                                                         0.74 kB │ gzip:  0.30 kB │ map:   2.22 kB
+.svelte-kit/output/server/chunks/infrastructure.svelte.js                                         0.85 kB │ gzip:  0.39 kB │ map:   1.94 kB
+.svelte-kit/output/server/chunks/StatusBadge.js                                                   1.06 kB │ gzip:  0.54 kB │ map:   1.63 kB
+.svelte-kit/output/server/chunks/ActivityList.js                                                  1.25 kB │ gzip:  0.55 kB │ map:   1.53 kB
+.svelte-kit/output/server/entries/pages/activity/_page.svelte.js                                  1.26 kB │ gzip:  0.57 kB │ map:   1.14 kB
+.svelte-kit/output/server/chunks/ProjectCard.js                                                   1.63 kB │ gzip:  0.70 kB │ map:   2.31 kB
+.svelte-kit/output/server/chunks/HealthMetrics.js                                                 2.07 kB │ gzip:  0.88 kB │ map:   2.90 kB
+.svelte-kit/output/server/chunks/presentation.js                                                  2.16 kB │ gzip:  0.93 kB │ map:   4.70 kB
+.svelte-kit/output/server/index.js                                                                2.24 kB │ gzip:  0.89 kB │ map:   3.32 kB
+.svelte-kit/output/server/entries/pages/projects/_page.svelte.js                                  2.33 kB │ gzip:  0.98 kB │ map:   2.39 kB
+.svelte-kit/output/server/chunks/AuthFlow.js                                                      3.53 kB │ gzip:  1.41 kB │ map:  36.92 kB
+.svelte-kit/output/server/entries/pages/documentation/_page.svelte.js                             3.69 kB │ gzip:  1.55 kB │ map:   4.03 kB
+.svelte-kit/output/server/entries/pages/settings/_page.svelte.js                                  3.85 kB │ gzip:  1.43 kB │ map:  16.66 kB
+.svelte-kit/output/server/entries/pages/domains/_page.svelte.js                                   5.42 kB │ gzip:  1.83 kB │ map:   6.46 kB
+.svelte-kit/output/server/entries/pages/projects/_projectId_/_page.svelte.js                      6.35 kB │ gzip:  2.09 kB │ map:  18.65 kB
+.svelte-kit/output/server/entries/pages/_page.svelte.js                                           6.60 kB │ gzip:  2.14 kB │ map:   7.52 kB
+.svelte-kit/output/server/entries/pages/domains/_zoneId_/_page.svelte.js                          6.92 kB │ gzip:  2.02 kB │ map:  28.48 kB
+.svelte-kit/output/server/chunks/Icon.js                                                          7.93 kB │ gzip:  2.91 kB │ map:   9.16 kB
+.svelte-kit/output/server/chunks/http.js                                                         12.36 kB │ gzip:  3.78 kB │ map:  27.77 kB
+.svelte-kit/output/server/entries/pages/_section_/_page.svelte.js                                16.32 kB │ gzip:  4.24 kB │ map:  19.97 kB
+.svelte-kit/output/server/chunks/server-errors.js                                                23.96 kB │ gzip:  4.49 kB │ map:  34.73 kB
+.svelte-kit/output/server/chunks/server.js                                                       43.57 kB │ gzip: 12.02 kB │ map: 124.36 kB
+.svelte-kit/output/server/remote-entry.js                                                        54.59 kB │ gzip: 11.91 kB │ map:  90.35 kB
+.svelte-kit/output/server/entries/pages/services/_serviceId_/_page.svelte.js                     60.52 kB │ gzip: 12.46 kB │ map:  92.11 kB
+.svelte-kit/output/server/entries/pages/_layout.svelte.js                                        65.83 kB │ gzip: 14.60 kB │ map: 116.89 kB
+.svelte-kit/output/server/chunks/internal.js                                                     89.83 kB │ gzip: 24.64 kB │ map: 196.13 kB
+.svelte-kit/output/server/chunks/instance.js                                                    118.17 kB │ gzip: 32.08 kB │ map: 241.34 kB
+
+✓ built in 574ms
+Analysing routes
+(node:3212) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Building app
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 373 modules transformed.
+rendering chunks...
+computing gzip size...
+.svelte-kit/output/client/_app/version.json                                                      0.02 kB │ gzip:  0.04 kB
+.svelte-kit/output/client/.vite/manifest.json                                                   17.15 kB │ gzip:  1.98 kB
+.svelte-kit/output/client/_app/immutable/assets/jetbrains-mono-latin-400-normal.V6pRDFza.woff2  21.16 kB
+.svelte-kit/output/client/_app/immutable/assets/jetbrains-mono-latin-500-normal.BWZEU5yA.woff2  21.83 kB
+.svelte-kit/output/client/_app/immutable/assets/inter-latin-400-normal.C38fXH4l.woff2           23.66 kB
+.svelte-kit/output/client/_app/immutable/assets/inter-latin-500-normal.Cerq10X2.woff2           24.27 kB
+.svelte-kit/output/client/_app/immutable/assets/inter-latin-700-normal.Yt3aPRUw.woff2           24.35 kB
+.svelte-kit/output/client/_app/immutable/assets/inter-latin-600-normal.LgqL8muc.woff2           24.45 kB
+.svelte-kit/output/client/_app/immutable/assets/jetbrains-mono-latin-400-normal.6-qcROiO.woff   27.49 kB
+.svelte-kit/output/client/_app/immutable/assets/jetbrains-mono-latin-500-normal.CJOVTJB7.woff   28.20 kB
+.svelte-kit/output/client/_app/immutable/assets/inter-latin-400-normal.CyCys3Eg.woff            30.69 kB
+.svelte-kit/output/client/_app/immutable/assets/inter-latin-600-normal.CiBQ2DWP.woff            31.26 kB
+.svelte-kit/output/client/_app/immutable/assets/inter-latin-500-normal.BL9OpVg8.woff            31.28 kB
+.svelte-kit/output/client/_app/immutable/assets/inter-latin-700-normal.BLAVimhd.woff            31.32 kB
+.svelte-kit/output/client/_app/immutable/assets/AuthFlow.BrAoNm2d.css                            5.57 kB │ gzip:  1.46 kB
+.svelte-kit/output/client/_app/immutable/assets/0.Ceiau-I3.css                                  63.85 kB │ gzip: 14.11 kB
+.svelte-kit/output/client/_app/immutable/chunks/YqvF7Zo5.js                                      0.02 kB │ gzip:  0.04 kB
+.svelte-kit/output/client/_app/immutable/chunks/D0BwZIPv.js                                      0.03 kB │ gzip:  0.05 kB
+.svelte-kit/output/client/_app/immutable/chunks/aOxphOrk.js                                      0.05 kB │ gzip:  0.06 kB
+.svelte-kit/output/client/_app/immutable/entry/payload.DSmR2FwN.js                               0.06 kB │ gzip:  0.07 kB
+.svelte-kit/output/client/_app/immutable/nodes/15.DXLcSjtH.js                                    0.16 kB │ gzip:  0.13 kB
+.svelte-kit/output/client/_app/immutable/nodes/9.C_3eFgn3.js                                     0.16 kB │ gzip:  0.13 kB
+.svelte-kit/output/client/_app/immutable/nodes/12.CEuO4sb-.js                                    0.16 kB │ gzip:  0.13 kB
+.svelte-kit/output/client/_app/immutable/nodes/5.BQOlTfeo.js                                     0.16 kB │ gzip:  0.14 kB
+.svelte-kit/output/client/_app/immutable/chunks/D7EV5MQS.js                                      0.26 kB │ gzip:  0.23 kB
+.svelte-kit/output/client/_app/immutable/chunks/CqHaqa6T.js                                      0.27 kB │ gzip:  0.21 kB
+.svelte-kit/output/client/_app/immutable/chunks/BnbRTGlV.js                                      0.30 kB │ gzip:  0.23 kB
+.svelte-kit/output/client/_app/immutable/nodes/1.OjsM1CFI.js                                     0.35 kB │ gzip:  0.25 kB
+.svelte-kit/output/client/_app/immutable/chunks/DSbgQJE5.js                                      0.43 kB │ gzip:  0.29 kB
+.svelte-kit/output/client/_app/immutable/chunks/-uK3oXK0.js                                      0.53 kB │ gzip:  0.35 kB
+.svelte-kit/output/client/_app/immutable/entry/start.Dog_07Uc.js                                 0.54 kB │ gzip:  0.31 kB
+.svelte-kit/output/client/_app/immutable/chunks/Dn-UKdE3.js                                      0.58 kB │ gzip:  0.41 kB
+.svelte-kit/output/client/_app/immutable/chunks/CXvwfEMU.js                                      0.59 kB │ gzip:  0.35 kB
+.svelte-kit/output/client/_app/immutable/chunks/XKyaHtl9.js                                      0.72 kB │ gzip:  0.42 kB
+.svelte-kit/output/client/_app/immutable/chunks/EpkwNbOj.js                                      0.79 kB │ gzip:  0.48 kB
+.svelte-kit/output/client/_app/immutable/chunks/DjiEVnRw.js                                      0.93 kB │ gzip:  0.51 kB
+.svelte-kit/output/client/_app/immutable/nodes/4.CCaCrfrq.js                                     0.98 kB │ gzip:  0.59 kB
+.svelte-kit/output/client/_app/immutable/chunks/Beqi9dRN.js                                      1.32 kB │ gzip:  0.65 kB
+.svelte-kit/output/client/_app/immutable/chunks/C4f1VDFy.js                                      1.36 kB │ gzip:  0.72 kB
+.svelte-kit/output/client/_app/immutable/chunks/CS4DGJFu.js                                      1.55 kB │ gzip:  0.83 kB
+.svelte-kit/output/client/_app/immutable/chunks/BJXV5GMM.js                                      1.62 kB │ gzip:  0.89 kB
+.svelte-kit/output/client/_app/immutable/chunks/DclECHGd.js                                      1.63 kB │ gzip:  0.83 kB
+.svelte-kit/output/client/_app/immutable/nodes/10.D_uOrHPz.js                                    1.68 kB │ gzip:  0.96 kB
+.svelte-kit/output/client/_app/immutable/chunks/B5gycPDE.js                                      2.89 kB │ gzip:  1.44 kB
+.svelte-kit/output/client/_app/immutable/nodes/6.DU_hNBJO.js                                     3.43 kB │ gzip:  1.69 kB
+.svelte-kit/output/client/_app/immutable/entry/app.gXbUikgQ.js                                   3.62 kB │ gzip:  1.24 kB
+.svelte-kit/output/client/_app/immutable/nodes/7.Cnui5eIO.js                                     4.54 kB │ gzip:  2.07 kB
+.svelte-kit/output/client/_app/immutable/chunks/COr3BtnS.js                                      4.56 kB │ gzip:  2.05 kB
+.svelte-kit/output/client/_app/immutable/nodes/2.DsSv6eIV.js                                     5.20 kB │ gzip:  2.27 kB
+.svelte-kit/output/client/_app/immutable/chunks/D-0n4Jh5.js                                      6.60 kB │ gzip:  2.49 kB
+.svelte-kit/output/client/_app/immutable/nodes/11.ft0c_obC.js                                   12.80 kB │ gzip:  4.21 kB
+.svelte-kit/output/client/_app/immutable/nodes/3.IqSlQqeu.js                                    12.99 kB │ gzip:  4.78 kB
+.svelte-kit/output/client/_app/immutable/nodes/14.Djxaf6Y6.js                                   15.89 kB │ gzip:  5.88 kB
+.svelte-kit/output/client/_app/immutable/nodes/8.D32fH9EF.js                                    21.48 kB │ gzip:  6.62 kB
+.svelte-kit/output/client/_app/immutable/chunks/CZ7m5bj2.js                                     40.73 kB │ gzip: 14.96 kB
+.svelte-kit/output/client/_app/immutable/chunks/CeXiSX8u.js                                     42.73 kB │ gzip: 15.50 kB
+.svelte-kit/output/client/_app/immutable/chunks/AKsO4siU.js                                     47.49 kB │ gzip: 18.29 kB
+.svelte-kit/output/client/_app/immutable/nodes/13.DyqbXnkg.js                                   60.14 kB │ gzip: 17.91 kB
+.svelte-kit/output/client/_app/immutable/nodes/0.D4fu_v5G.js                                    73.38 kB │ gzip: 23.63 kB
+.svelte-kit/output/client/_app/immutable/chunks/ZdqOCBJA.js                                     94.19 kB │ gzip: 27.58 kB
+
+✓ built in 534ms
+(node:3212) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Run npm run preview to preview your production build locally.
+
+> Using @sveltejs/adapter-static
+(node:3212) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Wrote site to "../../dist"
+✔ done
+{"status":"PASS","mode":"http","staticFiles":61,"totalBytes":862065,"fixturesIncluded":false}
+
+> cloudlane@0.1.0 build:preview
+> npm run build:api && npm run build:preview --workspace @cloudlane/dashboard && node scripts/verify_static.mjs demo
+
+
+> cloudlane@0.1.0 build:api
+> npm run build:contracts && npm run build --workspace @cloudlane/api
+
+
+> cloudlane@0.1.0 build:contracts
+> npm run build --workspace @cloudlane/contracts
+
+
+> @cloudlane/contracts@0.1.0 build
+> node ../../scripts/build-contracts.mjs
+
+
+> @cloudlane/api@0.1.0 build
+> tsc -p tsconfig.json
+
+
+> @cloudlane/dashboard@0.1.0 build:preview
+> vite build --mode preview
+
+vite v8.3.8 building ssr environment for preview...
+transforming...
+✓ 201 modules transformed.
+rendering chunks...
+computing gzip size...
+.svelte-kit/output/server/.vite/manifest.json                                                    15.67 kB │ gzip:  1.75 kB
+.svelte-kit/output/server/_app/immutable/assets/jetbrains-mono-latin-400-normal.V6pRDFza.woff2   21.16 kB
+.svelte-kit/output/server/_app/immutable/assets/jetbrains-mono-latin-500-normal.BWZEU5yA.woff2   21.83 kB
+.svelte-kit/output/server/_app/immutable/assets/inter-latin-400-normal.C38fXH4l.woff2            23.66 kB
+.svelte-kit/output/server/_app/immutable/assets/inter-latin-500-normal.Cerq10X2.woff2            24.27 kB
+.svelte-kit/output/server/_app/immutable/assets/inter-latin-700-normal.Yt3aPRUw.woff2            24.35 kB
+.svelte-kit/output/server/_app/immutable/assets/inter-latin-600-normal.LgqL8muc.woff2            24.45 kB
+.svelte-kit/output/server/_app/immutable/assets/jetbrains-mono-latin-400-normal.6-qcROiO.woff    27.49 kB
+.svelte-kit/output/server/_app/immutable/assets/jetbrains-mono-latin-500-normal.CJOVTJB7.woff    28.20 kB
+.svelte-kit/output/server/_app/immutable/assets/inter-latin-400-normal.CyCys3Eg.woff             30.69 kB
+.svelte-kit/output/server/_app/immutable/assets/inter-latin-600-normal.CiBQ2DWP.woff             31.26 kB
+.svelte-kit/output/server/_app/immutable/assets/inter-latin-500-normal.BL9OpVg8.woff             31.28 kB
+.svelte-kit/output/server/_app/immutable/assets/inter-latin-700-normal.BLAVimhd.woff             31.32 kB
+.svelte-kit/output/server/_app/immutable/assets/AuthFlow.BrAoNm2d.css                             5.57 kB │ gzip:  1.46 kB
+.svelte-kit/output/server/_app/immutable/assets/_layout.Ceiau-I3.css                             63.85 kB │ gzip: 14.11 kB
+.svelte-kit/output/server/chunks/preview-actions.js                                               0.07 kB │ gzip:  0.08 kB
+.svelte-kit/output/server/chunks/demo-deployment.js                                               0.10 kB │ gzip:  0.09 kB
+.svelte-kit/output/server/chunks/DnsGuide.js                                                      0.11 kB │ gzip:  0.09 kB
+.svelte-kit/output/server/entries/pages/_layout.ts.js                                             0.13 kB │ gzip:  0.12 kB │ map:   0.22 kB
+.svelte-kit/output/server/entries/pages/login/_page.svelte.js                                     0.27 kB │ gzip:  0.20 kB │ map:   0.29 kB
+.svelte-kit/output/server/entries/pages/setup/_page.svelte.js                                     0.27 kB │ gzip:  0.20 kB │ map:   0.29 kB
+.svelte-kit/output/server/entries/pages/recover/_page.svelte.js                                   0.27 kB │ gzip:  0.20 kB │ map:   0.29 kB
+.svelte-kit/output/server/entries/pages/auth/security/_page.svelte.js                             0.29 kB │ gzip:  0.21 kB │ map:   0.30 kB
+.svelte-kit/output/server/env.js                                                                  0.29 kB │ gzip:  0.18 kB │ map:   0.57 kB
+.svelte-kit/output/server/chunks/Badge.js                                                         0.41 kB │ gzip:  0.28 kB │ map:   0.61 kB
+.svelte-kit/output/server/chunks/index-server.js                                                  0.42 kB │ gzip:  0.26 kB │ map:   1.64 kB
+.svelte-kit/output/server/entries/fallbacks/error.svelte.js                                       0.43 kB │ gzip:  0.27 kB │ map:   0.46 kB
+.svelte-kit/output/server/chunks/navigation.js                                                    0.56 kB │ gzip:  0.27 kB │ map:   1.18 kB
+.svelte-kit/output/server/chunks/functions.js                                                     0.62 kB │ gzip:  0.36 kB │ map:   0.96 kB
+.svelte-kit/output/server/chunks/PageHeading.js                                                   0.65 kB │ gzip:  0.34 kB │ map:   0.85 kB
+.svelte-kit/output/server/chunks/MetricCard.js                                                    0.65 kB │ gzip:  0.33 kB │ map:   0.90 kB
+.svelte-kit/output/server/chunks/StorageBanner.js                                                 0.68 kB │ gzip:  0.43 kB │ map:   0.75 kB
+.svelte-kit/output/server/chunks/state.js                                                         0.74 kB │ gzip:  0.30 kB │ map:   2.22 kB
+.svelte-kit/output/server/chunks/infrastructure.svelte.js                                         1.04 kB │ gzip:  0.46 kB │ map:   2.05 kB
+.svelte-kit/output/server/chunks/StatusBadge.js                                                   1.06 kB │ gzip:  0.54 kB │ map:   1.63 kB
+.svelte-kit/output/server/chunks/ActivityList.js                                                  1.25 kB │ gzip:  0.55 kB │ map:   1.53 kB
+.svelte-kit/output/server/entries/pages/activity/_page.svelte.js                                  1.26 kB │ gzip:  0.57 kB │ map:   1.14 kB
+.svelte-kit/output/server/chunks/ProjectCard.js                                                   1.63 kB │ gzip:  0.70 kB │ map:   2.31 kB
+.svelte-kit/output/server/chunks/HealthMetrics.js                                                 2.07 kB │ gzip:  0.88 kB │ map:   2.90 kB
+.svelte-kit/output/server/chunks/presentation.js                                                  2.16 kB │ gzip:  0.93 kB │ map:   4.70 kB
+.svelte-kit/output/server/index.js                                                                2.24 kB │ gzip:  0.89 kB │ map:   3.32 kB
+.svelte-kit/output/server/entries/pages/projects/_page.svelte.js                                  2.33 kB │ gzip:  0.98 kB │ map:   2.39 kB
+.svelte-kit/output/server/entries/pages/documentation/_page.svelte.js                             3.69 kB │ gzip:  1.55 kB │ map:   4.03 kB
+.svelte-kit/output/server/chunks/AuthFlow.js                                                      3.72 kB │ gzip:  1.49 kB │ map:  30.88 kB
+.svelte-kit/output/server/entries/pages/settings/_page.svelte.js                                  3.85 kB │ gzip:  1.43 kB │ map:  16.66 kB
+.svelte-kit/output/server/entries/pages/domains/_page.svelte.js                                   5.42 kB │ gzip:  1.83 kB │ map:   6.46 kB
+.svelte-kit/output/server/entries/pages/projects/_projectId_/_page.svelte.js                      6.35 kB │ gzip:  2.09 kB │ map:  18.65 kB
+.svelte-kit/output/server/entries/pages/_page.svelte.js                                           6.60 kB │ gzip:  2.14 kB │ map:   7.52 kB
+.svelte-kit/output/server/entries/pages/domains/_zoneId_/_page.svelte.js                          6.92 kB │ gzip:  2.02 kB │ map:  28.48 kB
+.svelte-kit/output/server/chunks/Icon.js                                                          7.93 kB │ gzip:  2.91 kB │ map:   9.16 kB
+.svelte-kit/output/server/chunks/demo.js                                                         10.72 kB │ gzip:  2.94 kB │ map:  18.98 kB
+.svelte-kit/output/server/chunks/http.js                                                         11.84 kB │ gzip:  3.65 kB │ map:  27.70 kB
+.svelte-kit/output/server/entries/pages/_section_/_page.svelte.js                                16.32 kB │ gzip:  4.24 kB │ map:  19.97 kB
+.svelte-kit/output/server/chunks/server-errors.js                                                23.96 kB │ gzip:  4.49 kB │ map:  34.73 kB
+.svelte-kit/output/server/chunks/server.js                                                       43.57 kB │ gzip: 12.02 kB │ map: 124.36 kB
+.svelte-kit/output/server/remote-entry.js                                                        54.59 kB │ gzip: 11.91 kB │ map:  90.35 kB
+.svelte-kit/output/server/entries/pages/services/_serviceId_/_page.svelte.js                     60.52 kB │ gzip: 12.46 kB │ map:  92.11 kB
+.svelte-kit/output/server/entries/pages/_layout.svelte.js                                        65.83 kB │ gzip: 14.60 kB │ map: 116.89 kB
+.svelte-kit/output/server/chunks/internal.js                                                     89.83 kB │ gzip: 24.64 kB │ map: 196.13 kB
+.svelte-kit/output/server/chunks/instance.js                                                    118.17 kB │ gzip: 32.08 kB │ map: 241.34 kB
+
+✓ built in 558ms
+Analysing routes
+(node:3346) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Building app
+vite v8.3.8 building client environment for preview...
+transforming...
+✓ 374 modules transformed.
+rendering chunks...
+computing gzip size...
+.svelte-kit/output/client/_app/version.json                                                      0.02 kB │ gzip:  0.04 kB
+.svelte-kit/output/client/.vite/manifest.json                                                   17.40 kB │ gzip:  2.03 kB
+.svelte-kit/output/client/_app/immutable/assets/jetbrains-mono-latin-400-normal.V6pRDFza.woff2  21.16 kB
+.svelte-kit/output/client/_app/immutable/assets/jetbrains-mono-latin-500-normal.BWZEU5yA.woff2  21.83 kB
+.svelte-kit/output/client/_app/immutable/assets/inter-latin-400-normal.C38fXH4l.woff2           23.66 kB
+.svelte-kit/output/client/_app/immutable/assets/inter-latin-500-normal.Cerq10X2.woff2           24.27 kB
+.svelte-kit/output/client/_app/immutable/assets/inter-latin-700-normal.Yt3aPRUw.woff2           24.35 kB
+.svelte-kit/output/client/_app/immutable/assets/inter-latin-600-normal.LgqL8muc.woff2           24.45 kB
+.svelte-kit/output/client/_app/immutable/assets/jetbrains-mono-latin-400-normal.6-qcROiO.woff   27.49 kB
+.svelte-kit/output/client/_app/immutable/assets/jetbrains-mono-latin-500-normal.CJOVTJB7.woff   28.20 kB
+.svelte-kit/output/client/_app/immutable/assets/inter-latin-400-normal.CyCys3Eg.woff            30.69 kB
+.svelte-kit/output/client/_app/immutable/assets/inter-latin-600-normal.CiBQ2DWP.woff            31.26 kB
+.svelte-kit/output/client/_app/immutable/assets/inter-latin-500-normal.BL9OpVg8.woff            31.28 kB
+.svelte-kit/output/client/_app/immutable/assets/inter-latin-700-normal.BLAVimhd.woff            31.32 kB
+.svelte-kit/output/client/_app/immutable/assets/AuthFlow.BrAoNm2d.css                            5.57 kB │ gzip:  1.46 kB
+.svelte-kit/output/client/_app/immutable/assets/0.Ceiau-I3.css                                  63.85 kB │ gzip: 14.11 kB
+.svelte-kit/output/client/_app/immutable/chunks/YqvF7Zo5.js                                      0.02 kB │ gzip:  0.04 kB
+.svelte-kit/output/client/_app/immutable/chunks/D0BwZIPv.js                                      0.03 kB │ gzip:  0.05 kB
+.svelte-kit/output/client/_app/immutable/chunks/aOxphOrk.js                                      0.05 kB │ gzip:  0.06 kB
+.svelte-kit/output/client/_app/immutable/entry/payload.DSmR2FwN.js                               0.06 kB │ gzip:  0.07 kB
+.svelte-kit/output/client/_app/immutable/nodes/15.sEU3igqK.js                                    0.16 kB │ gzip:  0.13 kB
+.svelte-kit/output/client/_app/immutable/nodes/9.B040u9mp.js                                     0.16 kB │ gzip:  0.13 kB
+.svelte-kit/output/client/_app/immutable/nodes/12.D77Uq2RQ.js                                    0.16 kB │ gzip:  0.13 kB
+.svelte-kit/output/client/_app/immutable/nodes/5.wF-Gdoei.js                                     0.16 kB │ gzip:  0.14 kB
+.svelte-kit/output/client/_app/immutable/chunks/BnbRTGlV.js                                      0.30 kB │ gzip:  0.23 kB
+.svelte-kit/output/client/_app/immutable/chunks/DW9iFhGG.js                                      0.34 kB │ gzip:  0.26 kB
+.svelte-kit/output/client/_app/immutable/nodes/1.OjsM1CFI.js                                     0.35 kB │ gzip:  0.25 kB
+.svelte-kit/output/client/_app/immutable/chunks/-uK3oXK0.js                                      0.53 kB │ gzip:  0.35 kB
+.svelte-kit/output/client/_app/immutable/entry/start.Dog_07Uc.js                                 0.54 kB │ gzip:  0.31 kB
+.svelte-kit/output/client/_app/immutable/chunks/Dn-UKdE3.js                                      0.58 kB │ gzip:  0.41 kB
+.svelte-kit/output/client/_app/immutable/chunks/CXvwfEMU.js                                      0.59 kB │ gzip:  0.35 kB
+.svelte-kit/output/client/_app/immutable/chunks/CL1JsRp_.js                                      0.66 kB │ gzip:  0.38 kB
+.svelte-kit/output/client/_app/immutable/chunks/XKyaHtl9.js                                      0.72 kB │ gzip:  0.42 kB
+.svelte-kit/output/client/_app/immutable/chunks/DrkN4FQz.js                                      0.79 kB │ gzip:  0.47 kB
+.svelte-kit/output/client/_app/immutable/chunks/DjiEVnRw.js                                      0.93 kB │ gzip:  0.51 kB
+.svelte-kit/output/client/_app/immutable/nodes/4.Dexs4sif.js                                     0.98 kB │ gzip:  0.59 kB
+.svelte-kit/output/client/_app/immutable/chunks/Beqi9dRN.js                                      1.32 kB │ gzip:  0.65 kB
+.svelte-kit/output/client/_app/immutable/chunks/Dq73VgpI.js                                      1.36 kB │ gzip:  0.72 kB
+.svelte-kit/output/client/_app/immutable/chunks/DFYlVYBF.js                                      1.55 kB │ gzip:  0.82 kB
+.svelte-kit/output/client/_app/immutable/chunks/DtuoigRp.js                                      1.62 kB │ gzip:  0.89 kB
+.svelte-kit/output/client/_app/immutable/chunks/DclECHGd.js                                      1.63 kB │ gzip:  0.83 kB
+.svelte-kit/output/client/_app/immutable/nodes/10.BDfQntu2.js                                    1.68 kB │ gzip:  0.96 kB
+.svelte-kit/output/client/_app/immutable/chunks/DtrJf3Je.js                                      2.35 kB │ gzip:  1.15 kB
+.svelte-kit/output/client/_app/immutable/chunks/C2-g759e.js                                      2.89 kB │ gzip:  1.44 kB
+.svelte-kit/output/client/_app/immutable/nodes/6.DU_hNBJO.js                                     3.43 kB │ gzip:  1.69 kB
+.svelte-kit/output/client/_app/immutable/entry/app.BBGvCL9J.js                                   3.67 kB │ gzip:  1.24 kB
+.svelte-kit/output/client/_app/immutable/nodes/7.DdfGvjOD.js                                     4.54 kB │ gzip:  2.07 kB
+.svelte-kit/output/client/_app/immutable/chunks/COr3BtnS.js                                      4.56 kB │ gzip:  2.05 kB
+.svelte-kit/output/client/_app/immutable/nodes/2.CBdQ1Dla.js                                     5.20 kB │ gzip:  2.27 kB
+.svelte-kit/output/client/_app/immutable/chunks/D-0n4Jh5.js                                      6.60 kB │ gzip:  2.49 kB
+.svelte-kit/output/client/_app/immutable/chunks/D0jX4laC.js                                      7.23 kB │ gzip:  2.54 kB
+.svelte-kit/output/client/_app/immutable/nodes/11.RtxoR1jl.js                                   12.80 kB │ gzip:  4.21 kB
+.svelte-kit/output/client/_app/immutable/nodes/3.BJ3A0tHQ.js                                    12.99 kB │ gzip:  4.78 kB
+.svelte-kit/output/client/_app/immutable/nodes/14.DW2F4oTq.js                                   15.89 kB │ gzip:  5.88 kB
+.svelte-kit/output/client/_app/immutable/nodes/8.Cys2jc-k.js                                    21.48 kB │ gzip:  6.62 kB
+.svelte-kit/output/client/_app/immutable/chunks/BSz0YlSQ.js                                     38.96 kB │ gzip: 14.10 kB
+.svelte-kit/output/client/_app/immutable/chunks/CZ7m5bj2.js                                     40.73 kB │ gzip: 14.96 kB
+.svelte-kit/output/client/_app/immutable/chunks/AKsO4siU.js                                     47.49 kB │ gzip: 18.29 kB
+.svelte-kit/output/client/_app/immutable/nodes/13.D2xva2SB.js                                   60.14 kB │ gzip: 17.90 kB
+.svelte-kit/output/client/_app/immutable/nodes/0.SuxfRVaF.js                                    73.38 kB │ gzip: 23.62 kB
+.svelte-kit/output/client/_app/immutable/chunks/Cnb3KleC.js                                     94.09 kB │ gzip: 27.52 kB
+
+✓ built in 562ms
+(node:3346) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Run npm run preview to preview your production build locally.
+
+> Using @sveltejs/adapter-static
+(node:3346) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Wrote site to "../../dist"
+✔ done
+{"status":"PASS","mode":"demo","staticFiles":62,"totalBytes":867877,"fixturesIncluded":true}
+PASS: prepared separate HTTP/demo static fixtures; no browser executed

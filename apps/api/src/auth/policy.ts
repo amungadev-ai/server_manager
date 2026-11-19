@@ -4,6 +4,7 @@ import { ApiException } from '../common/errors';
 
 export const SESSION_COOKIE = '__Host-cloudlane_session';
 export const SETUP_COOKIE = '__Host-cloudlane_setup';
+export const CHALLENGE_COOKIE = '__Host-cloudlane_challenge';
 export const CSRF_HEADER = 'x-csrf-token';
 export const AUTH_REQUEST_HEADER = 'x-cloudlane-request';
 export const REVIEW_TOKEN = Symbol('cloudlane.owner-auth-review');

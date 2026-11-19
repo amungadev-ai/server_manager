@@ -1,0 +1,70 @@
+{
+  "label": "verify",
+  "commit": "27fd092eadb6926d075855ade146fc0fbbb172d0",
+  "workingTreeDirty": false,
+  "recordedUtc": "2026-11-19T15:09:25.845Z",
+  "node": "v24.22.3",
+  "npm": "11.9.0",
+  "lockSha256": "cbd7ea4e6d8b0892ef5d766871785360bb2698d6ab8e49b0157cd58eaff9df5d",
+  "github": {
+    "runId": "44551355426",
+    "attempt": "1",
+    "event": "pull_request"
+  },
+  "browser": {
+    "execution": "not-run",
+    "reportStatus": "missing"
+  },
+  "files": [
+    {
+      "path": "test-results/ci/browser-discovery.log",
+      "bytes": 5304,
+      "sha256": "931f0d46beb5fc68b99aea2a0c4f6779184ca5ff417c18020b984f22759663c9"
+    },
+    {
+      "path": "test-results/ci/checks.log",
+      "bytes": 1375,
+      "sha256": "e0b153fe1eb042b57d566e3a8e9ed31d1a3d68291eecc7176eb1419d09c381dc"
+    },
+    {
+      "path": "test-results/ci/formatting.log",
+      "bytes": 207,
+      "sha256": "0e80747c90a163462cc823d3d2621c0021612d230cfe0203ebf03b305d62711a"
+    },
+    {
+      "path": "test-results/ci/static-builds.log",
+      "bytes": 33869,
+      "sha256": "8f34a4648c4f3aca5573f5e0aee7e35aa1e7d445a7d526cc913bd0f54a40006d"
+    },
+    {
+      "path": "test-results/ci/steps.json",
+      "bytes": 1168,
+      "sha256": "9af904b9dc791b5eed5baf0002b3b0fe9eb946860117b627e5ddee9e4f9bd1e0"
+    },
+    {
+      "path": "test-results/ci/unit.log",
+      "bytes": 8735,
+      "sha256": "92a44b06d6260c3e7a611dc8be10f9a4a208d0d5542b6d7e9d531d33d08da30d"
+    },
+    {
+      "path": "test-results/e2e/discovery.json",
+      "bytes": 163,
+      "sha256": "ddb9a007c6ca256330282e4fed1e393c8ae6dcd76d13346af197f626f65ca01f"
+    },
+    {
+      "path": "test-results/unit/node-junit.xml",
+      "bytes": 15396,
+      "sha256": "0639fcb9c428584dae35b09a8fd51cfb46b6e7c5d45a3ad9cfc91242a80819c9"
+    },
+    {
+      "path": "test-results/unit/python-junit.xml",
+      "bytes": 1487,
+      "sha256": "1cb6b9b758f6f47136e458bd16352972af5330eddac12b16954283d6be17564d"
+    },
+    {
+      "path": "test-results/unit/summary.json",
+      "bytes": 1100,
+      "sha256": "594bb226565d9bfb2f987ab8ddecaf7f22cc56e01e13c455fa1571091bc6febf"
+    }
+  ]
+}

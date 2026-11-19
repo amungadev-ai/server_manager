@@ -9,8 +9,8 @@ Locked product decisions remain in `docs/13-ADR_AND_OPEN_DECISIONS.md`. This dir
 | [ADR-016: CI and test evidence](016-ci-and-test-evidence.md) | Accepted for development; hosted execution pending | CL-004, CL-006 |
 | [ADR-015: Agent envelope](015-agent-envelope.md) | Proposed; no execution or cryptographic implementation | CL-003, later CL-005/052 |
 | [ADR-018: API access policy and PostgreSQL migrations](018-api-persistence-foundations.md) | Implemented for development review; operational auth/security gates pending | CL-030, CL-031 |
-
 | [ADR-019: Isolated owner authentication](019-owner-auth-review-profile.md) | Proposed development candidate; production activation disabled | CL-032, CL-033 |
+| [ADR-020: MFA, recovery and auth screens](020-mfa-recovery-and-auth-ui.md) | Proposed development candidate; mandatory second factor, production activation disabled | CL-034, CL-035 |
 
 New decisions use `TEMPLATE.md`. Record context, scope, alternatives, compatibility, security/resource effects and reproducible acceptance evidence. Changes to a locked product decision need an explicit product-owner decision. Security-sensitive protocols need the designated security review and negative-path tests before becoming operational.
 

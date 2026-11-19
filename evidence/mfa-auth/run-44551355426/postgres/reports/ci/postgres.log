@@ -1,0 +1,74 @@
+
+> cloudlane@0.1.0 test:postgres
+> npm run build:api && node scripts/run-postgres-tests.mjs
+
+
+> cloudlane@0.1.0 build:api
+> npm run build:contracts && npm run build --workspace @cloudlane/api
+
+
+> cloudlane@0.1.0 build:contracts
+> npm run build --workspace @cloudlane/contracts
+
+
+> @cloudlane/contracts@0.1.0 build
+> node ../../scripts/build-contracts.mjs
+
+
+> @cloudlane/api@0.1.0 build
+> tsc -p tsconfig.json
+
+✔ fresh migration creates a durable single installation and no users, sessions or fixtures (53.784861ms)
+✔ reruns preserve installation identity and existing owner/project data across new connections (52.950268ms)
+✔ two concurrent migrators apply exactly once and produce one installation (44.677352ms)
+✔ failure on first install rolls back schema, ledger and installation together (73.533146ms)
+✔ failed upgrade preserves the previous identity, data and migration ledger (169.928379ms)
+✔ changed checksum and newer unknown migration histories block further migration (44.683847ms)
+✔ a busy migration lock fails within the bounded timeout and can be retried (5047.084716ms)
+✔ database constraints enforce one installation and one owner under concurrent inserts (57.323068ms)
+✔ workspace/project compound foreign keys reject cross-workspace environments (54.828905ms)
+✔ project slugs are constrained and unique within each workspace (61.242919ms)
+✔ session records require hashes, valid lifetime ordering and an owned workspace (82.938974ms)
+✔ a readiness-only runtime role can read the ledger but cannot modify it (50.53647ms)
+✔ real database readiness detects migration state and never reports authentication ready (160.341218ms)
+✔ public lifecycle contains no identity/claim material and never declares production readiness (152.322494ms)
+✔ one claim exchange wins a concurrent race; replay, wrong and cross-instance codes fail (84.489423ms)
+✔ expired claims and regenerated codes cannot open setup (77.013588ms)
+✔ claim verifier attempts remain durable and bounded after ten failures (114.604338ms)
+✔ one owner/workspace is created atomically under concurrent requests; all bootstrap material becomes unusable (123.313953ms)
+✔ owner creation rollback preserves the setup lease and never leaves a partial owner (121.107246ms)
+✔ expired/revoked setup leases, forged authority and wrong setup CSRF cannot create an owner (104.484349ms)
+✔ owner creation rechecks setup expiry after preflight and hashing (75.320328ms)
+✔ login rechecks a password hash changed after credential verification (123.987056ms)
+✔ real Argon2 login returns host-only secure cookies, a CSRF nonce and server-derived owner data (148.705666ms)
+✔ missing users, wrong passwords and disabled owners have identical errors and no cookies (158.357937ms)
+✔ login always replaces an incoming credential and revokes its prior session family (189.506932ms)
+✔ cookie authentication rejects bearer/agent alternatives and duplicate cookie/CSRF inputs (140.38524ms)
+✔ all authenticated mutations reject missing/wrong CSRF and exact-origin violations (270.194041ms)
+✔ login/claim deny cross-origin, missing custom header, query secrets and HTTP even with forged Forwarded headers (76.061572ms)
+✔ idle/absolute expiry, direct revocation and disabled owners invalidate existing cookies (294.236439ms)
+✔ rotation changes credential/CSRF, preserves absolute lifetime and old credential can only revoke its family (181.12513ms)
+✔ concurrent rotations produce one successor and a concurrent logout cannot leave a live successor (158.287147ms)
+✔ durable throttling is shared by independent runtimes and expires without resetting owner data (273.176915ms)
+✔ audit rows and database verifiers contain no raw password, session or claim credential (158.057693ms)
+✔ IP-host TLS cookies have the same flags and cannot change server-derived workspace scope (178.484719ms)
+✔ password success issues only a short-lived challenge; it cannot authorize resources or skip CSRF (134.553253ms)
+✔ enrollment secret is encrypted and displayed once per challenge; replacement needs a new password challenge (160.278033ms)
+✔ MFA proof rotates challenge and nonce; codes must be acknowledged before any owner session (177.445353ms)
+✔ TOTP replay is rejected across password challenges; an unused adjacent step can complete authentication (219.613005ms)
+✔ five bad proofs persist the attempt ceiling; expiry and changed passwords invalidate challenges (288.501455ms)
+✔ wrong wrapping key and modified ciphertext fail closed without owner cookies (141.687265ms)
+✔ concurrent recovery-code use has one winner, consumes the verifier and revokes every old family (217.168996ms)
+✔ recovery-code regeneration requires password, CSRF and fresh TOTP; old codes/sessions become invalid (293.394235ms)
+✔ lost recovery-code display can be replaced after fresh password and TOTP; the old generation cannot acknowledge (286.923491ms)
+✔ legacy password-only rows and stale factor epochs never authorize, including rotation (194.333408ms)
+✔ MFA endpoints retain HTTPS, exact Origin, no-query and duplicate-cookie boundaries and expose no secret retrieval (138.390272ms)
+✔ MFA audit contains no secret, code, challenge credential or nonce (116.532914ms)
+ℹ tests 46
+ℹ suites 0
+ℹ pass 46
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 12281.217863

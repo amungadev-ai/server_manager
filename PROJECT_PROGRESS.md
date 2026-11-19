@@ -1,6 +1,6 @@
 # Cloudlane — integration progress
 
-Recorded: 2026-11-19 (Africa/Nairobi). Foundation/CI is integrated; prototype and API/PostgreSQL foundations are ready for review in PR #3/#4; the isolated owner-auth candidate is prepared for independent review in PR #5. No production release, independent security approval or live resource operation is claimed.
+Recorded: 2026-11-19 (Africa/Nairobi). Foundation/CI is integrated; prototype and API/PostgreSQL foundations are ready for review in PR #3/#4; the owner-auth/MFA candidates are prepared for independent review in PR #5/#6. No production release, independent security approval or live resource operation is claimed.
 
 | Area | Current state |
 | --- | --- |
@@ -12,7 +12,8 @@ Recorded: 2026-11-19 (Africa/Nairobi). Foundation/CI is integrated; prototype an
 | PostgreSQL foundation | CL-031/PR #4 adds atomic checksummed migrations and installation/user/session/workspace/project/environment tables. Initial hosted SQL run passes 13 cases, with retained hashed reports. Corrected driver configuration passes 65 local unit/HTTP/progress cases; final combined checks/review are tracked by PR #4 |
 | Security threat model | Separate draft PR #2; independent review remains pending |
 | Owner claim and login | CL-032/033 isolated development candidate in PR #5; default API authentication remains disabled pending independent security review |
-| MFA, auth UI and project CRUD | CL-034–036 remain later gates; no production auth, recovery or mutation is claimed |
+| MFA and authentication screens | CL-034/035 implementation candidate in PR #6; normal activation and independent security review remain gated |
+| Authenticated project CRUD | CL-036 is the next feature batch; no real project mutation is enabled |
 | Installer, agent, pg-boss and real resources | Not implemented; no VPS, Docker, TLS, DNS, mail or storage operation is claimed |
 
 The [private dashboard preview](https://cloudlane-foundation.spiritedghat4.chatgpt.site) hosts static Svelte output. It cannot host the separate Nest/PostgreSQL platform. Authentication and resource data are never persisted in browser localStorage; UI preferences only.
@@ -40,3 +41,7 @@ PR #4 passes all six required jobs in run 44490126404 (65 unit/HTTP/progress, 13
 [PR #5](https://github.com/amungadev-ai/server_manager/pull/5), branch `task/CL-032-033-owner-auth-review`, is stacked on PR #4. It implements a concrete claim/login/session development candidate under [ADR-019](docs/adr/019-owner-auth-review-profile.md). [Evidence](docs/evidence/OWNER_AUTH_REVIEW.md) and canonical task records distinguish local/hosted checks from outstanding independent review, MFA, installer/Caddy/TLS and production-VPS gates. The normal API entry point exposes no switch to activate the candidate.
 
 The CL-032/033 implementation checkpoint `30e611aa238a6b781c234be18b611c82d0e197f6` passes all six jobs in [run 44534915294](https://github.com/amungadev-ai/server_manager/actions/runs/44534915294): 72 unit/HTTP/progress, 34 real PostgreSQL/HTTPS, 32 browser and 40 source screenshot comparisons. [Retained evidence](evidence/owner-auth/README.md) verifies source and artifact hashes. Independent review and production activation remain open.
+
+## MFA and authentication UI development batch
+
+[PR #6](https://github.com/amungadev-ai/server_manager/pull/6), branch `task/CL-034-035-mfa-auth-screens`, is stacked on PR #5. CL-034/035 now have an implementation candidate: mandatory encrypted TOTP, once-displayed single-use recovery codes, challenge/CSRF/epoch/session revocation and separate `/setup`, `/login`, `/recover`, `/auth/security` screens. [ADR-020](docs/adr/020-mfa-recovery-and-auth-ui.md) and [evidence](docs/evidence/MFA_AUTH_UI_REVIEW.md) record the exact checks and limits. Password-only review sessions are superseded. The dashboard stays faithful to the supplied prototype; the Site auth flow is explicitly a read-only synthetic walkthrough. Local root recovery remains contract-only. Independent security review and production activation remain open; CL-036 authenticated project CRUD is the next feature batch.

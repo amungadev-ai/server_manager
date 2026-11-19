@@ -1,0 +1,114 @@
+
+> cloudlane@0.1.0 test:ci
+> npm run build:api && node scripts/run-unit-tests.mjs
+
+
+> cloudlane@0.1.0 build:api
+> npm run build:contracts && npm run build --workspace @cloudlane/api
+
+
+> cloudlane@0.1.0 build:contracts
+> npm run build --workspace @cloudlane/contracts
+
+
+> @cloudlane/contracts@0.1.0 build
+> node ../../scripts/build-contracts.mjs
+
+
+> @cloudlane/api@0.1.0 build
+> tsc -p tsconfig.json
+
+✔ liveness truthfully distinguishes an unconfigured platform from a ready one (142.486998ms)
+✔ installation status is public-safe and contains no bootstrap material (12.225534ms)
+✔ readiness is a safe 503 while dependencies and authentication are unconfigured (8.838817ms)
+✔ normal entry point keeps all MFA and recovery operations disabled (57.923531ms)
+✔ public owner-setup and login declarations cannot report operational success (17.832817ms)
+✔ all protected resource and session routes deny anonymous and forged authority (12.397655ms)
+✔ request validation blocks caller authority fields and keeps Add Domain one-field (6.910244ms)
+✔ body size, content type and malformed JSON have safe consistent errors (5.540486ms)
+✔ anonymous callers cannot probe resource validation or bypass authorization using retry headers (8.160727ms)
+✔ deployment and routing declarations remain unavailable and reject command injection (4.919507ms)
+PASS: checked OpenAPI, client types and agent schemas (24 HTTP paths)
+✔ unknown routes return JSON errors and request IDs are server-owned (1.632744ms)
+✔ OpenAPI is valid, matches generated artifacts and labels unavailable endpoints (288.427055ms)
+✔ the local API documentation is readable with request submission disabled (1.623949ms)
+✔ missing route policy denies access even with a valid server principal (1.855989ms)
+✔ public routes work without a session store and never create owner authority (0.362275ms)
+✔ forged headers, body fields and request.user cannot authenticate (0.924041ms)
+✔ expired, boundary-expired, revoked and malformed sessions are denied (2.982588ms)
+✔ agent/API-key identities and future non-owner roles cannot become a human owner (0.774602ms)
+✔ owner context comes only from the resolver, is frozen and cannot bleed across requests (1.217641ms)
+✔ session store failures deny access with a sanitized availability error (0.409673ms)
+✔ database configuration has no ambient defaults, remote hosts or URL overrides (1.129026ms)
+✔ host PG environment settings cannot replace the configured identity, port or TLS policy (0.668442ms)
+✔ an unconfigured database does not connect using PG environment fallbacks (0.169903ms)
+✔ an unreachable database returns only a coarse unavailable state (8.072551ms)
+✔ migration history rejects altered, unknown, duplicate and non-prefix releases (1.132721ms)
+✔ failed rollback discards the client exactly once and redacts driver errors (1.078127ms)
+✔ connection and commit-acknowledgement failures are redacted without promising rollback (0.291158ms)
+✔ migration CLI rejects arbitrary paths/arguments and never prints configured secrets (71.918451ms)
+✔ RFC 6238 SHA1 vectors match six-digit TOTP and reject replay (2.122992ms)
+✔ AES-GCM uses independent nonces and binds the installation and user; wrong keys and corruption fail (1.856547ms)
+✔ review preparation rejects missing or malformed MFA keys before any password work (0.77124ms)
+✔ opaque credentials are canonical, purpose-separated and never authority-bearing IDs (1.751546ms)
+✔ duplicate, encoded and oversized cookie credentials are rejected (0.395527ms)
+✔ real Argon2id hashing preserves long/unicode passwords, salts independently and fails closed on unsupported PHC costs (237.103128ms)
+✔ password hashing admits two operations and rejects excess work without queuing (62.665618ms)
+✔ owner contract enforces length/UTF-8 limits and rejects caller authority (3.705399ms)
+✔ review origin configuration rejects HTTP, credentials, paths and noncanonical origins (0.48683ms)
+✔ factory rejects review activation without TLS and in production; main has no activation path (0.951331ms)
+✔ resource IDs reject demo identifiers, nil values and non-v4 UUIDs (1.820227ms)
+✔ create-project accepts bounded data but never caller workspace/owner authority (2.499831ms)
+✔ Add Domain is exactly one field, with no mode or verification shortcut (0.980958ms)
+✔ pagination limits and opaque cursor syntax are bounded (1.148175ms)
+✔ static deployment requests cannot inject a host command or container options (0.722439ms)
+✔ agent structure accepts a typed candidate, without claiming signature/expiry/ownership verification (3.799411ms)
+✔ agent contract rejects generic operations, unsafe mounts, injected fields and inverted timestamps (1.315698ms)
+✔ auth client restricts secret submission to its canonical HTTPS origin (0.872265ms)
+✔ auth client sends cookies, custom header and memory-only rotating CSRF; redirect following is disabled (35.460737ms)
+✔ password responses cannot masquerade as full sessions; unverified session responses are denied (3.733021ms)
+✔ auth client sanitizes API errors and rejects HTML or redirects without echoing secrets (2.262325ms)
+✔ boundaries allow a portable contract and separate consumers (6.043008ms)
+✔ boundaries reject a browser import of API implementation or agent contract (2.120404ms)
+✔ boundaries reject Node-only contract imports and direct API host execution (1.909345ms)
+✔ required gate rejects failed, cancelled, skipped and missing jobs (0.808651ms)
+✔ progress event selection uses validated base SHAs for PRs, merge queues and pushes (0.936913ms)
+✔ discovery and missing browser markers cannot count as browser execution (0.273636ms)
+✔ workflow validation accepts the actual policy and rejects weakened gates (66.894368ms)
+✔ CI command capture preserves nonzero status and records a failed step (59.27338ms)
+✔ browser job reruns retain the verified artifact identity (22.311785ms)
+✔ fixture upload rejects download-only inputs and missing names or output IDs (51.576806ms)
+✔ loopback harness separates static/demo, typed HTTP fixtures and the real unconfigured API (429.363001ms)
+✔ HTTP requests validate a real session before fetching protected data and include cookies (33.77531ms)
+✔ a rejected session does not request protected data or fall back to fixtures (2.009786ms)
+✔ HTML and malformed JSON are reported as invalid API responses (1.178305ms)
+✔ a forged or malformed success session cannot unlock the overview request (2.007615ms)
+✔ HTTP overview data rejects synthetic IDs, unbounded metrics and unknown fields (5.382252ms)
+✔ malformed server error envelopes never surface arbitrary response text (0.488615ms)
+✔ streamed responses are bounded even without a Content-Length header (2.459397ms)
+✔ request cancellation propagates instead of becoming a network error (0.588124ms)
+✔ database tests refuse absent opt-in, non-loopback hosts and non-disposable database names (1.096799ms)
+✔ CI rejects a missing, unpinned, optional or disconnected PostgreSQL test gate (73.651701ms)
+ℹ tests 70
+ℹ suites 0
+ℹ pass 70
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1622.446904
+test_deleting_a_checkpoint_cannot_satisfy_gate (test_progress_gate.ProgressGateTest.test_deleting_a_checkpoint_cannot_satisfy_gate) ... ok
+test_each_declared_task_needs_its_own_checkpoint (test_progress_gate.ProgressGateTest.test_each_declared_task_needs_its_own_checkpoint) ... ok
+test_implementation_with_progress_is_accepted (test_progress_gate.ProgressGateTest.test_implementation_with_progress_is_accepted) ... ok
+test_implementation_without_progress_is_rejected (test_progress_gate.ProgressGateTest.test_implementation_without_progress_is_rejected) ... ok
+test_invalid_comparison_ref_is_rejected_without_shell_evaluation (test_progress_gate.ProgressGateTest.test_invalid_comparison_ref_is_rejected_without_shell_evaluation) ... ok
+test_invalid_metadata_is_rejected (test_progress_gate.ProgressGateTest.test_invalid_metadata_is_rejected) ... ok
+test_not_started_record_cannot_cover_code (test_progress_gate.ProgressGateTest.test_not_started_record_cannot_cover_code) ... ok
+test_renaming_code_into_docs_still_requires_checkpoint (test_progress_gate.ProgressGateTest.test_renaming_code_into_docs_still_requires_checkpoint) ... ok
+test_root_browser_configuration_requires_checkpoint (test_progress_gate.ProgressGateTest.test_root_browser_configuration_requires_checkpoint) ... ok
+test_tooling_changes_require_checkpoint (test_progress_gate.ProgressGateTest.test_tooling_changes_require_checkpoint) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.154s
+
+OK
