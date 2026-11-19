@@ -1,6 +1,6 @@
 # CI and test harness
 
-CL-004/006 implement the repository workflow and harness. Hosted GitHub execution is not verified: the current private Site source has no configured GitHub repository, and the connected installation search returned no accessible Cloudlane repository. See the activation checklist below.
+CL-004/006 implement the repository workflow and harness. The user selected [amungadev-ai/server_manager](https://github.com/amungadev-ai/server_manager), initially an empty public repository. Its import commit `cc2bd6da1f9ae27d0de21d9ab2a579e21d71a03e` has the exact prepared source tree. The [passing hosted run](https://github.com/amungadev-ai/server_manager/actions/runs/44403166607) verifies 46 unit/HTTP/gate tests, both static builds and 20 desktop/mobile browser cases. The counted-navigation selector and fixture-upload inputs found during initial activation are corrected. Browser-only rerun attempt 2 passed using the original static artifact ID. See `evidence/ci-hosted-checks.md` and `evidence/ci-hosted/` for source/run/report identity. The private design preview retains its owner-only audience.
 
 ## Commands
 
@@ -50,11 +50,11 @@ Unit/integration jobs emit logs, Node/Python JUnit, exit-code summaries and a so
 
 ## GitHub activation and branch-protection checklist
 
-- [ ] Select the actual private GitHub Cloudlane repository and integration branch; confirm its history/source matches this checkout before syncing.
-- [ ] Enable GitHub Actions and allow the pinned official actions on a supported hosted runner.
-- [ ] Push this exact source and run the workflow; retain real run/artifact URLs and commit SHA.
-- [ ] Run a fixture PR changing implementation without a task checkpoint; confirm `Progress gate` and `Required checks` fail. Add the checkpoint and rerun.
-- [ ] Confirm both desktop/mobile browser jobs execute, pass and upload screenshots/traces/reports. Check the execution markers and viewport evidence. Rerun a browser job alone and confirm it downloads the original verified artifact ID.
+- [x] Select the actual GitHub Cloudlane repository and integration branch; confirm source before syncing. The empty repository was initialized with an exact tree match; source histories have distinct commit IDs.
+- [x] Enable GitHub Actions and allow the pinned official actions on a supported hosted runner; the first run executed the configured actions.
+- [x] Push the prepared source and run the workflow; import/run references appear above. Passing end-to-end acceptance is separate.
+- [x] Run a fixture PR changing implementation without a task checkpoint; confirm both gates fail. [Negative run](https://github.com/amungadev-ai/server_manager/actions/runs/44402797421) fails as intended; the subsequent checkpoint and full run pass.
+- [x] Confirm desktop/mobile execution, passing markers/viewports, reports/screenshots and failure-only traces. [Run 44403166607](https://github.com/amungadev-ai/server_manager/actions/runs/44403166607) passes 10 cases per project without retries; desktop-only rerun downloads original artifact ID `14473971831` and passes again. Failure traces were verified on the initial failed run.
 - [ ] Require the exact `Required checks` status from this workflow's first actual run. Do not guess a repository-specific status context before it exists.
 - [ ] Require reviewed pull requests and up-to-date/merge-queue checks; include administrators where repository policy permits.
 - [ ] Configure actual CODEOWNERS/reviewers for workflows, security/agent code and contracts. Do not invent GitHub identities.
@@ -62,3 +62,11 @@ Unit/integration jobs emit logs, Node/Python JUnit, exit-code summaries and a so
 - [ ] Verify fork PR policy, absence of exposed secrets, artifact retention and access. These settings are not changed merely by committing YAML.
 
 No item is marked complete without repository-specific evidence. Managed connector permissions may not include repository administration; a maintainer with appropriate access must apply and verify protected-branch settings.
+
+`main` currently reports `protected: false`; reading its protection endpoint returned `403 Resource not accessible by integration`. The connection cannot administer protection. A concrete proposed payload is in `.github/branch-protection.main.json`, using the observed `Required checks` context and GitHub Actions app ID `15368`. An administrator can review and apply it with:
+
+```bash
+gh api --method PUT repos/amungadev-ai/server_manager/branches/main/protection --input .github/branch-protection.main.json
+```
+
+The proposal requires one approving reviewer and applies checks to administrators. Configure an actual collaborator who can review the author's PRs before enabling that policy. Afterwards read the effective rule and exercise a rejected merge/push; the payload is not proof that settings were applied.

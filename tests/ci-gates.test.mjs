@@ -165,3 +165,20 @@ test('browser job reruns retain the verified artifact identity', () => {
     ),
   );
 });
+
+test('fixture upload rejects download-only inputs and missing names or output IDs', () => {
+  const source = readFileSync('.github/workflows/ci.yml', 'utf8');
+  for (const mutate of [
+    (step) => delete step.with.name,
+    (step) => (step.with['artifact-ids'] = '123'),
+    (step) => (step.with['merge-multiple'] = true),
+    (step) => (step.id = 'renamed_upload'),
+  ]) {
+    const workflow = parse(source);
+    const upload = workflow.jobs.verify.steps.find(
+      (step) => step.id === 'static_fixtures',
+    );
+    mutate(upload);
+    assert.ok(validateWorkflow(stringify(workflow)).length > 0);
+  }
+});
