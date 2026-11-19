@@ -5,6 +5,8 @@ Date: 2026-11-18
 Tasks: CL-003; required reviews CL-005, CL-052
 Review: security/transport/cryptographic review pending
 
+CL-005 now provides a concrete proposed verifier profile in [ADR-017](017-security-boundaries.md) and [negative acceptance cases](../security/SECURITY_ACCEPTANCE.md). These are review material only; this ADR and the draft v1 schemas remain unapproved for operational use.
+
 ## Proposal
 
 Use a separate commandVersion=1 schema with command/server/workspace/resource IDs, desired generation, idempotency key, issued/expiry timestamps, a typed operation-specific payload and detached authorization material. Allowed operations are start/stop/inspect candidate and promote a verified route binding. Payloads contain immutable digests, resource IDs, bounded limits and named volume IDs at allowlisted container mount points; no generic executable, shell, host path, Docker socket or arbitrary proxy destination.

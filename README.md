@@ -77,7 +77,7 @@ The agent schema is independently versioned and has no execution path. Parsing i
 
 CL-001 is integrated with reproducible checks. CL-002/003 add package/ADR/review conventions and the validated draft API contract; see their canonical task records for final evidence and review state. Independent review, visual/mobile/a11y checks, actual hosted GitHub CI and branch protection remain open.
 
-Proceed to CL-004/006 (CI and end-to-end harness), CL-005 (security threat model) and CL-030 (API authorization skeleton). PostgreSQL migrations (CL-031) precede secure claim/session/MFA and authenticated project writes. A disposable supported VPS is needed for installer, IP HTTPS and actual ZIP deployment verification. See `docs/15-FIRST_VERTICAL_SLICE.md`.
+CL-004/006 hosted activation is tracked in [CI evidence](evidence/ci-hosted-checks.md). CL-005's [threat model](docs/security/THREAT_MODEL.md), [security acceptance matrix](docs/security/SECURITY_ACCEPTANCE.md) and [ADR-017](docs/adr/017-security-boundaries.md) are review proposals; independent security approval and downstream operational tests remain open. CL-030 (API authorization skeleton) is the next implementation task. PostgreSQL migrations (CL-031) precede secure claim/session/MFA and authenticated project writes. A disposable supported VPS is needed for installer, IP HTTPS and actual ZIP deployment verification. See `docs/15-FIRST_VERTICAL_SLICE.md`.
 
 ## CI and desktop/mobile harness
 
