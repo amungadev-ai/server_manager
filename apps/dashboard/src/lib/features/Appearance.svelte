@@ -4,11 +4,11 @@
   let theme = $state('dark'),
     palette = $state('original');
   const palettes = [
-    ['original', 'Original'],
-    ['slate', 'Slate'],
-    ['sand', 'Sand'],
-    ['sage', 'Sage'],
-    ['mauve', 'Mauve'],
+    ['original', 'Original · Teal / Slate'],
+    ['slate', 'Slate & Charcoal'],
+    ['sand', 'Sand & Saddle'],
+    ['sage', 'Sage & Burgundy'],
+    ['mauve', 'Mauve Meadow'],
   ];
   onMount(() => {
     theme = document.documentElement.classList.contains('dark')

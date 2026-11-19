@@ -234,7 +234,7 @@
                   class="mono xs dns-value"
                 >
                   {#if record.priority !== undefined}<span class="muted">
-                      {record.priority} ·
+                      {`${record.priority} · `}
                     </span>{/if}{record.value}
                 </td><td class="mono">{record.ttl}s</td><td>
                   <div class="row">
@@ -570,6 +570,7 @@
       <div class="dns-mode-grid">
         {#each [['manual', 'Manual DNS', 'Keep your current nameservers. Copy and manage live records at your existing DNS host.'], ['managed', 'Cloudlane Managed DNS', 'Delegate authoritative nameservers to Cloudlane; requires independent DNS infrastructure in production.']] as [mode, label, description]}<div
             class="dns-mode-choice"
+            class:is-current={zone.dnsMode === mode}
             style={zone.dnsMode === mode
               ? 'cursor:default;border-color:var(--mint);background:#142d2d;'
               : 'cursor:default'}

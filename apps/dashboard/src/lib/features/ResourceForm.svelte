@@ -370,7 +370,12 @@
       </div>
       <p>Validate → Detect → Build → Start → Health Check → Activate HTTPS.</p>
     </div>
-    <FormFooter label="Start deployment" icon="rocket" disabled={inspecting} />
+    <FormFooter
+      label="Start deployment"
+      icon="rocket"
+      iconSize={16}
+      disabled={inspecting}
+    />
   {:else if kind === 'database'}
     <div class="form-grid">
       <div class="form-row">

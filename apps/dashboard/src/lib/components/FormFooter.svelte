@@ -5,11 +5,13 @@
   let {
     label,
     icon = '',
+    iconSize = 15,
     danger = false,
     disabled = false,
   }: {
     label: string;
     icon?: string;
+    iconSize?: number;
     danger?: boolean;
     disabled?: boolean;
   } = $props();
@@ -25,6 +27,6 @@
     type="submit"
     disabled={disabled || infrastructure.mode !== 'demo'}
   >
-    {label}{#if icon}<Icon name={icon} size={15} />{/if}
+    {label}{#if icon}<Icon name={icon} size={iconSize} />{/if}
   </button>
 </div>

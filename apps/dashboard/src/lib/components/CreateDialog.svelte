@@ -152,6 +152,20 @@
   {title}
   description={titles[ui.modal ?? '']?.[1] ?? ''}
   wide={ui.modal === 'application' || ui.modal === 'dbPrivileges'}
+  closeIconSize={ui.modal === 'dnsModeChange'
+    ? 17
+    : [
+          'storage',
+          'bucketCreate',
+          'storageFolder',
+          'objectUpload',
+          'storageGrant',
+          'volumeCreate',
+          'objectDetails',
+          'apiKey',
+        ].includes(ui.modal ?? '')
+      ? 16
+      : 18}
   onclose={() => (ui.modal = null)}
 >
   {#key `${ui.modal}:${JSON.stringify(ui.modalData)}`}{#if ui.modal === 'create'}<div

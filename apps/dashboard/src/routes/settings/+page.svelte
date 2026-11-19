@@ -102,8 +102,8 @@
     <div class="card">
       <h3 class="section-title">Local demo storage</h3>
       <p class="muted small">
-        Your projects and simulated operations stay in memory for this preview
-        session. Reload restores the sample workspace.
+        Your projects and simulated operations stay in memory for this session.
+        Reload restores the samples.
       </p>
       <div class="divider"></div>
       <button class="btn btn-danger" onclick={() => openDialog('reset')}>

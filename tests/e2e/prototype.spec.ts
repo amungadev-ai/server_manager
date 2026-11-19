@@ -1,3 +1,5 @@
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { dirname } from 'node:path';
 import type { Page } from '@playwright/test';
 import { test, expect, noHorizontalOverflow } from './fixtures';
 
@@ -256,10 +258,23 @@ test('render the immutable v1.13 reference beside all primary Svelte screens', a
     }
     await prototypeFonts(page);
     await prototypeFonts(reference);
+    // Compare the same horizontal viewport within scrollable tab strips.
+    const tabScroll = await page
+      .locator('.tabs')
+      .evaluateAll((nodes) => nodes.map((node) => node.scrollLeft));
+    await reference
+      .locator('.tabs')
+      .evaluateAll(
+        (nodes, positions) =>
+          nodes.forEach((node, i) => (node.scrollLeft = positions[i] ?? 0)),
+        tabScroll,
+      );
+    if (scene.assistant) await reference.locator('textarea').focus();
     await page.mouse.move(0, 0);
     await reference.mouse.move(0, 0);
     if (scene.modal) {
       for (const target of [reference, page]) {
+        await target.locator('.modal-head h2').click();
         const field = target
           .getByRole('dialog')
           .locator('input:not([type=hidden]),select,textarea')
@@ -270,12 +285,13 @@ test('render the immutable v1.13 reference beside all primary Svelte screens', a
     const actual = await layout(page),
       expected = await layout(reference);
     comparisons.push({ scene: scene.name, actual, reference: expected });
+    const screenshots: Record<string, Buffer> = {};
     for (const [name, target] of [
       ['reference', reference],
       ['app', page],
     ] as const) {
       const path = info.outputPath(`${scene.name}-${name}.png`);
-      await target.screenshot({
+      screenshots[name] = await target.screenshot({
         path,
         fullPage: true,
         animations: 'disabled',
@@ -285,6 +301,41 @@ test('render the immutable v1.13 reference beside all primary Svelte screens', a
         path,
         contentType: 'image/png',
       });
+    }
+    if (
+      [
+        'overview',
+        'projects',
+        'project-services',
+        'project-architecture',
+        'project-storage',
+        'domains',
+        'domain-overview',
+        'domain-managed',
+        'databases',
+        'email',
+        'cron-jobs',
+        'cron-overview',
+        'server',
+        'activity',
+        'storage-overview',
+        'app-overview',
+        'create',
+        'settings-preferences',
+        'domain-settings',
+        'app-artifacts',
+      ].includes(scene.name)
+    ) {
+      // The expected pixels come only from the hash-checked user prototype.
+      const baseline = info.snapshotPath(`${scene.name}.png`);
+      mkdirSync(dirname(baseline), { recursive: true });
+      writeFileSync(baseline, screenshots.reference!);
+      expect
+        .soft(screenshots.app!, scene.name)
+        .toMatchSnapshot(`${scene.name}.png`, {
+          threshold: 0.1,
+          maxDiffPixels: 0,
+        });
     }
     const dimensions = await page.evaluate(() => ({
       width: innerWidth,

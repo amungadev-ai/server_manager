@@ -91,12 +91,15 @@ test('appearance persists across reload for every palette and theme', async ({
   await page.goto('/settings?tab=preferences');
   for (const theme of ['Light', 'Dark']) {
     await page.getByRole('button', { name: theme, exact: true }).click();
-    for (const palette of ['Original', 'Slate', 'Sand', 'Sage', 'Mauve']) {
+    for (const [id, palette] of [
+      ['original', 'Original · Teal / Slate'],
+      ['slate', 'Slate & Charcoal'],
+      ['sand', 'Sand & Saddle'],
+      ['sage', 'Sage & Burgundy'],
+      ['mauve', 'Mauve Meadow'],
+    ] as const) {
       await page.getByRole('button', { name: palette, exact: true }).click();
-      await expect(page.locator('html')).toHaveAttribute(
-        'data-palette',
-        palette.toLowerCase(),
-      );
+      await expect(page.locator('html')).toHaveAttribute('data-palette', id);
       await noHorizontalOverflow(page);
     }
     await page.reload();

@@ -217,7 +217,7 @@
         Settings.
       </p>
     </div>
-    <FormFooter label="Add domain" icon="arrow" />
+    <FormFooter label="Add domain" icon="arrow" iconSize={14} />
   {:else if kind === 'domainAttach'}
     {#if apps.length && available.length}{#if !ui.modalData.service}<div
           class="form-row"
@@ -262,9 +262,11 @@
           automatic HTTPS. DNS and subdomain management stay under Domains.
         </p>
       </div>
-      <FormFooter label="Connect hostname" icon="arrow" />{:else}<div
-        class="empty"
-      >
+      <FormFooter
+        label="Connect hostname"
+        icon="arrow"
+        iconSize={14}
+      />{:else}<div class="empty">
         <Icon name="globe" size={28} />
         <h3>
           {!apps.length

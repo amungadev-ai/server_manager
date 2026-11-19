@@ -103,3 +103,9 @@ button.ai-overlay {
   border: 0;
   padding: 0;
 }
+
+/* The prototype's style-attribute selector becomes an explicit Svelte state. */
+.dns-mode-choice.is-current {
+  background: var(--primary-tint) !important;
+  border-color: var(--primary) !important;
+}

@@ -156,7 +156,7 @@
             : 'phpMyAdmin'} preview
         </button>
       </div>
-      <p class="hint">No SQL is executed by this dashboard.</p>
+      <p class="hint">No SQL is executed by this HTML file.</p>
     </div>
   </div>
 </div>

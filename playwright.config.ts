@@ -11,6 +11,8 @@ export default defineConfig({
   timeout: 30000,
   expect: { timeout: 8000 },
   outputDir: 'test-results/e2e/artifacts',
+  snapshotPathTemplate:
+    '{testDir}/../../test-results/e2e/reference/{projectName}/{testFilePath}/{arg}{ext}',
   reporter: [
     ['list'],
     ['html', { outputFolder: 'playwright-report', open: 'never' }],

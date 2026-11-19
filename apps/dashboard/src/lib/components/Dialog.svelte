@@ -6,6 +6,7 @@
     title,
     description = '',
     wide = false,
+    closeIconSize = 18,
     onclose,
     children,
     footer,
@@ -14,6 +15,7 @@
     title: string;
     description?: string;
     wide?: boolean;
+    closeIconSize?: number;
     onclose: () => void;
     children: Snippet;
     footer?: Snippet;
@@ -54,7 +56,7 @@
       {#if description}<p>{description}</p>{/if}
     </div>
     <button class="icon-btn" onclick={onclose} aria-label="Close dialog">
-      <Icon name="close" size={18} />
+      <Icon name="close" size={closeIconSize} />
     </button>
   </div>
   <div class="modal-body">{@render children()}</div>
