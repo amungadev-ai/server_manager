@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import type { Snippet } from 'svelte';
+  import { onMount, type Snippet } from 'svelte';
   import { page } from '$app/state';
   import Icon from './Icon.svelte';
   import CreateDialog from './CreateDialog.svelte';
+  import Assistant from './Assistant.svelte';
   import {
     infrastructure,
     loadInfrastructure,
@@ -13,14 +13,14 @@
   let mobileOpen = $state(false);
   const groups = [
     {
-      label: 'Workspace',
+      label: 'WORKSPACE',
       items: [
-        { href: '/', label: 'Overview', icon: 'overview' },
+        { href: '/', label: 'Overview', icon: 'layout' },
         { href: '/projects', label: 'Projects', icon: 'folder' },
       ],
     },
     {
-      label: 'Resources',
+      label: 'RESOURCES',
       items: [
         { href: '/domains', label: 'Domains', icon: 'globe' },
         { href: '/databases', label: 'Databases', icon: 'database' },
@@ -29,25 +29,47 @@
       ],
     },
     {
-      label: 'Infrastructure',
+      label: 'INFRASTRUCTURE',
       items: [
-        { href: '/activity', label: 'Activity & Logs', icon: 'activity' },
+        { href: '/activity', label: 'Activity & Logs', icon: 'pulse' },
         { href: '/server', label: 'Server', icon: 'server' },
       ],
     },
     {
-      label: 'Preferences',
+      label: 'PREFERENCES',
       items: [{ href: '/settings', label: 'Settings', icon: 'settings' }],
     },
   ];
+  const service = $derived(
+    infrastructure.data?.services.find((s) => s.id === page.params.serviceId),
+  );
+  const project = $derived(
+    infrastructure.data?.projects.find(
+      (p) => p.id === (page.params.projectId ?? service?.projectId),
+    ),
+  );
+  const domain = $derived(
+    infrastructure.data?.domains.find((d) => d.id === page.params.zoneId),
+  );
   const current = $derived(
-    groups
-      .flatMap((group) => group.items)
-      .find((item) =>
-        item.href === '/'
-          ? page.url.pathname === '/'
-          : page.url.pathname.startsWith(item.href),
-      )?.label ?? 'Cloudlane',
+    page.url.pathname.startsWith('/services/')
+      ? 'Projects'
+      : (groups
+          .flatMap((group) => group.items)
+          .find((item) =>
+            item.href === '/'
+              ? page.url.pathname === '/'
+              : page.url.pathname.startsWith(item.href),
+          )?.label ??
+          (page.url.pathname === '/storage'
+            ? 'Object Storage'
+            : 'Documentation')),
+  );
+  const title = $derived(
+    service?.name ??
+      (page.params.projectId ? project?.name : undefined) ??
+      domain?.name ??
+      current,
   );
   onMount(() => {
     const controller = new AbortController();
@@ -66,7 +88,7 @@
           prefs.theme === 'dark',
         );
     } catch {
-      /* Appearance storage is optional. */
+      /* Optional UI preference only. */
     }
     void loadInfrastructure(controller.signal);
     return () => controller.abort();
@@ -79,117 +101,124 @@
 
 <a class="skip-link" href="#main-content">Skip to content</a>
 {#if mobileOpen}<button
-    class="sidebar-backdrop"
-    onclick={() => (mobileOpen = false)}
+    class="mobile-shade open"
     aria-label="Close navigation"
+    onclick={() => (mobileOpen = false)}
   ></button>{/if}
-<aside
-  class:mobile-open={mobileOpen}
-  class="sidebar"
-  aria-label="Main navigation"
->
-  <a class="brand" href="/">
-    <span class="logo"><Icon name="cloud" size={23} /></span><span>
-      <strong>Cloudlane</strong><small>INFRASTRUCTURE, SIMPLIFIED</small>
-    </span>
-  </a>
-  <nav class="nav-list">
-    {#each groups as group}<div class="nav-group">
-        <p class="nav-label">{group.label}</p>
+<div class="app">
+  <aside class="sidebar" class:open={mobileOpen} aria-label="Main navigation">
+    <a class="brand" href="/" aria-label="Cloudlane overview">
+      <div class="logo"><Icon name="layers" size={22} /></div>
+      <div>
+        <div class="brand-name">
+          cloudlane<span style="color:var(--mint)">.</span>
+        </div>
+        <div class="brand-tag">INFRASTRUCTURE, SIMPLIFIED</div>
+      </div>
+    </a>
+    <nav class="nav-list" aria-label="Main navigation">
+      {#each groups as group}<div class="nav-group-title">{group.label}</div>
         {#each group.items as item}<a
             class="nav-item"
             class:active={current === item.label}
             aria-current={current === item.label ? 'page' : undefined}
             href={item.href}
           >
-            <Icon name={item.icon} size={18} /><span>
-              {item.label}
-            </span>{#if item.label === 'Projects' && infrastructure.data}<span
-                class="nav-count"
-              >
-                {infrastructure.data.projects.length}
-              </span>{/if}
-          </a>{/each}
-      </div>{/each}
-  </nav>
-  <div class="sidebar-bottom">
-    <a class="nav-item" href="/documentation">
-      <Icon name="book" size={18} /><span>Documentation</span>
-    </a><a class="profile" href="/settings">
-      <span class="avatar"><Icon name="cloud" size={18} /></span><span
-        class="grow"
-      >
-        <strong>Starter Workspace</strong><small>
-          {infrastructure.mode === 'demo'
-            ? 'Development preview'
-            : 'Owner setup pending'}
-        </small>
-      </span><Icon name="down" size={14} />
-    </a>
-  </div>
-</aside>
-<div class="main-area">
-  <header class="topbar">
-    <button
-      class="icon-button mobile-toggle"
-      onclick={() => (mobileOpen = !mobileOpen)}
-      aria-label="Open navigation"
-      aria-expanded={mobileOpen}
-    >
-      <Icon name="menu" />
-    </button>
-    <div class="breadcrumbs">
-      <span>Workspace</span><Icon name="chevron" size={12} /><strong>
-        {current}
-      </strong>
+            <Icon name={item.icon} size={16} /><span>{item.label}</span>
+          </a>{/each}{/each}
+    </nav>
+    <div class="sidebar-bottom">
+      <a class="side-small-link" href="/documentation">
+        <Icon name="book" size={15} /> Documentation <Icon
+          name="external"
+          size={13}
+        />
+      </a>
+      <div class="tiny-profile" style="margin-top:10px">
+        <div class="avatar">{infrastructure.mode === 'demo' ? 'DW' : 'CW'}</div>
+        <div>
+          <div class="profile-name">
+            {infrastructure.mode === 'demo'
+              ? 'Demo Workspace'
+              : 'Cloudlane Workspace'}
+          </div>
+          <div class="profile-meta">
+            {infrastructure.mode === 'demo'
+              ? 'Local browser storage'
+              : 'Owner session required'}
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="grow"></div>
-    <span class="connection-label">
-      <Icon name="server" size={14} />{infrastructure.mode === 'demo'
-        ? 'Sample infrastructure'
-        : 'API connection'}
-    </span>{#if infrastructure.mode === 'demo'}<span class="preview-badge">
-        Design preview
-      </span>{/if}<a
-      class="icon-button top-settings"
-      href="/settings"
-      aria-label="Appearance settings"
-    >
-      <Icon name="sun" size={18} />
-    </a>
-  </header>
-  <main id="main-content" class="content" tabindex="-1">
-    {#if infrastructure.status === 'loading'}<div class="loading-state">
-        <Icon name="cloud" size={30} />
-        <p>Loading your workspace…</p>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <button
+        class="icon-btn mobile-toggle"
+        onclick={() => (mobileOpen = !mobileOpen)}
+        aria-label="Open navigation"
+        aria-expanded={mobileOpen}
+      >
+        <Icon name="menu" size={19} />
+      </button>
+      <div class="crumb">
+        <span>Workspace</span><Icon name="chevron" size={12} />{#if domain}<a
+            class="link"
+            href="/domains"
+          >
+            Domains
+          </a><Icon name="chevron" size={12} />{/if}{#if service && project}<a
+            class="link"
+            href="/projects/{project.id}"
+          >
+            {project.name}
+          </a><Icon name="chevron" size={12} />{/if}<strong>{title}</strong>
       </div>
-    {:else if infrastructure.status === 'error'}<div class="empty-state card">
-        <span class="empty-icon"><Icon name="server" size={28} /></span>
-        <h1>Connect your Cloudlane API</h1>
-        <p>{infrastructure.error}</p>
-        <p class="muted">
-          The dashboard is ready. Owner setup and workspace data require the
-          Cloudlane API.
-        </p>
-        <button class="button" onclick={() => loadInfrastructure()}>
-          <Icon name="refresh" size={16} />Try again
-        </button>
-      </div>
-    {:else}{@render children()}{/if}
-    <footer class="content-footer">
-      <span>Cloudlane</span><span>
-        {infrastructure.mode === 'demo'
-          ? 'Read-only sample data · No server connected'
-          : 'Foundation build · v0.1.0'}
-      </span>
-    </footer>
-  </main>
+      <div class="top-spacer"></div>
+      {#if infrastructure.mode === 'demo'}<span class="top-server">
+          <span class="dot"></span> VPS connected (demo)
+        </span><span
+          class="top-pill"
+          aria-label="Design preview — simulation only"
+        >
+          <Icon name="alert" size={13} /> SIMULATION
+        </span>{:else}<span class="top-server">
+          {infrastructure.data?.server
+            ? 'Reported server state'
+            : 'No server connected'}
+        </span>{/if}
+    </header>
+    <main id="main-content" class="content" tabindex="-1">
+      {#if infrastructure.status === 'loading'}<div class="card empty">
+          <Icon name="layers" size={30} />
+          <p>Loading your workspace…</p>
+        </div>{:else if infrastructure.status === 'error'}<section
+          class="card empty"
+        >
+          <Icon name="server" size={28} />
+          <h1>Connect your Cloudlane API</h1>
+          <p>{infrastructure.error}</p>
+          <p class="muted">
+            The dashboard is ready. Owner setup and workspace data require the
+            Cloudlane API.
+          </p>
+          <button class="btn" onclick={() => loadInfrastructure()}>
+            <Icon name="refresh" size={16} />Try again
+          </button>
+        </section>{:else}{@render children()}{/if}
+    </main>
+  </div>
 </div>
-<button
-  class="assistant-launcher"
-  aria-label="Open Cloudlane Assistant"
-  onclick={() => (ui.modal = 'assistant')}
->
-  <Icon name="sparkles" size={20} />
-</button>
+<Assistant />
 <CreateDialog />
+{#if ui.toast}<div
+    class="toast"
+    class:error-toast={ui.toast.error}
+    role="status"
+  >
+    <Icon name={ui.toast.error ? 'alert' : 'check'} size={18} /><span>
+      {ui.toast.message}
+    </span><button aria-label="Dismiss" onclick={() => (ui.toast = null)}>
+      <Icon name="close" size={15} />
+    </button>
+  </div>{/if}

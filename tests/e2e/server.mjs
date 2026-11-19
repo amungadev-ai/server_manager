@@ -84,6 +84,21 @@ export async function createHarnessServers({
             );
           const url = new URL(request.url, 'http://127.0.0.1');
           if (
+            mode === 'demo' &&
+            url.pathname === '/__reference' &&
+            request.method === 'GET'
+          ) {
+            const body = readFileSync(
+              new URL('../../reference-cloudlane-v1.13.html', import.meta.url),
+            );
+            response.writeHead(200, {
+              'Content-Type': 'text/html; charset=utf-8',
+              'Cache-Control': 'no-store',
+              'X-Cloudlane-Test-Fixture': '1',
+            });
+            return response.end(body);
+          }
+          if (
             request.headers.origin &&
             request.headers.origin !== `http://${request.headers.host}`
           )

@@ -6,4 +6,11 @@
     $props();
 </script>
 
-<span class="badge {tone}">{label}</span>
+<span
+  class="tag"
+  class:ok={tone === 'success'}
+  class:warn={tone === 'warning'}
+  class:blue={tone === 'info'}
+>
+  {label}
+</span>

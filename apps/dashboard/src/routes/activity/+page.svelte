@@ -1,23 +1,23 @@
 <script lang="ts">
-  import { infrastructure } from '#lib/stores/infrastructure.svelte.ts';
   import PageHeading from '#lib/components/PageHeading.svelte';
+  import Badge from '#lib/components/Badge.svelte';
   import ActivityList from '#lib/features/ActivityList.svelte';
-  import Icon from '#lib/components/Icon.svelte';
+  import { infrastructure } from '#lib/stores/infrastructure.svelte.ts';
 </script>
 
-<svelte:head><title>Activity & Logs — Cloudlane</title></svelte:head>
+<svelte:head><title>Activity &amp; Logs — Cloudlane</title></svelte:head>
 <PageHeading
-  title="Activity & Logs"
-  eyebrow="Workspace history"
-  description="A clear view of what happened across your infrastructure."
+  title="Activity"
+  eyebrow="AUDIT & EVENTS"
+  description="Operations across deployments, infrastructure, and user actions."
 />
-<p class="notice" style="margin-bottom:20px">
-  <Icon name="info" size={17} /><span>
-    These entries are synthetic examples for the design preview. Real operation
-    events and audit logs are not connected.
-  </span>
-</p>
-<section class="card">
-  <h2>Recent activity</h2>
+<div class="card">
+  <div class="row space" style="margin-bottom:12px">
+    <h3 class="section-title">Recent events</h3>
+    <Badge
+      label={`${infrastructure.data?.activity.length ?? 0} events`}
+      tone="info"
+    />
+  </div>
   <ActivityList items={infrastructure.data?.activity ?? []} />
-</section>
+</div>

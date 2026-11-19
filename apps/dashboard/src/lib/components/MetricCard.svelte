@@ -9,11 +9,13 @@
     $props();
 </script>
 
-<div class="metric card">
-  <span class="metric-icon"><Icon name={icon} size={19} /></span>
-  <div class="metric-copy">
-    <span class="metric-label">{label}</span><strong class="metric-value">
-      {value}
-    </strong><span class="metric-note">{note}</span>
+<div class="card stat">
+  <div class="stat-row">
+    <div class="stat-icon"><Icon name={icon} size={18} /></div>
+    <div class="stat-main">
+      <div class="stat-label">{label}</div>
+      <div class="stat-note">{note}</div>
+    </div>
+    <div class="stat-number">{value}</div>
   </div>
 </div>

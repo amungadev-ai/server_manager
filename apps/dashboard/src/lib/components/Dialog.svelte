@@ -4,10 +4,20 @@
   let {
     open,
     title,
+    description = '',
+    wide = false,
     onclose,
     children,
-  }: { open: boolean; title: string; onclose: () => void; children: Snippet } =
-    $props();
+    footer,
+  }: {
+    open: boolean;
+    title: string;
+    description?: string;
+    wide?: boolean;
+    onclose: () => void;
+    children: Snippet;
+    footer?: Snippet;
+  } = $props();
   let element: HTMLDialogElement;
   $effect(() => {
     if (!element) return;
@@ -17,6 +27,8 @@
 </script>
 
 <dialog
+  class="modal"
+  class:wide
   bind:this={element}
   aria-labelledby="dialog-title"
   {onclose}
@@ -24,12 +36,27 @@
     event.preventDefault();
     onclose();
   }}
+  onclick={(event) => {
+    if (event.target !== element) return;
+    const rect = element.getBoundingClientRect();
+    if (
+      event.clientX < rect.left ||
+      event.clientX > rect.right ||
+      event.clientY < rect.top ||
+      event.clientY > rect.bottom
+    )
+      onclose();
+  }}
 >
-  <div class="dialog-heading">
-    <h2 id="dialog-title">{title}</h2>
-    <button class="icon-button" onclick={onclose} aria-label="Close dialog">
-      <Icon name="close" />
+  <div class="modal-head">
+    <div>
+      <h2 id="dialog-title">{title}</h2>
+      {#if description}<p>{description}</p>{/if}
+    </div>
+    <button class="icon-btn" onclick={onclose} aria-label="Close dialog">
+      <Icon name="close" size={18} />
     </button>
   </div>
-  <div class="dialog-body">{@render children()}</div>
+  <div class="modal-body">{@render children()}</div>
+  {#if footer}<div class="modal-footer">{@render footer()}</div>{/if}
 </dialog>

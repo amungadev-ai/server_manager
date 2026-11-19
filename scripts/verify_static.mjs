@@ -27,7 +27,9 @@ const javascript = paths
   .filter((path) => path.endsWith('.js'))
   .map((path) => readFileSync(path, 'utf8'))
   .join('\n');
-const fixturesIncluded = javascript.includes('maid-finder.example');
+const fixturesIncluded = javascript.includes(
+  'cloudlane-prototype-fixtures-v113',
+);
 assert.ok(
   !javascript.includes('Test Fixture Project') &&
     !javascript.includes('test-owner@example.test'),

@@ -10,3 +10,6 @@ PROJECT_PROGRESS.md
 packages/contracts/src/generated/
 packages/contracts/openapi/
 packages/contracts/schema/
+
+# Preserve the approved reference cascade verbatim.
+apps/dashboard/src/prototype.css
