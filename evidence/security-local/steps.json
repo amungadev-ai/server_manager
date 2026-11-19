@@ -1,0 +1,48 @@
+[
+  {
+    "label": "security-check",
+    "command": [
+      "npm",
+      "run",
+      "check"
+    ],
+    "started": "2026-11-18T21:34:45.876Z",
+    "finished": "2026-11-18T21:35:10.370Z",
+    "status": "passed",
+    "exitCode": 0
+  },
+  {
+    "label": "security-unit",
+    "command": [
+      "npm",
+      "test"
+    ],
+    "started": "2026-11-18T21:35:45.779Z",
+    "finished": "2026-11-18T21:35:59.136Z",
+    "status": "passed",
+    "exitCode": 0
+  },
+  {
+    "label": "security-build",
+    "command": [
+      "node",
+      "/home/agent/.codex/plugins/cache/openai-curated-remote/sites/1.1.7/scripts/build-site.mjs"
+    ],
+    "started": "2026-11-18T21:36:49.215Z",
+    "finished": "2026-11-18T21:37:07.632Z",
+    "status": "passed",
+    "exitCode": 0
+  },
+  {
+    "label": "security-preview",
+    "command": [
+      "npm",
+      "run",
+      "build:preview"
+    ],
+    "started": "2026-11-18T21:37:59.779Z",
+    "finished": "2026-11-18T21:38:17.389Z",
+    "status": "passed",
+    "exitCode": 0
+  }
+]

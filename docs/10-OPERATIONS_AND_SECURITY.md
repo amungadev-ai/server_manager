@@ -1,5 +1,7 @@
 # 10 — Security, observability, backups and operations
 
+CL-005 review material: [source-based threat model](security/THREAT_MODEL.md), [negative-test/reviewer matrix](security/SECURITY_ACCEPTANCE.md) and [proposed ADR-017](adr/017-security-boundaries.md). These proposals do not implement or approve authentication, an installer, privileged execution or workload isolation. Exact review state and regression evidence live in `tasks/progress/CL-005.md`.
+
 ## 1. Threat inventory
 
 1. Attacker reaches unclaimed setup endpoint or guesses claim secret.

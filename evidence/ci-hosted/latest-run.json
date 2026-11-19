@@ -1,0 +1,43 @@
+{
+  "runId": 44432013149,
+  "url": "https://github.com/amungadev-ai/server_manager/actions/runs/44432013149",
+  "headSha": "704bac37300715d12b570a44859c0a85116fbdbf",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 135251459042,
+      "name": "Progress gate",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 135251520291,
+      "name": "Build and unit tests",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 135251945784,
+      "name": "Browser tests (mobile)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 135251945860,
+      "name": "Browser tests (desktop)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 135255964059,
+      "name": "Required checks",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "unitTests": 46,
+  "browserCases": 20,
+  "integratedMainCommit": "104c0974434221e9385bcd336ed5a3daab5ac9e1",
+  "verifiedMainTree": "7c96a13298c9b8ff56e1de98e6da5897393ee3c7",
+  "mainTreeMatchesTestedBranch": true
+}
