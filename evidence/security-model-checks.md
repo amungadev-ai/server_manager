@@ -13,7 +13,7 @@ Recorded 2026-11-19 (Africa/Nairobi). Scope: threat-model/ADR/review documents o
 | `npm run build` through supported build helper | PASS; HTTP static output has 98 files, no demo fixtures/agent bundle or SSR runtime |
 | `npm run build:preview` | PASS; explicit read-only demo output |
 | `python3 scripts/validate_progress.py` | PASS |
-| Hosted baseline regression | PASS; [run 44403166607](https://github.com/amungadev-ai/server_manager/actions/runs/44403166607), 46 unit/HTTP/gate tests and 20 actual desktop/mobile browser cases; see `ci-hosted-checks.md` |
+| Hosted baseline regression | PASS; [run 44432013149](https://github.com/amungadev-ai/server_manager/actions/runs/44432013149), 46 unit/HTTP/gate tests and 20 actual desktop/mobile browser cases; see `ci-hosted-checks.md` |
 | New operational security tests N01–N18 | Planned; absent installer/auth/agent/DB/runtime features are not represented by passing placeholder tests |
 | Independent security/cryptographic review | PENDING; no reviewer or approval fabricated |
 
