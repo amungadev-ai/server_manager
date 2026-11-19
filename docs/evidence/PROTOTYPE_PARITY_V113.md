@@ -68,3 +68,7 @@ Image review confirmed zero changed pixels above a 16/255 channel threshold in b
 The review found smaller residual differences: palette display names, the selected DNS mode tint (a legacy style-attribute selector did not survive browser CSS serialization), one-pixel dialog icon sizes and MX priority spacing. These were corrected. Tab-strip scroll positions and assistant/input focus are normalized between reference and app for the final comparison; source HTML and CSS are not edited. Workspace/storage explanatory copy intentionally describes ephemeral in-memory simulation.
 
 The final browser harness additionally compares 20 complete scenes per viewport directly against PNGs rendered from the immutable reference in the same run. It permits zero changed pixels above Playwright's 0.1 perceptual color threshold; it does not approve app-generated baselines. These expected PNGs remain in ignored test output and are retained as CI artifacts. Final gate results belong to the exact source commit shown by the PR checks.
+
+## Direct comparison correction
+
+Run 44474331194 passed 38 of the 40 direct screenshot assertions. Domain Settings alone exposed a missing original `align-items:center` on each DNS mode choice label row (4,657 desktop pixels and 1,233 mobile pixels). The exact inline rule was restored; comparison thresholds and coverage were kept unchanged. All non-capture browser cases and build/unit gates passed. The complete gate must pass on the correction head before publication.

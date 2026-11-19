@@ -575,7 +575,7 @@
               ? 'cursor:default;border-color:var(--mint);background:#142d2d;'
               : 'cursor:default'}
           >
-            <div class="row space">
+            <div class="row space" style="align-items:center">
               <strong>{label}</strong><Badge
                 label={zone.dnsMode === mode ? 'Current mode' : 'Available'}
                 tone={zone.dnsMode === mode ? 'success' : 'info'}
