@@ -72,3 +72,7 @@ The final browser harness additionally compares 20 complete scenes per viewport 
 ## Direct comparison correction
 
 Run 44474331194 passed 38 of the 40 direct screenshot assertions. Domain Settings alone exposed a missing original `align-items:center` on each DNS mode choice label row (4,657 desktop pixels and 1,233 mobile pixels). The exact inline rule was restored; comparison thresholds and coverage were kept unchanged. All non-capture browser cases and build/unit gates passed. The complete gate must pass on the correction head before publication.
+
+## Pixel parity gate passed
+
+[Run 44475617472](https://github.com/amungadev-ai/server_manager/actions/runs/44475617472), source head `146ebfbf4d2890ea7384f80808e1ef13a087c6cc`: all 40 direct reference screenshot comparisons passed with zero permitted changed pixels above the declared perceptual threshold. Desktop passed all 16 cases; mobile had one failure in the post-creation reload check. The harness now waits for the exact project URL to commit before reloading. The resource-reset and localStorage-is-UI-only assertions remain required. The final combined result is recorded on PR #3's checks and description.

@@ -467,6 +467,8 @@ test('service previews enforce terminal and SQL boundaries and discard resource 
       exact: true,
     }),
   ).toBeVisible();
+  // Svelte may paint the destination before its history update commits.
+  await expect(page).toHaveURL(/\/projects\/proj_[0-9a-f]{8}$/);
   await page.reload();
   await expect(
     page.getByRole('heading', { name: 'Project not found', exact: true }),
