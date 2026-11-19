@@ -33,9 +33,27 @@
     class="btn"
     class:btn-primary={!danger}
     class:btn-danger={danger}
+    class:http-project-submit={httpEnabled &&
+      infrastructure.mode === 'http' &&
+      !danger}
     type="submit"
     disabled={disabled || (infrastructure.mode !== 'demo' && !httpEnabled)}
   >
     {label}{#if icon}<Icon name={icon} size={iconSize} />{/if}
   </button>
 </div>
+
+<style>
+  button.http-project-submit {
+    background: #0f766e;
+    border-color: #0f766e;
+    background: color-mix(in srgb, var(--primary) 60%, #000);
+    border-color: color-mix(in srgb, var(--primary) 60%, #000);
+    color: #fff;
+  }
+  button.http-project-submit:hover:not(:disabled) {
+    background: #0f766e;
+    background: color-mix(in srgb, var(--primary) 60%, #000);
+    color: #fff;
+  }
+</style>

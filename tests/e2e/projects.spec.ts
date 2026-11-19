@@ -234,12 +234,33 @@ test('HTTPS project form saves only after API confirmation, reloads durable meta
   await openForm(page);
   const name = '<b>Literal project</b>';
   await page.getByLabel('Project name', { exact: true }).fill(name);
-  const a11y = await new AxeBuilder({ page }).include('dialog[open]').analyze();
-  expect(
-    a11y.violations.filter(
-      (v) => v.impact === 'serious' || v.impact === 'critical',
-    ),
-  ).toEqual([]);
+  const appearance = await page.evaluate(() => ({
+    classes: document.documentElement.className,
+    palette: document.documentElement.dataset.palette ?? 'original',
+  }));
+  for (const palette of ['original', 'slate', 'sand', 'sage', 'mauve'])
+    for (const dark of [false, true]) {
+      await page.evaluate(
+        ({ palette, dark }) => {
+          document.documentElement.dataset.palette = palette;
+          document.documentElement.classList.toggle('dark', dark);
+        },
+        { palette, dark },
+      );
+      const a11y = await new AxeBuilder({ page })
+        .include('dialog[open]')
+        .analyze();
+      expect(
+        a11y.violations.filter(
+          (v) => v.impact === 'serious' || v.impact === 'critical',
+        ),
+        palette + (dark ? ' dark' : ' light'),
+      ).toEqual([]);
+    }
+  await page.evaluate((appearance) => {
+    document.documentElement.className = appearance.classes;
+    document.documentElement.dataset.palette = appearance.palette;
+  }, appearance);
   await page
     .getByRole('button', { name: 'Create project', exact: true })
     .click();
