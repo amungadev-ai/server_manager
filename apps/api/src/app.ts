@@ -12,14 +12,10 @@ import { ResourceContractModule } from './modules/resources.module';
 import { createOpenApiDocument } from './openapi';
 import { AuthorizationModule } from './common/authorization';
 import { DatabaseModule, PlatformDatabase } from './database/database';
+import type { OwnerAuthReview } from './auth/review';
 
 @Module({
-  imports: [
-    AuthorizationModule,
-    PlatformModule,
-    AuthContractModule,
-    ResourceContractModule,
-  ],
+  imports: [PlatformModule, ResourceContractModule],
 })
 class AppModule {}
 
@@ -27,21 +23,35 @@ export async function createApp(
   options: {
     documentation?: boolean;
     database?: PlatformDatabase;
+    ownerAuthReview?: OwnerAuthReview;
+    https?: { key: Buffer; cert: Buffer };
   } = {},
 ) {
+  if (options.ownerAuthReview) {
+    if (process.env.NODE_ENV === 'production' || !options.https)
+      throw new Error(
+        'Owner authentication is an isolated HTTPS review candidate; production activation is disabled.',
+      );
+    await options.ownerAuthReview.prepare();
+  }
   const app = await NestFactory.create(
     {
       module: AppModule,
       imports: [
         DatabaseModule.configure(options.database ?? new PlatformDatabase()),
+        AuthorizationModule.configure(options.ownerAuthReview),
+        AuthContractModule.configure(options.ownerAuthReview),
       ],
     },
     {
       logger: false,
       bodyParser: false,
+      httpsOptions: options.https,
     },
   );
   app.setGlobalPrefix(API_PREFIX.slice(1));
+  app.getHttpAdapter().getInstance().set('trust proxy', false);
+  app.getHttpAdapter().getInstance().disable('x-powered-by');
   app.use((_request: Request, response: Response, next: NextFunction) => {
     response.setHeader('X-Request-Id', randomUUID());
     response.setHeader('Cache-Control', 'no-store');

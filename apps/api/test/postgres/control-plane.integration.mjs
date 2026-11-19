@@ -10,6 +10,7 @@ const { databaseConfig } = require('./dist/database/config.js');
 const { migrate, loadMigrations } = require('./dist/database/migrations.js');
 const { PlatformDatabase } = require('./dist/database/database.js');
 const { createApp } = require('./dist/app.js');
+const migrationIds = () => loadMigrations().map((migration) => migration.id);
 assertDisposableDatabase(process.env);
 const url = process.env.CLOUDLANE_TEST_DATABASE_URL;
 const pool = new Pool(databaseConfig(url));
@@ -61,7 +62,7 @@ after(async () => {
 });
 
 test('fresh migration creates a durable single installation and no users, sessions or fixtures', async () => {
-  assert.deepEqual(await migrate(pool), ['0001_control_plane']);
+  assert.deepEqual(await migrate(pool), migrationIds());
   assert.match(await identity(), /^[0-9a-f-]{36}$/);
   for (const table of [
     'users',
@@ -104,7 +105,10 @@ test('reruns preserve installation identity and existing owner/project data acro
 });
 test('two concurrent migrators apply exactly once and produce one installation', async () => {
   const applied = await Promise.all([migrate(pool), migrate(pool)]);
-  assert.deepEqual(applied.map((value) => value.length).sort(), [0, 1]);
+  assert.deepEqual(applied.map((value) => value.length).sort(), [
+    0,
+    migrationIds().length,
+  ]);
   assert.equal(
     (
       await pool.query(
@@ -119,14 +123,14 @@ test('two concurrent migrators apply exactly once and produce one installation',
         'SELECT count(*)::integer AS count FROM cloudlane.schema_migrations',
       )
     ).rows[0].count,
-    1,
+    migrationIds().length,
   );
 });
 test('failure on first install rolls back schema, ledger and installation together', async () => {
   const broken = [
     ...loadMigrations(),
     {
-      id: '0002_fail',
+      id: '0003_fail',
       sql: 'CREATE TABLE cloudlane.rollback_probe (id integer); SELECT * FROM cloudlane.missing_table;',
     },
   ];
@@ -136,7 +140,7 @@ test('failure on first install rolls back schema, ledger and installation togeth
       .schema,
     null,
   );
-  assert.deepEqual(await migrate(pool), ['0001_control_plane']);
+  assert.deepEqual(await migrate(pool), migrationIds());
 });
 test('failed upgrade preserves the previous identity, data and migration ledger', async () => {
   await migrate(pool);
@@ -145,7 +149,7 @@ test('failed upgrade preserves the previous identity, data and migration ledger'
     migrate(pool, [
       ...loadMigrations(),
       {
-        id: '0002_fail',
+        id: '0003_fail',
         sql: 'CREATE TABLE cloudlane.rollback_probe (id integer); SELECT 1/0;',
       },
     ]),
@@ -165,7 +169,7 @@ test('failed upgrade preserves the previous identity, data and migration ledger'
         'SELECT count(*)::integer AS count FROM cloudlane.schema_migrations',
       )
     ).rows[0].count,
-    1,
+    migrationIds().length,
   );
 });
 test('changed checksum and newer unknown migration histories block further migration', async () => {
@@ -194,7 +198,7 @@ test('a busy migration lock fails within the bounded timeout and can be retried'
     await holder.query('ROLLBACK');
     holder.release();
   }
-  assert.deepEqual(await migrate(pool), ['0001_control_plane']);
+  assert.deepEqual(await migrate(pool), migrationIds());
 });
 test('database constraints enforce one installation and one owner under concurrent inserts', async () => {
   await migrate(pool);
@@ -308,7 +312,7 @@ test('a readiness-only runtime role can read the ledger but cannot modify it', a
           'SELECT count(*)::integer AS count FROM cloudlane.schema_migrations',
         )
       ).rows[0].count,
-      1,
+      migrationIds().length,
     );
     await assert.rejects(
       client.query('DELETE FROM cloudlane.schema_migrations'),

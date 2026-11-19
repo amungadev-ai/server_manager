@@ -1,4 +1,4 @@
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 
 export function assertDisposableDatabase(env) {
@@ -25,6 +25,32 @@ export function assertDisposableDatabase(env) {
 if (process.argv[1]?.endsWith('run-postgres-tests.mjs')) {
   assertDisposableDatabase(process.env);
   mkdirSync('test-results/postgres', { recursive: true });
+  mkdirSync('test-results/auth-fixture', { recursive: true, mode: 0o700 });
+  const certificate = spawnSync(
+    'openssl',
+    [
+      'req',
+      '-x509',
+      '-newkey',
+      'rsa:2048',
+      '-nodes',
+      '-keyout',
+      'test-results/auth-fixture/key.pem',
+      '-out',
+      'test-results/auth-fixture/cert.pem',
+      '-days',
+      '2',
+      '-subj',
+      '/CN=Cloudlane isolated review fixture',
+      '-addext',
+      'subjectAltName=DNS:panel.example.test,DNS:localhost,IP:127.0.0.1,IP:::1',
+      '-addext',
+      'extendedKeyUsage=serverAuth',
+    ],
+    { encoding: 'utf8', shell: false },
+  );
+  if (certificate.status !== 0)
+    throw new Error('Could not prepare the isolated TLS test fixture.');
   const started = new Date().toISOString();
   const args = [
     '--test',
@@ -35,6 +61,7 @@ if (process.argv[1]?.endsWith('run-postgres-tests.mjs')) {
     '--test-reporter-destination=stdout',
     '--test-reporter-destination=test-results/postgres/junit.xml',
     'apps/api/test/postgres/control-plane.integration.mjs',
+    'apps/api/test/postgres/owner-auth.integration.mjs',
   ];
   const code = await new Promise((done) => {
     const child = spawn(process.execPath, args, {

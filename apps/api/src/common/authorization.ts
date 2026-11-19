@@ -4,6 +4,7 @@ import {
   SetMetadata,
   type CanActivate,
   type ExecutionContext,
+  type DynamicModule,
 } from '@nestjs/common';
 import { APP_GUARD, Reflector } from '@nestjs/core';
 import type { Request } from 'express';
@@ -67,7 +68,8 @@ export class AuthorizationGuard implements CanActivate {
     let resolved: unknown;
     try {
       resolved = await this.sessions.resolve(request);
-    } catch {
+    } catch (error) {
+      if (error instanceof ApiException) throw error;
       throw new ApiException(503, 'API_UNAVAILABLE');
     }
     const result = sessionSchema.safeParse(resolved);
@@ -85,10 +87,18 @@ export class AuthorizationGuard implements CanActivate {
   }
 }
 
-@Module({
-  providers: [
-    { provide: OwnerSessionResolver, useClass: DisabledSessionResolver },
-    { provide: APP_GUARD, useClass: AuthorizationGuard },
-  ],
-})
-export class AuthorizationModule {}
+@Module({})
+export class AuthorizationModule {
+  static configure(resolver?: OwnerSessionResolver): DynamicModule {
+    return {
+      module: AuthorizationModule,
+      providers: [
+        {
+          provide: OwnerSessionResolver,
+          useValue: resolver ?? new DisabledSessionResolver(),
+        },
+        { provide: APP_GUARD, useClass: AuthorizationGuard },
+      ],
+    };
+  }
+}

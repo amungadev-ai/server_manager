@@ -43,7 +43,17 @@ Migrations acquire a bounded transaction-level advisory lock and apply atomicall
 | `POST /api/v1/auth/login`, `/bootstrap/claim`, `/bootstrap/owner` | Strict request validation then 501; no session/claim issuance |
 | Resource operations, `/auth/session`, `/auth/logout`              | Owner policy; default resolver denies all callers with 401    |
 
-The guard never accepts browser role/workspace claims, bearer/agent credentials or forged cookies as owner authority. The successful owner-context path is covered by internal unit fixtures only. See [ADR-018](../../docs/adr/018-api-persistence-foundations.md) for the exact development and production boundaries.
+The guard never accepts browser role/workspace claims, bearer/agent credentials or forged cookies as owner authority. The normal entry point still resolves no sessions; the isolated harness below also exercises real database-backed sessions. See [ADR-018](../../docs/adr/018-api-persistence-foundations.md) for the exact development and production boundaries.
+
+## Isolated owner-auth review candidate
+
+[Draft PR #5](https://github.com/amungadev-ai/server_manager/pull/5) adds real claim/setup/session state and password verification under [ADR-019](../../docs/adr/019-owner-auth-review-profile.md). The normal entry point described above keeps its disabled behavior. No environment or HTTP flag activates the candidate. An internal review harness must construct `OwnerAuthReview` with a disposable database pool and exact HTTPS panel origin, then pass it plus HTTPS key/certificate options to `createApp`. The factory rejects production mode and missing TLS. Production Caddy termination/trusted-proxy configuration, MFA, root installer CLI and independent security approval remain future gates.
+
+The internal `review.store.issueClaim()` function creates a one-time, installation-bound code for the local installer integration to use later; there is no public issuance/reset endpoint. POST claim exchanges that code for a separate Secure/HttpOnly setup cookie and JSON CSRF nonce. POST owner requires that cookie/nonce, creates owner/workspace atomically and reports MFA setup required. POST login issues a new Secure/HttpOnly host-only owner cookie and returns a session-bound synchronizer nonce. Auth mutations require exact Origin and `X-Cloudlane-Request: owner-auth`; owner creation and authenticated mutations additionally require `X-CSRF-Token`. Only same-origin response JSON carries CSRF values; keep them in memory. Never put credentials, cookies or nonces in localStorage or URLs.
+
+POST `/api/v1/auth/session/rotate` changes the cookie and nonce while preserving absolute lifetime. Logout revokes its entire session family under the same lock used by rotation. A rotated old credential can only revoke that family with its own matching CSRF nonce; it cannot inspect or renew a session. Later independent login families remain independent. The candidate still reports readiness 503 with `authentication: review_only` even when its database is current. No real resource handlers are enabled.
+
+Run the PostgreSQL suite for actual race/expiry/replay/CSRF/Host/Origin/TLS tests. The runner generates isolated temporary TLS material and never uploads those key bytes. [Review evidence and limits](../../docs/evidence/OWNER_AUTH_REVIEW.md) distinguish this development candidate from production authentication.
 
 ## Verification
 
