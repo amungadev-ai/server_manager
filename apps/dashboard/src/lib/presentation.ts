@@ -45,6 +45,9 @@ export const serviceTone = (service: Service) =>
       ? 'purple'
       : 'mint';
 export const endpoint = (service: Service) =>
+  infrastructure.preview?.hostnames.find(
+    (host) => host.serviceId === service.id,
+  )?.name ??
   infrastructure.preview?.platformDomains.find(
     (domain) => domain.serviceId === service.id,
   )?.name ??

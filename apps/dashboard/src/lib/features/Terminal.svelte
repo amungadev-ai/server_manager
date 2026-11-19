@@ -46,7 +46,11 @@
     entries = [
       {
         kind: 'system',
-        text: 'Demo session started. Type help for the read-only command list. No real command execution.',
+        text: '[SIMULATED] Container-scoped session established. No network connection or real command execution.',
+      },
+      {
+        kind: 'system',
+        text: 'Type help to see available preview commands. Session expires automatically in 5 minutes.',
       },
     ];
     timer = setTimeout(
@@ -69,7 +73,10 @@
       end();
       return;
     }
-    entries.push({ kind: 'command', text: `app $ ${value}` });
+    entries.push({
+      kind: 'prompt',
+      text: `app@${service.name}:/app$ ${value}`,
+    });
     const outputs: Record<string, string> = {
       help: `Simulated read-only commands: ${commands.join(', ')}`,
       pwd: '/app',
@@ -95,11 +102,17 @@
       env: 'Secrets protected. Environment variables are never printed by this demo.',
     };
     entries.push({
-      kind: Object.hasOwn(outputs, value) ? 'output' : 'error',
+      kind:
+        value === 'env'
+          ? 'blocked'
+          : Object.hasOwn(outputs, value)
+            ? 'ok'
+            : 'blocked',
       text:
         outputs[value] ??
-        'Command not permitted. Only listed read-only demo commands are supported.',
+        'Command not permitted in preview. Only allowlisted read-only demo commands are supported. No command was executed.',
     });
+    entries = entries.slice(-45);
   }
   onDestroy(() => clearTimeout(timer));
 </script>

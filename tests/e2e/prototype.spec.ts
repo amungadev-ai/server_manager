@@ -1,12 +1,12 @@
-import { createHash } from 'node:crypto';
-import { readFileSync, existsSync } from 'node:fs';
-import { resolve } from 'node:path';
 import type { Page } from '@playwright/test';
 import { test, expect, noHorizontalOverflow } from './fixtures';
 
-const referenceHash =
-  'f94204ed5e52ae58a80deea46d4fe6edba6626d8b0e36005f6fb9d9765a68f6d';
-const fixedTime = new Date('2026-11-19T06:00:00Z');
+import {
+  openPrototype,
+  prototypeFonts,
+  referenceHash,
+  fixedTime,
+} from './prototype-reference';
 type Scene = {
   name: string;
   path: string;
@@ -173,11 +173,6 @@ const scenes: Scene[] = [
     state: { page: 'overview', assistantOpen: true },
   },
 ];
-async function fonts(page: Page) {
-  await page.evaluate(async () => {
-    await document.fonts.ready;
-  });
-}
 async function layout(page: Page) {
   return page.evaluate(() => {
     const selectors = [
@@ -218,42 +213,19 @@ test('render the immutable v1.13 reference beside all primary Svelte screens', a
   context,
 }, info) => {
   test.setTimeout(180000);
-  expect(
-    createHash('sha256')
-      .update(readFileSync('reference-cloudlane-v1.13.html'))
-      .digest('hex'),
-  ).toBe(referenceHash);
+  page.setDefaultTimeout(10000);
   const reference = await context.newPage();
-  await reference.clock.setFixedTime(fixedTime);
+  await openPrototype(reference);
   await page.clock.setFixedTime(fixedTime);
-  // Serve the original pinned font files locally, without editing the reference HTML.
-  await reference.route(
-    'https://cdn.jsdelivr.net/npm/@fontsource/**',
-    async (route) => {
-      const match = new URL(route.request().url()).pathname.match(
-        /^\/npm\/@fontsource\/(inter|jetbrains-mono)@5\.2\.8\/(latin-\d+\.css|files\/[a-z0-9.-]+\.(?:woff2?|css))$/,
-      );
-      const path = match
-        ? resolve('node_modules/@fontsource', match[1]!, match[2]!)
-        : '';
-      if (!path || !existsSync(path)) return route.abort();
-      await route.fulfill({
-        path,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': path.endsWith('.css') ? 'text/css' : 'font/woff2',
-        },
-      });
-    },
-  );
-  await reference.goto('/__reference');
-  await fonts(reference);
   const comparisons: unknown[] = [];
   for (const scene of scenes) {
     await reference.evaluate(
       `Object.assign(ui, {modal:null,modalData:{},assistantOpen:false,projectId:null,serviceId:null,domainZoneId:null,tab:'overview',projectTab:'services',settingsTab:'workspace',search:'',showPassword:false,mobileMenu:false}, ${JSON.stringify(scene.state)});render();`,
     );
+    if (await page.getByRole('dialog').count())
+      await page.keyboard.press('Escape');
     await page.goto(scene.path);
+    await page.reload();
     await expect(page.locator('.heading h1')).toBeVisible();
     if (scene.tab)
       await page
@@ -263,7 +235,7 @@ test('render the immutable v1.13 reference beside all primary Svelte screens', a
     if (scene.modal) {
       const labels: Record<string, string> = {
         create: 'Create new',
-        application: 'Deploy an application',
+        application: 'Deploy an application From ZIP or GitHub',
         domain: 'Add domain',
       };
       await page
@@ -282,8 +254,8 @@ test('render the immutable v1.13 reference beside all primary Svelte screens', a
         page.getByRole('dialog', { name: 'Cloudlane assistant', exact: true }),
       ).toBeVisible();
     }
-    await fonts(page);
-    await fonts(reference);
+    await prototypeFonts(page);
+    await prototypeFonts(reference);
     await page.mouse.move(0, 0);
     await reference.mouse.move(0, 0);
     if (scene.modal) {
@@ -567,7 +539,10 @@ test('storage and API key workflows stay scoped and simulated', async ({
   await expect(page.locator('.token-preview')).toContainText(
     'cl_demo_not_real_',
   );
-  await page.getByRole('button', { name: 'Dismiss', exact: true }).click();
+  await page
+    .locator('.content')
+    .getByRole('button', { name: 'Dismiss', exact: true })
+    .click();
   await expect(page.locator('.token-preview')).toHaveCount(0);
   await page.getByRole('button', { name: 'Revoke', exact: true }).click();
   await expect(page.getByText('Revoked', { exact: true })).toBeVisible();

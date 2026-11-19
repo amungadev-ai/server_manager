@@ -26,7 +26,10 @@
     } | null>(null);
   function run(event: SubmitEvent) {
     event.preventDefault();
-    const text = (query || samples[0]).trim().replace(/;$/, '');
+    const text = (query || samples[0])
+      .trim()
+      .replace(/;$/, '')
+      .replace(/\s+/g, ' ');
     const index = samples.findIndex(
       (s) => s.toLowerCase() === text.toLowerCase(),
     );
@@ -42,22 +45,22 @@
     }
     result = {
       blocked: false,
-      message:
-        'Synthetic result only. No database connection or real query execution.',
+      message: 'Synthetic preview rows; no SQL was executed.',
       columns:
         index === 0
-          ? ['database']
+          ? [postgres ? 'current_database' : 'DATABASE()']
           : index === 1
-            ? ['table_name']
-            : ['id', 'name', 'email'],
+            ? [postgres ? 'table_name' : `Tables_in_${detail?.database}`]
+            : ['id', 'email', 'status'],
       rows:
         index === 0
           ? [[detail?.database ?? 'demo']]
           : index === 1
-            ? [['users'], ['sessions'], ['jobs']]
+            ? [['users'], ['bookings'], ['profiles']]
             : [
-                ['1', 'Sample User', 'user@example.test'],
-                ['2', 'Demo User', 'demo@example.test'],
+                ['1', 'alex@example.test', 'active'],
+                ['2', 'taylor@example.test', 'active'],
+                ['3', 'sam@example.test', 'pending'],
               ],
     };
   }

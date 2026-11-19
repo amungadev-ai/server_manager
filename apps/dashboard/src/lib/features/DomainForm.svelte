@@ -2,7 +2,7 @@
   import { untrack } from 'svelte';
   import { goto } from '$app/navigation';
   import { infrastructure } from '#lib/stores/infrastructure.svelte.ts';
-  import { ui } from '#lib/stores/ui.svelte.ts';
+  import { ui, copyText } from '#lib/stores/ui.svelte.ts';
   import { previewAction, previewId } from '#lib/preview-actions.ts';
   import Icon from '#lib/components/Icon.svelte';
   import Badge from '#lib/components/Badge.svelte';
@@ -302,6 +302,13 @@
             >
               <div class="muted xs">Nameserver {index + 1}</div>
               <div class="mono small" style="margin:7px 0">{ns}</div>
+              <button
+                class="btn btn-small"
+                type="button"
+                onclick={() => copyText(ns)}
+              >
+                Copy
+              </button>
             </div>{/each}
         </div>
         <div class="notice">

@@ -30,6 +30,7 @@
           'CONNECT',
           'CREATE',
           'TEMPORARY',
+          'USAGE',
           'SELECT',
           'INSERT',
           'UPDATE',
@@ -38,28 +39,32 @@
           'REFERENCES',
           'TRIGGER',
           'EXECUTE',
-          'USAGE',
         ]
       : [
-          'SELECT',
-          'INSERT',
-          'UPDATE',
-          'DELETE',
-          'CREATE',
-          'DROP',
           'ALTER',
-          'INDEX',
-          'REFERENCES',
-          'CREATE TEMPORARY TABLES',
-          'LOCK TABLES',
-          'EXECUTE',
-          'CREATE VIEW',
-          'SHOW VIEW',
-          'CREATE ROUTINE',
           'ALTER ROUTINE',
+          'CREATE',
+          'CREATE ROUTINE',
+          'CREATE TEMPORARY TABLES',
+          'CREATE VIEW',
+          'DELETE',
+          'DROP',
           'EVENT',
+          'EXECUTE',
+          'INDEX',
+          'INSERT',
+          'LOCK TABLES',
+          'REFERENCES',
+          'SELECT',
+          'SHOW VIEW',
           'TRIGGER',
+          'UPDATE',
         ],
+  );
+  const readOnly = $derived(
+    detail?.engine === 'PostgreSQL'
+      ? ['CONNECT', 'USAGE', 'SELECT']
+      : ['SELECT'],
   );
   let name = $state(''),
     value = $state(''),
@@ -119,8 +124,8 @@
                 preset === 'full'
                   ? [...privileges]
                   : preset === 'app'
-                    ? ['SELECT', 'INSERT', 'UPDATE', 'DELETE']
-                    : ['SELECT'],
+                    ? [...readOnly, 'INSERT', 'UPDATE', 'DELETE']
+                    : [...readOnly],
               revoked: false,
             });
           } else if (kind === 'apiKey') {
@@ -363,7 +368,7 @@
         </button><button
           type="button"
           class="btn btn-small"
-          onclick={() => (selected = ['SELECT'])}
+          onclick={() => (selected = [...readOnly])}
         >
           Read only
         </button><button

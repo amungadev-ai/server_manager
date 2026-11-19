@@ -19,7 +19,7 @@
   const url = $derived(
     `${detail?.engine === 'PostgreSQL' ? 'postgresql' : 'mysql'}://${user}:demo_not_real@${host}:${port}/${detail?.database ?? 'demo'}${detail?.engine === 'PostgreSQL' ? '?sslmode=require' : ''}`,
   );
-  let backups = $state<{ id: string; created: string; status: string }[]>([]);
+  const backups = $derived(detail?.backups ?? []);
 </script>
 
 {#if tab === 'overview' || tab === 'connections'}
@@ -158,7 +158,10 @@
                 />
               </td><td>
                 <span class="muted small">
-                  {dbUser.privileges.length} privileges
+                  {dbUser.privileges.length ===
+                  (detail?.engine === 'PostgreSQL' ? 12 : 18)
+                    ? 'Full access'
+                    : `${dbUser.privileges.length} privileges`}
                 </span>
               </td><td>
                 <div class="row">
@@ -212,8 +215,8 @@
       class="btn btn-primary"
       onclick={() =>
         previewAction(
-          () =>
-            backups.unshift({
+          (m) =>
+            (m.services[service.id].backups ??= []).unshift({
               id: previewId('backup'),
               created: new Date().toISOString(),
               status: 'success',

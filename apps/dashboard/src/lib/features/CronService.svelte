@@ -2,7 +2,12 @@
   import type { Service } from '@cloudlane/contracts/preview';
   import { infrastructure } from '#lib/stores/infrastructure.svelte.ts';
   import { previewAction, previewId } from '#lib/preview-actions.ts';
-  import { serviceDetail, formatDate, age } from '#lib/presentation.ts';
+  import {
+    serviceDetail,
+    serviceStatus,
+    formatDate,
+    age,
+  } from '#lib/presentation.ts';
   import Icon from '#lib/components/Icon.svelte';
   import StatusBadge from '#lib/components/StatusBadge.svelte';
   let { service, tab }: { service: Service; tab: string } = $props();
@@ -13,18 +18,26 @@
     ) ?? [],
   );
   function run() {
-    previewAction(
-      (m) =>
-        m.cronRuns.unshift({
-          id: previewId('run'),
-          serviceId: service.id,
-          status: 'success',
-          created: new Date().toISOString(),
-          duration: '416ms',
-          code: '200 OK',
-        }),
-      'Demo execution recorded. No HTTP request was sent.',
-    );
+    previewAction((m) => {
+      const id = previewId('run');
+      m.cronRuns.unshift({
+        id,
+        serviceId: service.id,
+        status: 'running job',
+        created: new Date().toISOString(),
+        duration: '—',
+        code: '—',
+      });
+      setTimeout(() => {
+        if (infrastructure.preview !== m) return;
+        const record = m.cronRuns.find((r) => r.id === id);
+        if (!record) return;
+        const failing = detail?.target?.includes('fail');
+        record.status = failing ? 'failed' : 'success';
+        record.duration = '416ms';
+        record.code = failing ? '503 Service Unavailable' : '200 OK';
+      }, 1150);
+    }, 'Demo execution started. No HTTP request was sent.');
   }
 </script>
 
@@ -32,7 +45,7 @@
     <div class="card">
       <div class="row space">
         <h3 class="section-title">Cron configuration</h3>
-        <StatusBadge status={service.status} />
+        <StatusBadge status={serviceStatus(service)} />
       </div>
       <div class="kv" style="margin-top:14px">
         <span class="k">Schedule</span><span class="v mono">
@@ -54,6 +67,7 @@
               const d = m.services[service.id];
               d.enabled = !d.enabled;
               service.status = d.enabled ? 'active' : 'stopped';
+              d.displayStatus = d.enabled ? 'active' : 'paused';
             })}
         >
           <Icon name={detail?.enabled ? 'pause' : 'play'} size={14} />

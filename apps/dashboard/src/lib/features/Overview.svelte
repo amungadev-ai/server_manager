@@ -101,9 +101,7 @@
           </p>
         </div>
       </div>
-      <a class="btn btn-small" href="/storage">
-        Explore storage <Icon name="arrow" size={14} />
-      </a>
+      <a class="btn btn-small" href="/storage"> Explore storage → </a>
     </div>
   </div>
   <div class="section-head">

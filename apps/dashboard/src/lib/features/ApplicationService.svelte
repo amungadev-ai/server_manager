@@ -118,64 +118,70 @@
             <button class="btn btn-small" onclick={() => (tab = 'logs')}>
               View logs
             </button>
-          </div>{:else}<p class="muted small">No deployment yet</p>{/if}
+          </div>
+          {#if latest.status !== 'LIVE' && latest.status !== 'FAILED'}<div
+              class="progress skeleton"
+            >
+              <span style:width={`${Math.max(8, (latest.stage ?? 0) * 12)}%`}
+              ></span>
+            </div>{/if}{:else}<p class="muted small">No deployment yet</p>{/if}
       </div>
     </div>
-    <div class="col" style="gap:17px">
-      <div class="card">
-        <h3 class="section-title">Source control</h3>
-        <div class="divider"></div>
-        <div class="row">
-          <span class="status-icon">
-            <Icon
-              name={detail?.source === 'github' ? 'github' : 'archive'}
-              size={17}
-            />
-          </span>
-          <div>
-            <div class="strong small">
-              {detail?.source === 'github'
-                ? detail.repo
-                : (detail?.fileName ?? 'Not reported')}
-            </div>
-            <div class="muted xs">
-              {detail?.source === 'github'
-                ? `Branch ${detail.branch ?? 'main'}`
-                : 'Local ZIP source'}
-            </div>
+  </div>
+  <div class="col" style="gap:17px">
+    <div class="card">
+      <h3 class="section-title">Source control</h3>
+      <div class="divider"></div>
+      <div class="row">
+        <span class="status-icon">
+          <Icon
+            name={detail?.source === 'github' ? 'github' : 'archive'}
+            size={17}
+          />
+        </span>
+        <div>
+          <div class="strong small">
+            {detail?.source === 'github'
+              ? detail.repo
+              : (detail?.fileName ?? 'Not reported')}
+          </div>
+          <div class="muted xs">
+            {detail?.source === 'github'
+              ? `Branch ${detail.branch ?? 'main'}`
+              : 'Local ZIP source'}
           </div>
         </div>
-        {#if detail?.source === 'github'}<div class="divider"></div>
-          <div class="row space">
-            <span class="muted xs">Automatic deploy</span><Badge
-              label={detail.autoDeploy ? 'Enabled' : 'Disabled'}
-              tone={detail.autoDeploy ? 'success' : 'warning'}
-            />
-          </div>
-          <div style="margin-top:12px">
-            <button class="btn btn-small" onclick={() => deploy()}>
-              <Icon name="branch" size={14} /> Simulate new commit
-            </button>
-          </div>{/if}
       </div>
-      <div class="card">
-        <h3 class="section-title">Health &amp; networking</h3>
-        <div class="divider"></div>
+      {#if detail?.source === 'github'}<div class="divider"></div>
         <div class="row space">
-          <span class="muted small">Health check</span><StatusBadge
-            status={service.status === 'running' ? 'healthy' : service.status}
+          <span class="muted xs">Automatic deploy</span><Badge
+            label={detail.autoDeploy ? 'Enabled' : 'Disabled'}
+            tone={detail.autoDeploy ? 'success' : 'warning'}
           />
         </div>
-        <div class="row space" style="margin-top:11px">
-          <span class="muted small">Domains</span><strong class="small">
-            {platform.length + hosts.length}
-          </strong>
-        </div>
-        <div class="row space" style="margin-top:11px">
-          <span class="muted small">Build strategy</span><strong class="small">
-            Auto-detected
-          </strong>
-        </div>
+        <div style="margin-top:12px">
+          <button class="btn btn-small" onclick={() => deploy()}>
+            <Icon name="branch" size={14} /> Simulate new commit
+          </button>
+        </div>{/if}
+    </div>
+    <div class="card">
+      <h3 class="section-title">Health &amp; networking</h3>
+      <div class="divider"></div>
+      <div class="row space">
+        <span class="muted small">Health check</span><StatusBadge
+          status={service.status === 'running' ? 'healthy' : service.status}
+        />
+      </div>
+      <div class="row space" style="margin-top:11px">
+        <span class="muted small">Domains</span><strong class="small">
+          {platform.length + hosts.length}
+        </strong>
+      </div>
+      <div class="row space" style="margin-top:11px">
+        <span class="muted small">Build strategy</span><strong class="small">
+          Auto-detected
+        </strong>
       </div>
     </div>
   </div>

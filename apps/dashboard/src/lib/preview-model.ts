@@ -21,6 +21,7 @@ export interface ServiceDetail {
   region?: string;
   displayStatus?: string;
   activeDeployment?: string;
+  backups?: { id: string; created: string; status: string }[];
   variables?: { key: string; value: string }[];
 }
 export interface PreviewModel {

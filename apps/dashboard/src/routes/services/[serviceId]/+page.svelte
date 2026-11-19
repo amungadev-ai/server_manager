@@ -63,6 +63,7 @@
     >
       {#snippet actions()}{#if tab === 'buckets' || tab === 'files'}<button
             class="btn btn-primary"
+            disabled={!infrastructure.preview}
             onclick={() =>
               openDialog(tab === 'buckets' ? 'bucketCreate' : 'objectUpload', {
                 service: service.id,
@@ -114,16 +115,24 @@
         {capitalize(key)}
       </button>{/each}
   </div>
-  {#key service.id}{#if service.kind === 'application'}<ApplicationService
-        {service}
-        bind:tab
-      />{:else if service.kind === 'database'}<DatabaseService
-        {service}
-        {tab}
-      />{:else if service.kind === 'cron'}<CronService
-        {service}
-        {tab}
-      />{:else}<StorageService {service} bind:tab />{/if}{/key}
+  {#if !infrastructure.preview}<div class="card">
+      <h3 class="section-title">Service details not reported</h3>
+      <p class="muted small">
+        The API has reported this service summary. Its configuration, endpoints,
+        logs and management operations have not been connected yet.
+      </p>
+    </div>{:else}
+    {#key service.id}{#if service.kind === 'application'}<ApplicationService
+          {service}
+          bind:tab
+        />{:else if service.kind === 'database'}<DatabaseService
+          {service}
+          {tab}
+        />{:else if service.kind === 'cron'}<CronService
+          {service}
+          {tab}
+        />{:else}<StorageService {service} bind:tab />{/if}{/key}
+  {/if}
 {:else}<div class="card empty">
     <h1>Service not found</h1>
     <a class="btn" href="/projects">All projects</a>

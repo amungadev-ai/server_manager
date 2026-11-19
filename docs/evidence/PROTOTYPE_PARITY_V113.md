@@ -50,3 +50,11 @@ Required checks: type/boundary/contract/progress checks, formatting, existing 46
 - Local `npm test`: pass, 36 Node plus 10 Python tests.
 - Local `npm run build`: pass; production output omits preview fixtures.
 - Remote runs `44464203685` and `44469363900`: formatting gates rejected a test method chain. The pinned formatter required a second normalization pass; the chain was normalized and its output checked again. Browser jobs correctly did not run; these runs are not visual evidence.
+
+## First rendered findings (run 44469649364)
+
+- 13 of 16 browser cases passed per viewport. Navigation/reload, all 37 detail tabs, domain binding/DNS staging, terminal/SQL denials, storage metadata, resource reset and assistant drag/approval exercised actual Chromium.
+- The capture reached 26 paired scenes per viewport. The final three were blocked by a too-narrow accessible-name locator for the quick action; the capture now selects its full accessible name. The key-dismiss test also needed to distinguish the content action from the toast dismiss button. These were harness locator failures.
+- Reference font requests were aborted because npm installed the pinned fonts in the dashboard workspace rather than root node_modules. The harness now resolves from the dashboard package and explicitly requires all six font faces to load. Initial fallback-font screenshots are diagnostic evidence, not an accepted parity baseline.
+- Original rendered application overview stacks Source control and Health & networking below the deployment area; the Svelte layout is being aligned to that rendered arrangement. Dialog overlay color/spacing and text-vs-SVG arrow differences were also corrected.
+- The original teal/white primary-button palette has an inherited 3.74:1 contrast issue. This correction preserves the approved palette. Accessibility verification now compares the original and the app, records both full axe reports, permits only the same source color-contrast debt and rejects new serious/critical violations. This is not an AA-compliance claim.

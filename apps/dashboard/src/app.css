@@ -34,6 +34,7 @@ dialog.modal {
   inset: 0;
   margin: auto;
   height: fit-content;
+  max-width: calc(100% - 40px);
   color: var(--text);
   padding: 0;
 }
@@ -41,8 +42,8 @@ dialog.modal:not([open]) {
   display: none;
 }
 dialog::backdrop {
-  background: rgba(2, 7, 13, 0.76);
-  backdrop-filter: blur(6px);
+  background: rgb(2 6 23 / 0.55);
+  backdrop-filter: none;
 }
 .modal form {
   margin: 0;
@@ -96,4 +97,9 @@ button.arch-node {
   *::after {
     scroll-behavior: auto !important;
   }
+}
+
+button.ai-overlay {
+  border: 0;
+  padding: 0;
 }
