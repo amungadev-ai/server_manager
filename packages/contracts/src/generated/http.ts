@@ -11,7 +11,7 @@ export interface paths {
         put?: never;
         /**
          * Owner password challenge
-         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["login"];
         delete?: never;
@@ -31,7 +31,7 @@ export interface paths {
         put?: never;
         /**
          * End owner session
-         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["logout"];
         delete?: never;
@@ -51,7 +51,7 @@ export interface paths {
         put?: never;
         /**
          * Confirm authenticator and receive recovery codes once
-         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["confirmMfa"];
         delete?: never;
@@ -71,7 +71,7 @@ export interface paths {
         put?: never;
         /**
          * Begin mandatory authenticator enrollment
-         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["enrollMfa"];
         delete?: never;
@@ -91,7 +91,7 @@ export interface paths {
         put?: never;
         /**
          * Verify authenticator challenge
-         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["verifyMfa"];
         delete?: never;
@@ -111,7 +111,7 @@ export interface paths {
         put?: never;
         /**
          * Acknowledge saved recovery codes before owner access
-         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["acknowledgeRecoveryCodes"];
         delete?: never;
@@ -131,7 +131,7 @@ export interface paths {
         put?: never;
         /**
          * Replace codes after password and fresh TOTP step-up
-         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["regenerateRecoveryCodes"];
         delete?: never;
@@ -151,7 +151,7 @@ export interface paths {
         put?: never;
         /**
          * Use one recovery code after password verification
-         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["useRecoveryCode"];
         delete?: never;
@@ -169,7 +169,7 @@ export interface paths {
         };
         /**
          * Owner session
-         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         get: operations["getSession"];
         put?: never;
@@ -191,7 +191,7 @@ export interface paths {
         put?: never;
         /**
          * Rotate owner session and CSRF nonce (review candidate)
-         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["rotateSession"];
         delete?: never;
@@ -211,7 +211,7 @@ export interface paths {
         put?: never;
         /**
          * Claim installation
-         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["claimInstallation"];
         delete?: never;
@@ -231,7 +231,7 @@ export interface paths {
         put?: never;
         /**
          * Create initial owner
-         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["createOwner"];
         delete?: never;
@@ -393,7 +393,7 @@ export interface paths {
         };
         /**
          * Workspace overview projection
-         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         get: operations["getOverview"];
         put?: never;
@@ -413,13 +413,13 @@ export interface paths {
         };
         /**
          * List projects in the authenticated workspace
-         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         get: operations["listProjects"];
         put?: never;
         /**
          * Create a project and production environment
-         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["createProject"];
         delete?: never;
@@ -437,7 +437,7 @@ export interface paths {
         };
         /**
          * Read an owned project
-         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.
          */
         get: operations["getProject"];
         put?: never;
@@ -748,12 +748,16 @@ export interface components {
                 status: "verified" | "pending";
             }[];
             projects: {
+                /** Format: date-time */
+                createdAt?: string;
                 description: string;
                 /** Format: uuid */
                 id: string;
                 name: string;
                 updatedLabel: string;
             }[];
+            /** @enum {string} */
+            scope?: "project_metadata";
             server: {
                 cpuPercent: number;
                 diskTotalGb: number;
@@ -2318,7 +2322,7 @@ export interface operations {
         parameters: {
             query?: never;
             header: {
-                /** @description UUID v4 retry key. Persistence/deduplication is not implemented. */
+                /** @description UUID v4 retry key, scoped to the authenticated workspace/user in the review profile. Same key/body returns the original result; changed body returns 409. */
                 "Idempotency-Key": string;
             };
             path?: never;

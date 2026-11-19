@@ -67,11 +67,25 @@ export class AuthBoundary {
   }
   assert(request: Request): void {
     const mutation = !['GET', 'HEAD', 'OPTIONS'].includes(request.method);
+    const query = request.originalUrl.split('?')[1];
+    let safePage = false;
+    if (
+      query !== undefined &&
+      request.method === 'GET' &&
+      request.path === '/api/v1/projects'
+    ) {
+      const fields = [...new URLSearchParams(query).keys()];
+      safePage =
+        fields.length > 0 &&
+        fields.length <= 2 &&
+        new Set(fields).size === fields.length &&
+        fields.every((key) => key === 'limit' || key === 'cursor');
+    }
     if (
       !request.secure ||
       headerCount(request, 'host') !== 1 ||
       request.headers.host !== this.origin.host ||
-      request.originalUrl.includes('?') ||
+      (request.originalUrl.includes('?') && !safePage) ||
       headerCount(request, 'origin') > 1 ||
       headerCount(request, CSRF_HEADER) > 1 ||
       headerCount(request, AUTH_REQUEST_HEADER) > 1 ||

@@ -6,7 +6,14 @@ import {
   Param,
   Post,
   Query,
+  Req,
+  Res,
+  Inject,
+  type DynamicModule,
 } from '@nestjs/common';
+import type { Request, Response } from 'express';
+import { ownerContext } from '../common/authorization';
+import { ProjectStore, PROJECT_STORE } from '../projects/store';
 import { ApiTags } from '@nestjs/swagger';
 import {
   CreateDeploymentRequestSchema,
@@ -32,14 +39,21 @@ const resourceId = () => new SchemaPipe(ResourceIdSchema);
 @ApiTags('Resources — unavailable')
 @Controller()
 class ResourcesController {
+  constructor(
+    @Inject(PROJECT_STORE) private readonly store: ProjectStore | null,
+  ) {}
+  private projectsStore() {
+    return this.store ?? unavailable();
+  }
   @Get('overview')
   @RouteContract(
     'getOverview',
     'Workspace overview projection',
     'OverviewResponse',
+    { review: true },
   )
-  overview() {
-    return unavailable();
+  overview(@Req() request: Request) {
+    return this.projectsStore().overview(ownerContext(request));
   }
 
   @Get('projects')
@@ -48,9 +62,14 @@ class ResourcesController {
     'listProjects',
     'List projects in the authenticated workspace',
     'ProjectListResponse',
+    { review: true },
   )
-  projects(@Query(new SchemaPipe(PaginationQuerySchema)) _query: unknown) {
-    return unavailable();
+  projects(
+    @Req() request: Request,
+    @Query(new SchemaPipe(PaginationQuerySchema))
+    query: { limit: number; cursor?: string },
+  ) {
+    return this.projectsStore().list(ownerContext(request), query);
   }
 
   @Post('projects')
@@ -58,20 +77,39 @@ class ResourcesController {
     'createProject',
     'Create a project and production environment',
     'CreateProjectResponse',
-    { body: 'CreateProjectRequest', status: 201, mutation: true },
+    {
+      body: 'CreateProjectRequest',
+      status: 201,
+      mutation: true,
+      review: true,
+      retryImplemented: true,
+    },
   )
   createProject(
-    @Body(new SchemaPipe(CreateProjectRequestSchema)) _body: unknown,
-    @RetryKey() _key: string,
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+    @Body(new SchemaPipe(CreateProjectRequestSchema))
+    body: { name: string; slug?: string; description?: string },
+    @RetryKey() key: string,
   ) {
-    return unavailable();
+    return this.projectsStore().create(
+      ownerContext(request),
+      body,
+      key,
+      String(response.getHeader('X-Request-Id')),
+    );
   }
 
   @Get('projects/:projectId')
   @IdParameter('projectId')
-  @RouteContract('getProject', 'Read an owned project', 'ProjectRecord')
-  project(@Param('projectId', resourceId()) _id: string) {
-    return unavailable();
+  @RouteContract('getProject', 'Read an owned project', 'ProjectRecord', {
+    review: true,
+  })
+  project(
+    @Req() request: Request,
+    @Param('projectId', resourceId()) id: string,
+  ) {
+    return this.projectsStore().get(ownerContext(request), id);
   }
 
   @Get('domains')
@@ -174,5 +212,13 @@ class ResourcesController {
     return unavailable();
   }
 }
-@Module({ controllers: [ResourcesController] })
-export class ResourceContractModule {}
+@Module({})
+export class ResourceContractModule {
+  static configure(store?: ProjectStore): DynamicModule {
+    return {
+      module: ResourceContractModule,
+      controllers: [ResourcesController],
+      providers: [{ provide: PROJECT_STORE, useValue: store ?? null }],
+    };
+  }
+}

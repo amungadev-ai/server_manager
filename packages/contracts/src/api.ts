@@ -274,6 +274,7 @@ export const ServiceStatusSchema = z.enum([
   'failed',
 ]);
 export const OverviewProjectSchema = z.strictObject({
+  createdAt: TimestampSchema.optional(),
   id: ResourceIdSchema,
   name: ProjectNameSchema,
   description: DescriptionSchema,
@@ -320,6 +321,7 @@ export const ServerMetricsSchema = z
     'Usage cannot exceed capacity',
   );
 export const OverviewResponseSchema = z.strictObject({
+  scope: z.literal('project_metadata').optional(),
   projects: z.array(OverviewProjectSchema).max(1000),
   services: z.array(OverviewServiceSchema).max(1000),
   domains: z.array(OverviewDomainSchema).max(1000),

@@ -73,7 +73,7 @@
   <PageHeading
     eyebrow="PROJECT / PRODUCTION"
     title={project.name}
-    description={`Created ${formatDate(infrastructure.preview?.projectCreated[project.id])} · Default environment: production`}
+    description={`Created ${infrastructure.mode === 'demo' ? formatDate(infrastructure.preview?.projectCreated[project.id]) : project.createdAt ? new Date(project.createdAt).toLocaleString(undefined, { timeZone: 'Africa/Nairobi', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'date unavailable'} · Default environment: production`}
   >
     {#snippet actions()}<button
         class="btn btn-primary"
