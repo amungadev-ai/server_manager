@@ -197,33 +197,35 @@
       <div>
         <h3 class="section-title">Platform API keys</h3>
         <p class="muted small">
-          Create scoped, revocable credentials for automation. Demo keys cannot
-          authenticate.
+          For external scripts and automation that will call Cloudlane. All keys
+          here are nonfunctional demo examples.
         </p>
       </div>
       <button class="btn btn-primary" onclick={() => openDialog('apiKey')}>
-        <Icon name="plus" size={15} /> Create API key
+        <Icon name="plus" size={15} /> Generate demo key
       </button>
     </div>
-    <div class="divider"></div>
-    {#if ui.revealedKey}<div class="callout">
-        <strong class="small">Copy your demo key now</strong>
-        <p class="muted xs">
-          This is a fake key shown once. It does not authenticate anywhere.
-        </p>
-        <div class="token-preview">{ui.revealedKey}</div>
-        <div class="row" style="margin-top:10px">
-          <button
-            class="btn btn-small"
-            onclick={() => copyText(ui.revealedKey)}
-          >
-            Copy demo key
-          </button><button
-            class="btn btn-small"
-            onclick={() => (ui.revealedKey = '')}
-          >
-            Dismiss
-          </button>
+    {#if ui.revealedKey}<div class="soft-banner" style="margin:18px 0">
+        <Icon name="key" size={20} />
+        <div>
+          <strong class="small">Copy this example key now</strong>
+          <p class="muted xs">
+            Displayed only until dismissed. It does not authenticate anywhere.
+          </p>
+          <div class="token-preview">{ui.revealedKey}</div>
+          <div class="row" style="margin-top:10px">
+            <button
+              class="btn btn-small"
+              onclick={() => copyText(ui.revealedKey)}
+            >
+              Copy demo key
+            </button><button
+              class="btn btn-small"
+              onclick={() => (ui.revealedKey = '')}
+            >
+              Dismiss
+            </button>
+          </div>
         </div>
       </div>{/if}
     <div class="divider"></div>

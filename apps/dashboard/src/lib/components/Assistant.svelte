@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy, tick } from 'svelte';
   import { page } from '$app/state';
+  import { previewAction, previewId } from '#lib/preview-actions.ts';
   import Icon from './Icon.svelte';
   import Badge from './Badge.svelte';
   import { ui, askAssistant, notify } from '#lib/stores/ui.svelte.ts';

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { startDemoDeployment } from '#lib/demo-deployment.ts';
   import { goto } from '$app/navigation';
   import { infrastructure } from '#lib/stores/infrastructure.svelte.ts';
   import { ui, notify } from '#lib/stores/ui.svelte.ts';
@@ -123,19 +124,6 @@
             role: /Nest|Express/.test(type) ? 'api' : 'web',
             variables: [],
           };
-          m.deployments.unshift({
-            id: previewId('dep'),
-            serviceId: id,
-            status: 'LIVE',
-            revision: 'demo-release',
-            created: now,
-            logs: [
-              '[SOURCE] Demo source inspected',
-              '[BUILD] Simulated build completed',
-              '[HEALTH] Candidate healthy (simulated)',
-              '[ROUTE] HTTPS activated (simulation only)',
-            ],
-          });
           m.platformDomains.push({
             id: previewId('dom'),
             serviceId: id,
@@ -172,7 +160,7 @@
           id: previewId('activity'),
           title:
             kind === 'application'
-              ? 'Deployment is live'
+              ? 'Deployment queued'
               : kind === 'database'
                 ? 'Database provisioned'
                 : kind === 'cron'
@@ -182,6 +170,7 @@
           kind: kind as 'application' | 'database' | 'cron' | 'storage',
           timeLabel: 'just now',
         });
+        if (kind === 'application') startDemoDeployment(m, d, id);
         destination = `/services/${id}`;
       }, 'Created in simulation only. No real resources were provisioned.');
       if (ok) {

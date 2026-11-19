@@ -314,8 +314,13 @@ test('render the immutable v1.13 reference beside all primary Svelte screens', a
         contentType: 'image/png',
       });
     }
-    const dimensions=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));
-    expect.soft(dimensions.scroll,scene.name).toBeLessThanOrEqual(dimensions.width);
+    const dimensions = await page.evaluate(() => ({
+      width: innerWidth,
+      scroll: document.documentElement.scrollWidth,
+    }));
+    expect
+      .soft(dimensions.scroll, scene.name)
+      .toBeLessThanOrEqual(dimensions.width);
     if (['overview', 'projects', 'domains'].includes(scene.name)) {
       expect.soft(Object.keys(actual)).toEqual(Object.keys(expected));
       // Primary page structure and approved palette are checked against the source, not a self-generated app baseline.
@@ -450,4 +455,166 @@ test('service previews enforce terminal and SQL boundaries and discard resource 
       ['cloudlane:appearance', 'cloudlane:assistant-position'].includes(key),
     ),
   ).toBe(true);
+});
+
+test('every prototype detail tab contains a working view', async ({ page }) => {
+  test.setTimeout(90000);
+  for (const [path, tabs] of [
+    [
+      '/services/svc_maid_api',
+      [
+        'Overview',
+        'Deployments',
+        'Logs',
+        'Terminal',
+        'Domains',
+        'Variables',
+        'Artifacts',
+        'Volumes',
+        'Settings',
+      ],
+    ],
+    [
+      '/services/svc_db',
+      ['Overview', 'Connections', 'Console', 'Users', 'Backups', 'Settings'],
+    ],
+    ['/services/svc_cron', ['Overview', 'Executions', 'Settings']],
+    [
+      '/services/svc_maid_media',
+      ['Overview', 'Buckets', 'Files', 'Access', 'Usage', 'Settings'],
+    ],
+    [
+      '/domains/zone_example',
+      [
+        'Overview',
+        'DNS Records',
+        'Subdomains',
+        'Connections',
+        'SSL',
+        'Email',
+        'Settings',
+      ],
+    ],
+    [
+      '/settings',
+      [
+        'Workspace',
+        'Integrations',
+        'API Keys',
+        'Security',
+        'Server',
+        'Preferences',
+      ],
+    ],
+  ] as const) {
+    await page.goto(path);
+    await expect(page.locator('.tabs')).toBeVisible();
+    for (const tab of tabs) {
+      await page
+        .locator('.tabs')
+        .getByRole('button', { name: tab, exact: true })
+        .click();
+      await expect(page.locator('.content .card').first()).toBeVisible();
+      await expect(
+        page.getByText('Select a domain section above.', { exact: true }),
+      ).toHaveCount(0);
+      await noHorizontalOverflow(page);
+    }
+  }
+});
+
+test('storage and API key workflows stay scoped and simulated', async ({
+  page,
+}) => {
+  await page.goto('/services/svc_maid_media');
+  await page.getByRole('button', { name: 'Files', exact: true }).click();
+  await page.getByRole('button', { name: /sample-user-001/ }).click();
+  await expect(page.locator('.file-row')).toHaveCount(3);
+  await page
+    .getByRole('button', { name: 'Details', exact: true })
+    .first()
+    .click();
+  await expect(page.getByRole('dialog')).toContainText('Demo metadata only');
+  await expect(page.getByRole('dialog').getByRole('img')).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: 'Upload', exact: true }).click();
+  await page
+    .getByLabel('Choose local file')
+    .setInputFiles({
+      name: 'preview.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from('metadata fixture only'),
+    });
+  await page
+    .getByRole('button', { name: 'Record demo upload', exact: true })
+    .click();
+  await expect(page.getByText('preview.png', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Access', exact: true }).click();
+  await page.getByRole('button', { name: 'Grant access', exact: true }).click();
+  const options = await page
+    .getByRole('dialog')
+    .getByLabel('Application', { exact: true })
+    .locator('option')
+    .allTextContents();
+  expect(options).toEqual(['maidfinder-api', 'maidfinder-admin']);
+  await page.keyboard.press('Escape');
+  await page.goto('/settings?tab=api');
+  await page
+    .getByRole('button', { name: 'Generate demo key', exact: true })
+    .click();
+  await page.getByLabel('Key name', { exact: true }).fill('Preview automation');
+  await page
+    .getByRole('button', { name: 'Create demo key', exact: true })
+    .click();
+  await expect(page.locator('.token-preview')).toContainText(
+    'cl_demo_not_real_',
+  );
+  await page.getByRole('button', { name: 'Dismiss', exact: true }).click();
+  await expect(page.locator('.token-preview')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Revoke', exact: true }).click();
+  await expect(page.getByText('Revoked', { exact: true })).toBeVisible();
+});
+
+test('assistant drag persists a bounded UI preference and plans require approval', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const button = page.getByRole('button', {
+    name: 'Open Cloudlane Assistant (drag to reposition)',
+    exact: true,
+  });
+  await expect(button).toBeVisible();
+  const box = await button.boundingBox();
+  if (!box) throw new Error('Assistant launcher has no box.');
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(22, 180, { steps: 12 });
+  await page.mouse.up();
+  await expect(
+    page.getByRole('dialog', { name: 'Cloudlane assistant', exact: true }),
+  ).toHaveCount(0);
+  await page.reload();
+  const saved = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem('cloudlane:assistant-position') ?? 'null'),
+  );
+  expect(saved.x).toBeGreaterThanOrEqual(0);
+  expect(saved.x).toBeLessThanOrEqual(1);
+  expect(saved.y).toBeGreaterThanOrEqual(0);
+  expect(saved.y).toBeLessThanOrEqual(1);
+  await button.click();
+  await page
+    .getByRole('textbox', { name: 'What would you like Cloudlane to do?' })
+    .fill('Diagnose the failed deployment');
+  await page
+    .getByRole('button', { name: 'Generate plan', exact: true })
+    .click();
+  await expect(page.getByText('Needs approval', { exact: true })).toBeVisible();
+  await page
+    .getByRole('button', { name: 'Approve & simulate', exact: true })
+    .click();
+  await expect(
+    page.getByText('Simulated complete', { exact: true }),
+  ).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(button).toBeFocused();
 });

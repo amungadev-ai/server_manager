@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { redeployDemo } from '#lib/demo-deployment.ts';
   import type { Service } from '@cloudlane/contracts/preview';
   import { infrastructure } from '#lib/stores/infrastructure.svelte.ts';
   import { openDialog, copyText, askAssistant } from '#lib/stores/ui.svelte.ts';
@@ -42,33 +43,10 @@
     deployments.find((d) => d.id === selected) ?? latest,
   );
   function deploy(failure = '') {
-    previewAction(
-      (m) => {
-        m.deployments.unshift({
-          id: previewId('dep'),
-          serviceId: service.id,
-          status: failure ? 'FAILED' : 'LIVE',
-          revision: failure ? 'demo-failed' : previewId('demo'),
-          created: new Date().toISOString(),
-          logs: failure
-            ? [
-                '[SOURCE] Demo source prepared',
-                `[${failure === 'build' ? 'BUILD' : 'HEALTH'}] Simulated failure — previous release preserved`,
-              ]
-            : [
-                '[SOURCE] Demo source prepared',
-                '[BUILD] Simulated build completed',
-                '[HEALTH] Candidate service healthy (simulated)',
-                '[ROUTE] Release activated (simulation only)',
-              ],
-        });
-      },
-      failure
-        ? 'Simulated failure. Existing live release preserved.'
-        : 'Demo release activated. No real build or deployment occurred.',
-    );
-    tab = failure ? 'logs' : 'deployments';
-    selected = '';
+    if (redeployDemo(service.id, failure)) {
+      tab = failure ? 'logs' : 'deployments';
+      selected = '';
+    }
   }
 </script>
 
@@ -233,13 +211,11 @@
                     }}
                   >
                     Logs
-                  </button>{#if release.status === 'LIVE' && index > 0}<button
+                  </button>{#if release.status === 'LIVE' && release.id !== (detail?.activeDeployment ?? deployments.find((d) => d.status === 'LIVE')?.id)}<button
                       class="btn btn-small"
                       onclick={() =>
                         previewAction((m) => {
-                          const entries = m.deployments.filter(
-                            (d) => d.serviceId === service.id,
-                          );
+                          m.services[service.id].activeDeployment = release.id;
                           m.deployments = [
                             release,
                             ...m.deployments.filter((d) => d.id !== release.id),

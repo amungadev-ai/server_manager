@@ -20,6 +20,7 @@ export interface ServiceDetail {
   provider?: string;
   region?: string;
   displayStatus?: string;
+  activeDeployment?: string;
   variables?: { key: string; value: string }[];
 }
 export interface PreviewModel {
@@ -66,6 +67,7 @@ export interface PreviewModel {
     id: string;
     serviceId: string;
     status: string;
+    stage?: number;
     revision: string;
     created: string;
     logs: string[];

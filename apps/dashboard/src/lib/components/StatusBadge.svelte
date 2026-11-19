@@ -11,7 +11,6 @@
       'verified',
       'connected',
       'available',
-      'healthy',
     ].includes(status.toLowerCase())
       ? 'ok'
       : ['failed', 'error', 'offline'].includes(status.toLowerCase())
@@ -37,5 +36,5 @@
   <span
     class="dot"
     style="width:5px;height:5px;background:currentColor;box-shadow:none"
-  ></span>{capitalize(status)}
+  ></span>{capitalize(status.toLowerCase())}
 </span>
