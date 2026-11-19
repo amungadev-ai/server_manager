@@ -1,4 +1,4 @@
-import { Controller, Get, Module, Res } from '@nestjs/common';
+import { Controller, Get, Module, Res, Inject } from '@nestjs/common';
 import type { Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import {
@@ -8,11 +8,16 @@ import {
 } from '@cloudlane/contracts/api';
 import { RouteContract } from '../common/documentation';
 import { PlatformDatabase } from '../database/database';
+import { OwnerAuthReview } from '../auth/review';
+import { REVIEW_TOKEN } from '../auth/policy';
 
 @ApiTags('Platform')
 @Controller()
 class PlatformController {
-  constructor(private readonly database: PlatformDatabase) {}
+  constructor(
+    private readonly database: PlatformDatabase,
+    @Inject(REVIEW_TOKEN) private readonly review: OwnerAuthReview | null,
+  ) {}
   @Get('health')
   @RouteContract(
     'getHealth',
@@ -45,7 +50,7 @@ class PlatformController {
     return ReadinessResponseSchema.parse({
       status: 'not_ready',
       database: await this.database.status(),
-      authentication: 'unavailable',
+      authentication: this.review ? 'review_only' : 'unavailable',
     });
   }
 
@@ -56,7 +61,9 @@ class PlatformController {
     'InstallationStatus',
     { implemented: true, access: 'public' },
   )
-  installation() {
+  async installation() {
+    if (this.review)
+      return InstallationStatusSchema.parse(await this.review.store.status());
     return InstallationStatusSchema.parse({
       state: 'unconfigured',
       ownerConfigured: false,

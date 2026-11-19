@@ -1,0 +1,62 @@
+
+> cloudlane@0.1.0 test:postgres
+> npm run build:api && node scripts/run-postgres-tests.mjs
+
+
+> cloudlane@0.1.0 build:api
+> npm run build:contracts && npm run build --workspace @cloudlane/api
+
+
+> cloudlane@0.1.0 build:contracts
+> npm run build --workspace @cloudlane/contracts
+
+
+> @cloudlane/contracts@0.1.0 build
+> node ../../scripts/build-contracts.mjs
+
+
+> @cloudlane/api@0.1.0 build
+> tsc -p tsconfig.json
+
+✔ fresh migration creates a durable single installation and no users, sessions or fixtures (38.641545ms)
+✔ reruns preserve installation identity and existing owner/project data across new connections (36.626752ms)
+✔ two concurrent migrators apply exactly once and produce one installation (28.041061ms)
+✔ failure on first install rolls back schema, ledger and installation together (44.666709ms)
+✔ failed upgrade preserves the previous identity, data and migration ledger (30.600536ms)
+✔ changed checksum and newer unknown migration histories block further migration (28.904089ms)
+✔ a busy migration lock fails within the bounded timeout and can be retried (5045.528464ms)
+✔ database constraints enforce one installation and one owner under concurrent inserts (33.700499ms)
+✔ workspace/project compound foreign keys reject cross-workspace environments (34.066047ms)
+✔ project slugs are constrained and unique within each workspace (41.870613ms)
+✔ session records require hashes, valid lifetime ordering and an owned workspace (51.839808ms)
+✔ a readiness-only runtime role can read the ledger but cannot modify it (32.630214ms)
+✔ real database readiness detects migration state and never reports authentication ready (108.692029ms)
+✔ public lifecycle contains no identity/claim material and never declares production readiness (125.935088ms)
+✔ one claim exchange wins a concurrent race; replay, wrong and cross-instance codes fail (63.559131ms)
+✔ expired claims and regenerated codes cannot open setup (43.29039ms)
+✔ claim verifier attempts remain durable and bounded after ten failures (87.966521ms)
+✔ one owner/workspace is created atomically under concurrent requests; all bootstrap material becomes unusable (89.619699ms)
+✔ owner creation rollback preserves the setup lease and never leaves a partial owner (96.550447ms)
+✔ expired/revoked setup leases, forged authority and wrong setup CSRF cannot create an owner (65.370348ms)
+✔ owner creation rechecks setup expiry after preflight and hashing (54.611443ms)
+✔ login rechecks a password hash changed after credential verification (102.779698ms)
+✔ real Argon2 login returns host-only secure cookies, a CSRF nonce and server-derived owner data (93.196556ms)
+✔ missing users, wrong passwords and disabled owners have identical errors and no cookies (135.396823ms)
+✔ login always replaces an incoming credential and revokes its prior session family (120.247125ms)
+✔ cookie authentication rejects bearer/agent alternatives and duplicate cookie/CSRF inputs (90.385179ms)
+✔ all authenticated mutations reject missing/wrong CSRF and exact-origin violations (127.694028ms)
+✔ login/claim deny cross-origin, missing custom header, query secrets and HTTP even with forged Forwarded headers (61.898999ms)
+✔ idle/absolute expiry, direct revocation and disabled owners invalidate existing cookies (177.514709ms)
+✔ rotation changes credential/CSRF, preserves absolute lifetime and old credential can only revoke its family (118.345898ms)
+✔ concurrent rotations produce one successor and a concurrent logout cannot leave a live successor (108.178605ms)
+✔ durable throttling is shared by independent runtimes and expires without resetting owner data (214.585942ms)
+✔ audit rows and database verifiers contain no raw password, session or claim credential (109.714762ms)
+✔ IP-host TLS cookies have the same flags and cannot change server-derived workspace scope (114.480753ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8365.378157

@@ -60,3 +60,7 @@ The initial pack inventory has been updated for the repository foundation. Exact
 ## API and persistence development batch
 
 [CL-030/031 evidence](evidence/API_PERSISTENCE_BATCH.md) and [ADR-018](adr/018-api-persistence-foundations.md) describe the bounded API guard/database foundation in PR #4, stacked on the tested prototype conversion. These are development changes pending their recorded checks/review; no operational authentication, owner-claim exchange, installer or production service is implied. Canonical task records and PR checks identify current evidence.
+
+## Isolated owner authentication candidate
+
+[PR #5](https://github.com/amungadev-ai/server_manager/pull/5) prepares CL-032/033 under [ADR-019](adr/019-owner-auth-review-profile.md). It implements a concrete PostgreSQL/HTTPS development candidate with negative-path evidence. The normal API entry point keeps authentication disabled and the factory rejects production activation. Independent CL-005 review, MFA, installer/Caddy integration and real VPS acceptance remain open. See [the review evidence](evidence/OWNER_AUTH_REVIEW.md) and current PR checks for exact source scope.

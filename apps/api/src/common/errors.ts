@@ -14,6 +14,7 @@ export const errorMessages: Record<ErrorCode, string> = {
   PAYLOAD_TOO_LARGE: 'The JSON request body exceeds the allowed size.',
   UNSUPPORTED_MEDIA_TYPE: 'Use the application/json content type.',
   SESSION_REQUIRED: 'An authenticated owner session is required.',
+  AUTHENTICATION_FAILED: 'The supplied credentials are invalid or expired.',
   FORBIDDEN: 'This action is not permitted.',
   NOT_FOUND: 'The requested route or resource was not found.',
   METHOD_NOT_ALLOWED: 'This HTTP method is not supported.',

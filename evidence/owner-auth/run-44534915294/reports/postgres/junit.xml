@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="fresh migration creates a durable single installation and no users, sessions or fixtures" time="0.038642" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/control-plane.integration.mjs"/>
+	<testcase name="reruns preserve installation identity and existing owner/project data across new connections" time="0.036627" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/control-plane.integration.mjs"/>
+	<testcase name="two concurrent migrators apply exactly once and produce one installation" time="0.028041" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/control-plane.integration.mjs"/>
+	<testcase name="failure on first install rolls back schema, ledger and installation together" time="0.044667" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/control-plane.integration.mjs"/>
+	<testcase name="failed upgrade preserves the previous identity, data and migration ledger" time="0.030601" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/control-plane.integration.mjs"/>
+	<testcase name="changed checksum and newer unknown migration histories block further migration" time="0.028904" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/control-plane.integration.mjs"/>
+	<testcase name="a busy migration lock fails within the bounded timeout and can be retried" time="5.045528" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/control-plane.integration.mjs"/>
+	<testcase name="database constraints enforce one installation and one owner under concurrent inserts" time="0.033700" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/control-plane.integration.mjs"/>
+	<testcase name="workspace/project compound foreign keys reject cross-workspace environments" time="0.034066" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/control-plane.integration.mjs"/>
+	<testcase name="project slugs are constrained and unique within each workspace" time="0.041871" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/control-plane.integration.mjs"/>
+	<testcase name="session records require hashes, valid lifetime ordering and an owned workspace" time="0.051840" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/control-plane.integration.mjs"/>
+	<testcase name="a readiness-only runtime role can read the ledger but cannot modify it" time="0.032630" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/control-plane.integration.mjs"/>
+	<testcase name="real database readiness detects migration state and never reports authentication ready" time="0.108692" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/control-plane.integration.mjs"/>
+	<testcase name="public lifecycle contains no identity/claim material and never declares production readiness" time="0.125935" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="one claim exchange wins a concurrent race; replay, wrong and cross-instance codes fail" time="0.063559" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="expired claims and regenerated codes cannot open setup" time="0.043290" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="claim verifier attempts remain durable and bounded after ten failures" time="0.087967" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="one owner/workspace is created atomically under concurrent requests; all bootstrap material becomes unusable" time="0.089620" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="owner creation rollback preserves the setup lease and never leaves a partial owner" time="0.096550" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="expired/revoked setup leases, forged authority and wrong setup CSRF cannot create an owner" time="0.065370" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="owner creation rechecks setup expiry after preflight and hashing" time="0.054611" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="login rechecks a password hash changed after credential verification" time="0.102780" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="real Argon2 login returns host-only secure cookies, a CSRF nonce and server-derived owner data" time="0.093197" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="missing users, wrong passwords and disabled owners have identical errors and no cookies" time="0.135397" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="login always replaces an incoming credential and revokes its prior session family" time="0.120247" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="cookie authentication rejects bearer/agent alternatives and duplicate cookie/CSRF inputs" time="0.090385" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="all authenticated mutations reject missing/wrong CSRF and exact-origin violations" time="0.127694" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="login/claim deny cross-origin, missing custom header, query secrets and HTTP even with forged Forwarded headers" time="0.061899" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="idle/absolute expiry, direct revocation and disabled owners invalidate existing cookies" time="0.177515" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="rotation changes credential/CSRF, preserves absolute lifetime and old credential can only revoke its family" time="0.118346" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="concurrent rotations produce one successor and a concurrent logout cannot leave a live successor" time="0.108179" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="durable throttling is shared by independent runtimes and expires without resetting owner data" time="0.214586" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="audit rows and database verifiers contain no raw password, session or claim credential" time="0.109715" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<testcase name="IP-host TLS cookies have the same flags and cannot change server-derived workspace scope" time="0.114481" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/postgres/owner-auth.integration.mjs"/>
+	<!-- tests 34 -->
+	<!-- suites 0 -->
+	<!-- pass 34 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 8365.378157 -->
+</testsuites>

@@ -14,15 +14,10 @@ export interface AppliedMigration {
 export const migrationChecksum = (sql: string) =>
   createHash('sha256').update(sql).digest('hex');
 export function loadMigrations(): readonly Migration[] {
-  return [
-    {
-      id: '0001_control_plane',
-      sql: readFileSync(
-        resolve(__dirname, '../../migrations/0001_control_plane.sql'),
-        'utf8',
-      ),
-    },
-  ];
+  return ['0001_control_plane', '0002_owner_auth'].map((id) => ({
+    id,
+    sql: readFileSync(resolve(__dirname, `../../migrations/${id}.sql`), 'utf8'),
+  }));
 }
 export function validateHistory(
   migrations: readonly Migration[],

@@ -11,7 +11,7 @@ export interface paths {
         put?: never;
         /**
          * Owner login
-         * @description DECLARED, UNAVAILABLE: Validates request shape and returns 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["login"];
         delete?: never;
@@ -31,7 +31,7 @@ export interface paths {
         put?: never;
         /**
          * End owner session
-         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["logout"];
         delete?: never;
@@ -49,11 +49,31 @@ export interface paths {
         };
         /**
          * Owner session
-         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.
          */
         get: operations["getSession"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/session/rotate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Rotate owner session and CSRF nonce (review candidate)
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.
+         */
+        post: operations["rotateSession"];
         delete?: never;
         options?: never;
         head?: never;
@@ -71,7 +91,7 @@ export interface paths {
         put?: never;
         /**
          * Claim installation
-         * @description DECLARED, UNAVAILABLE: Validates request shape and returns 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["claimInstallation"];
         delete?: never;
@@ -91,7 +111,7 @@ export interface paths {
         put?: never;
         /**
          * Create initial owner
-         * @description DECLARED, UNAVAILABLE: Validates request shape and returns 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup CSRF nonce where applicable. Independent security review is pending.
          */
         post: operations["createOwner"];
         delete?: never;
@@ -109,7 +129,7 @@ export interface paths {
         };
         /**
          * Read observed deployment state
-         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.
          */
         get: operations["getDeployment"];
         put?: never;
@@ -129,13 +149,13 @@ export interface paths {
         };
         /**
          * List globally registered workspace domains
-         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.
          */
         get: operations["listDomains"];
         put?: never;
         /**
          * Register a pending domain with Manual DNS
-         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.
          */
         post: operations["createDomain"];
         delete?: never;
@@ -155,7 +175,7 @@ export interface paths {
         put?: never;
         /**
          * Stage a DNS mode change from domain Settings
-         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.
          */
         post: operations["transitionDnsMode"];
         delete?: never;
@@ -175,7 +195,7 @@ export interface paths {
         put?: never;
         /**
          * Request actual DNS ownership verification
-         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.
          */
         post: operations["verifyDomain"];
         delete?: never;
@@ -253,7 +273,7 @@ export interface paths {
         };
         /**
          * Workspace overview projection
-         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.
          */
         get: operations["getOverview"];
         put?: never;
@@ -273,13 +293,13 @@ export interface paths {
         };
         /**
          * List projects in the authenticated workspace
-         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.
          */
         get: operations["listProjects"];
         put?: never;
         /**
          * Create a project and production environment
-         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.
          */
         post: operations["createProject"];
         delete?: never;
@@ -297,7 +317,7 @@ export interface paths {
         };
         /**
          * Read an owned project
-         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.
          */
         get: operations["getProject"];
         put?: never;
@@ -319,7 +339,7 @@ export interface paths {
         put?: never;
         /**
          * Queue a static ZIP deployment
-         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.
          */
         post: operations["createDeployment"];
         delete?: never;
@@ -339,7 +359,7 @@ export interface paths {
         put?: never;
         /**
          * Queue rollback to a prior healthy release
-         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
+         * @description NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.
          */
         post: operations["rollbackDeployment"];
         delete?: never;
@@ -355,7 +375,7 @@ export interface components {
         ApiErrorEnvelope: {
             error: {
                 /** @enum {string} */
-                code: "VALIDATION_ERROR" | "INVALID_JSON" | "PAYLOAD_TOO_LARGE" | "UNSUPPORTED_MEDIA_TYPE" | "SESSION_REQUIRED" | "FORBIDDEN" | "NOT_FOUND" | "METHOD_NOT_ALLOWED" | "CONFLICT" | "RATE_LIMITED" | "NOT_IMPLEMENTED" | "API_UNAVAILABLE" | "INTERNAL_ERROR";
+                code: "VALIDATION_ERROR" | "INVALID_JSON" | "PAYLOAD_TOO_LARGE" | "UNSUPPORTED_MEDIA_TYPE" | "SESSION_REQUIRED" | "AUTHENTICATION_FAILED" | "FORBIDDEN" | "NOT_FOUND" | "METHOD_NOT_ALLOWED" | "CONFLICT" | "RATE_LIMITED" | "NOT_IMPLEMENTED" | "API_UNAVAILABLE" | "INTERNAL_ERROR";
                 details?: {
                     issues: {
                         code: string;
@@ -368,6 +388,7 @@ export interface components {
             };
         };
         BootstrapResponse: {
+            csrfToken?: string;
             /** @enum {string} */
             state: "owner_setup_required" | "mfa_setup_required" | "active";
         };
@@ -388,7 +409,7 @@ export interface components {
             displayName: string;
             /** Format: email */
             email: string;
-            /** @description Shape only. Password strength/MFA policy requires security review. */
+            /** @description Review candidate: minimum 15 characters and maximum 1024 UTF-8 bytes; no trimming. Production password/MFA policy requires security review. */
             password: string;
         };
         CreateProjectRequest: {
@@ -502,6 +523,26 @@ export interface components {
             setupAvailable: false;
             /** @enum {string} */
             state: "unconfigured";
+        } | {
+            /** @enum {boolean} */
+            ownerConfigured: false;
+            setupAvailable: boolean;
+            /** @enum {string} */
+            state: "unclaimed";
+        } | {
+            /** @enum {boolean} */
+            ownerConfigured: false;
+            /** @enum {boolean} */
+            setupAvailable: false;
+            /** @enum {string} */
+            state: "setup_pending";
+        } | {
+            /** @enum {boolean} */
+            ownerConfigured: true;
+            /** @enum {boolean} */
+            setupAvailable: false;
+            /** @enum {string} */
+            state: "active";
         };
         LoginRequest: {
             /** Format: email */
@@ -607,7 +648,7 @@ export interface components {
         };
         ReadinessResponse: {
             /** @enum {string} */
-            authentication: "unavailable";
+            authentication: "unavailable" | "review_only";
             /** @enum {string} */
             database: "unconfigured" | "unavailable" | "migration_required" | "ready";
             /** @enum {string} */
@@ -622,6 +663,7 @@ export interface components {
         SessionResponse: {
             /** @enum {boolean} */
             authenticated: true;
+            csrfToken?: string;
             user: {
                 displayName: string;
                 /** Format: email */
@@ -831,6 +873,93 @@ export interface operations {
             };
             /** @description Actor or route policy denied. */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Result for valid requests after required authorization. No operation is performed. */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Session verifier unavailable; access denied. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+        };
+    };
+    rotateSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EmptyRequest"];
+            };
+        };
+        responses: {
+            /** @description Planned success response; not emitted by the current scaffold. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionResponse"];
+                };
+            };
+            /** @description Invalid request or JSON. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Owner session required; current default for protected operations. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Actor or route policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description JSON body too large. */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description JSON content type required. */
+            415: {
                 headers: {
                     [name: string]: unknown;
                 };

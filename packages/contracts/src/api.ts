@@ -15,6 +15,7 @@ export const ErrorCodeSchema = z.enum([
   'PAYLOAD_TOO_LARGE',
   'UNSUPPORTED_MEDIA_TYPE',
   'SESSION_REQUIRED',
+  'AUTHENTICATION_FAILED',
   'FORBIDDEN',
   'NOT_FOUND',
   'METHOD_NOT_ALLOWED',
@@ -46,11 +47,28 @@ export const HealthResponseSchema = z.strictObject({
   version: z.string().min(1).max(40),
   readiness: z.literal('unconfigured'),
 });
-export const InstallationStatusSchema = z.strictObject({
-  state: z.literal('unconfigured'),
-  ownerConfigured: z.literal(false),
-  setupAvailable: z.literal(false),
-});
+export const InstallationStatusSchema = z.discriminatedUnion('state', [
+  z.strictObject({
+    state: z.literal('unconfigured'),
+    ownerConfigured: z.literal(false),
+    setupAvailable: z.literal(false),
+  }),
+  z.strictObject({
+    state: z.literal('unclaimed'),
+    ownerConfigured: z.literal(false),
+    setupAvailable: z.boolean(),
+  }),
+  z.strictObject({
+    state: z.literal('setup_pending'),
+    ownerConfigured: z.literal(false),
+    setupAvailable: z.literal(false),
+  }),
+  z.strictObject({
+    state: z.literal('active'),
+    ownerConfigured: z.literal(true),
+    setupAvailable: z.literal(false),
+  }),
+]);
 export type HealthResponse = z.infer<typeof HealthResponseSchema>;
 export type InstallationStatus = z.infer<typeof InstallationStatusSchema>;
 export const DatabaseStatusSchema = z.enum([
@@ -63,7 +81,7 @@ export type DatabaseStatus = z.infer<typeof DatabaseStatusSchema>;
 export const ReadinessResponseSchema = z.strictObject({
   status: z.literal('not_ready'),
   database: DatabaseStatusSchema,
-  authentication: z.literal('unavailable'),
+  authentication: z.enum(['unavailable', 'review_only']),
 });
 
 const ProjectNameSchema = z.string().trim().min(1).max(80);
@@ -119,14 +137,30 @@ export const ClaimRequestSchema = z.strictObject({
 export const CreateOwnerRequestSchema = z.strictObject({
   email: z.email().max(254),
   displayName: z.string().trim().min(1).max(80),
-  password: z.string().min(1).max(1024).meta({
-    writeOnly: true,
-    description:
-      'Shape only. Password strength/MFA policy requires security review.',
-  }),
+  password: z
+    .string()
+    .min(15)
+    .max(1024)
+    .refine(
+      (value) => Array.from(value).length >= 15,
+      'Password requires at least 15 Unicode code points',
+    )
+    .refine(
+      (value) => new TextEncoder().encode(value).length <= 1024,
+      'Password exceeds the UTF-8 byte limit',
+    )
+    .meta({
+      writeOnly: true,
+      description:
+        'Review candidate: minimum 15 characters and maximum 1024 UTF-8 bytes; no trimming. Production password/MFA policy requires security review.',
+    }),
 });
 export const BootstrapResponseSchema = z.strictObject({
   state: z.enum(['owner_setup_required', 'mfa_setup_required', 'active']),
+  csrfToken: z
+    .string()
+    .regex(/^[A-Za-z0-9_-]{43}$/)
+    .optional(),
 });
 export const EmptyRequestSchema = z.strictObject({});
 export const LogoutResponseSchema = z.strictObject({
@@ -134,6 +168,10 @@ export const LogoutResponseSchema = z.strictObject({
 });
 export const SessionResponseSchema = z.strictObject({
   authenticated: z.literal(true),
+  csrfToken: z
+    .string()
+    .regex(/^[A-Za-z0-9_-]{43}$/)
+    .optional(),
   user: z.strictObject({
     id: ResourceIdSchema,
     email: z.email().max(254),

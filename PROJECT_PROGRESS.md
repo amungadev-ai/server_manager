@@ -1,6 +1,6 @@
 # Cloudlane — integration progress
 
-Recorded: 2026-11-19 (Africa/Nairobi). Foundation/CI is integrated; prototype parity is ready for review in PR #3; the API/PostgreSQL batch is in development in PR #4. No production release, independent security approval or live resource operation is claimed.
+Recorded: 2026-11-19 (Africa/Nairobi). Foundation/CI is integrated; prototype and API/PostgreSQL foundations are ready for review in PR #3/#4; the isolated owner-auth candidate is prepared for independent review in PR #5. No production release, independent security approval or live resource operation is claimed.
 
 | Area | Current state |
 | --- | --- |
@@ -11,7 +11,8 @@ Recorded: 2026-11-19 (Africa/Nairobi). Foundation/CI is integrated; prototype pa
 | API authorization foundation | CL-030/PR #4 adds global default-deny policy, a disabled session resolver, request-local server-derived context and safe readiness. It issues/accepts no owner sessions |
 | PostgreSQL foundation | CL-031/PR #4 adds atomic checksummed migrations and installation/user/session/workspace/project/environment tables. Initial hosted SQL run passes 13 cases, with retained hashed reports. Corrected driver configuration passes 65 local unit/HTTP/progress cases; final combined checks/review are tracked by PR #4 |
 | Security threat model | Separate draft PR #2; independent review remains pending |
-| Owner claim, login, MFA and project CRUD | CL-032–036 not implemented; bootstrap/session gates depend on the security review |
+| Owner claim and login | CL-032/033 isolated development candidate in PR #5; default API authentication remains disabled pending independent security review |
+| MFA, auth UI and project CRUD | CL-034–036 remain later gates; no production auth, recovery or mutation is claimed |
 | Installer, agent, pg-boss and real resources | Not implemented; no VPS, Docker, TLS, DNS, mail or storage operation is claimed |
 
 The [private dashboard preview](https://cloudlane-foundation.spiritedghat4.chatgpt.site) hosts static Svelte output. It cannot host the separate Nest/PostgreSQL platform. Authentication and resource data are never persisted in browser localStorage; UI preferences only.
@@ -32,4 +33,10 @@ The prototype batch later passed [run 44476534033](https://github.com/amungadev-
 
 ## Next gate
 
-Finish and review CL-030/031 using real PostgreSQL and unchanged desktop/mobile prototype checks. Then resolve CL-005's independent security decisions before CL-032/033 owner claim and session issuance. Project mutation requires CL-036 workspace authorization tests. Production acceptance still needs installation, role provisioning, trusted TLS, backup/restore, agent and VPS evidence. Task states are not promoted to merged/verified by scaffolding or preview publication.
+PR #4 passes all six required jobs in run 44490126404 (65 unit/HTTP/progress, 13 PostgreSQL, 32 browser and 40 prototype comparisons). Review the CL-032/033 candidate and ADR-019 in PR #5 using its actual PostgreSQL/HTTPS evidence; resolve CL-005 independently before activation. Project mutation requires CL-036 workspace authorization tests. Production acceptance still needs installation, role provisioning, trusted TLS, backup/restore, agent and VPS evidence. Task states are not promoted to merged/verified by scaffolding or preview publication.
+
+## Owner authentication review candidate
+
+[PR #5](https://github.com/amungadev-ai/server_manager/pull/5), branch `task/CL-032-033-owner-auth-review`, is stacked on PR #4. It implements a concrete claim/login/session development candidate under [ADR-019](docs/adr/019-owner-auth-review-profile.md). [Evidence](docs/evidence/OWNER_AUTH_REVIEW.md) and canonical task records distinguish local/hosted checks from outstanding independent review, MFA, installer/Caddy/TLS and production-VPS gates. The normal API entry point exposes no switch to activate the candidate.
+
+The CL-032/033 implementation checkpoint `30e611aa238a6b781c234be18b611c82d0e197f6` passes all six jobs in [run 44534915294](https://github.com/amungadev-ai/server_manager/actions/runs/44534915294): 72 unit/HTTP/progress, 34 real PostgreSQL/HTTPS, 32 browser and 40 source screenshot comparisons. [Retained evidence](evidence/owner-auth/README.md) verifies source and artifact hashes. Independent review and production activation remain open.
