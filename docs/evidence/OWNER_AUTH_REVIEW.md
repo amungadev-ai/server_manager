@@ -1,6 +1,6 @@
 # CL-032/033 owner authentication review candidate
 
-2026-11-19 (Africa/Nairobi). Canonical [draft PR #5](https://github.com/amungadev-ai/server_manager/pull/5), branch `task/CL-032-033-owner-auth-review`, is stacked on PR #4 (`cf815a214a2ad184a234a10727870b9964d682d7`). Initial shared claim: `f83b6e7367077d8bcf5775043d4c94e01abbc4d1`.
+2026-11-19 (Africa/Nairobi). Canonical [PR #5](https://github.com/amungadev-ai/server_manager/pull/5), branch `task/CL-032-033-owner-auth-review`, is stacked on PR #4 (`cf815a214a2ad184a234a10727870b9964d682d7`). Initial shared claim: `f83b6e7367077d8bcf5775043d4c94e01abbc4d1`.
 
 ## Implemented and deliberately gated
 
@@ -43,3 +43,7 @@ Independent security decisions, MFA/step-up/recovery, production password/blockl
 ## Local implementation checkpoint
 
 PASS current local `npm run check`, `npm test` (62 Node + 10 Python, zero failures/skips), and `npm run lint`. Both production/demo builds passed the preceding local checkpoint; hosted/package builds use final source. Native Argon2 tests include independent salt, cost ceilings, Unicode/byte bounds and two-operation admission. Prepared 21 auth PostgreSQL/HTTPS cases and 13 migration cases; their actual execution is pending at this checkpoint. Final current-source required-run evidence is recorded in PR #5 rather than inferred from preparation.
+
+## Hosted implementation checkpoint
+
+[Run 44534915294](https://github.com/amungadev-ai/server_manager/actions/runs/44534915294) passes all six jobs on `30e611aa238a6b781c234be18b611c82d0e197f6`: 72 unit/HTTP/progress, 34 real PostgreSQL/HTTPS, 32 browser and 40 direct prototype comparisons. [Retained source-bound reports](../../evidence/owner-auth/README.md) include verified archive/manifest hashes, JUnit and actual server version. The tested merge and source-head Git trees match. This run proves the isolated candidate; activation and independent review remain outstanding. Final PR checks identify the later documentation/evidence commit.
