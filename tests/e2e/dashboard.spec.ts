@@ -18,9 +18,10 @@ test('demo overview is explicitly labelled and fits the viewport', async ({
 });
 test('project search, detail navigation and reload use the static SPA fallback', async ({
   page,
+  isMobile,
 }) => {
   await page.goto('/');
-  await navigate(page, 'Projects');
+  await navigate(page, 'Projects', isMobile);
   await page.getByRole('textbox', { name: 'Search projects' }).fill('Maid');
   await expect(page.locator('.project-card')).toHaveCount(1);
   await page.getByRole('link', { name: /Maid Finder/ }).click();

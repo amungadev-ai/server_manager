@@ -1,0 +1,18 @@
+{
+  "runId": 44429870803,
+  "headSha": "2b651666caff0aae320402ba5df973aa99d6c7cb",
+  "jobId": 135244690194,
+  "artifactId": 14485634446,
+  "artifactSha256": "84100a885bad2001eca5113a49b4e105bc20b2b65e26b259a6dae3ceb9c338db",
+  "case": "project search, detail navigation and reload use the static SPA fallback",
+  "attempts": [
+    "timedOut",
+    "timedOut"
+  ],
+  "traceFacts": [
+    "The initial Open navigation isVisible result is false.",
+    "No menu click occurs before the Projects link click.",
+    "Projects link resolves but click repeatedly reports outside of the viewport."
+  ],
+  "correction": "Use the configured isMobile test fixture and await menu expansion before selecting the navigation link."
+}
