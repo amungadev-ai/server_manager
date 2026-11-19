@@ -538,13 +538,11 @@ test('storage and API key workflows stay scoped and simulated', async ({
   await expect(page.getByRole('dialog').getByRole('img')).toHaveCount(0);
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: 'Upload', exact: true }).click();
-  await page
-    .getByLabel('Choose local file')
-    .setInputFiles({
-      name: 'preview.png',
-      mimeType: 'image/png',
-      buffer: Buffer.from('metadata fixture only'),
-    });
+  await page.getByLabel('Choose local file').setInputFiles({
+    name: 'preview.png',
+    mimeType: 'image/png',
+    buffer: Buffer.from('metadata fixture only'),
+  });
   await page
     .getByRole('button', { name: 'Record demo upload', exact: true })
     .click();

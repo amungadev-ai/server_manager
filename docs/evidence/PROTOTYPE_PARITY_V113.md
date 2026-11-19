@@ -49,4 +49,4 @@ Required checks: type/boundary/contract/progress checks, formatting, existing 46
 - Local `npm run check`: pass, zero Svelte errors/warnings.
 - Local `npm test`: pass, 36 Node plus 10 Python tests.
 - Local `npm run build`: pass; production output omits preview fixtures.
-- First remote run `44464203685`: formatting gate rejected a test file exported while formatting was still running. Browser jobs correctly did not run; this run is not visual evidence. The export was corrected and will be rerun.
+- Remote runs `44464203685` and `44469363900`: formatting gates rejected a test method chain. The pinned formatter required a second normalization pass; the chain was normalized and its output checked again. Browser jobs correctly did not run; these runs are not visual evidence.
