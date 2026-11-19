@@ -13,16 +13,18 @@ test('required gate rejects failed, cancelled, skipped and missing jobs', () => 
   const passed = {
     progress: { result: 'success' },
     verify: { result: 'success' },
+    postgres: { result: 'success' },
     e2e: { result: 'success' },
   };
   assert.doesNotThrow(() => assertRequiredResults(passed));
-  for (const status of ['failure', 'cancelled', 'skipped', undefined])
-    assert.throws(() =>
-      assertRequiredResults({
-        ...passed,
-        e2e: status ? { result: status } : undefined,
-      }),
-    );
+  for (const name of ['e2e', 'postgres'])
+    for (const status of ['failure', 'cancelled', 'skipped', undefined])
+      assert.throws(() =>
+        assertRequiredResults({
+          ...passed,
+          [name]: status ? { result: status } : undefined,
+        }),
+      );
 });
 test('progress event selection uses validated base SHAs for PRs, merge queues and pushes', () => {
   const sha = 'a'.repeat(40);
@@ -114,8 +116,8 @@ test('workflow validation accepts the actual policy and rejects weakened gates',
   for (const changed of [
     source.replace('contents: read', 'contents: write'),
     source.replace(
-      'if: ${{ always() }}\n    needs: [progress, verify, e2e]',
-      'if: ${{ success() }}\n    needs: [progress, verify, e2e]',
+      'if: ${{ always() }}\n    needs: [progress, verify, postgres, e2e]',
+      'if: ${{ success() }}\n    needs: [progress, verify, postgres, e2e]',
     ),
     source.replace('project: [desktop, mobile]', 'project: [desktop]'),
     source.replace(

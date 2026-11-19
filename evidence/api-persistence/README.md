@@ -1,0 +1,9 @@
+# Retained real PostgreSQL evidence
+
+Source run: [44488622638](https://github.com/amungadev-ai/server_manager/actions/runs/44488622638), attempt 1, source head `5a150c37ce1708a1a41c642d1d3d13d78a317c16`. The tested PR merge commit is `e5e4547ef9d3c16f1edcf2f8134c268989b0b2c9`; its Git tree `3837faa89e41ea40854373ac4164428242980a1d` exactly equals the source-head tree. This is evidence for that checkpoint; final current-source checks are linked in PR #4.
+
+PostgreSQL job `135438436045` passed all 13 tests with no failures/skips against actual PostgreSQL `18.1 (Debian 18.1-1.pgdg13+2)`. Image: `postgres:18.1@sha256:1090bc3a8ccfb0b55f78a494d76f8d603434f7e4553543d6e807bc7bd6bbd17f`.
+
+The GitHub artifact `14511128256` (`postgres-1`, 3447 bytes) was downloaded and verified as SHA-256 `3350514817131c6733425159c6b11c940933077f25006345d92e4b663aa23f94`. All six archive files are retained under `run-44488622638/reports/`, preserving the archive names. The CI `test-results/` prefix maps to this `reports/` directory. The five file sizes/hashes in `manifests/postgres.json` were verified against the extracted bytes. JUnit, actual server version, bounded command result/log and source manifest are preserved. No database URL or real credentials are included.
+
+Commands: `npm ci`, `npm run build:api`, `CLOUDLANE_POSTGRES_TESTS=1` with the disposable test URL supplied through CI environment, then `node scripts/ci-step.mjs postgres npm run test:postgres`. The runner refuses a remote or non-disposable database and missing opt-in. This checkpoint also passed 64 unit/HTTP/progress tests and the mobile browser job. It was followed by explicit driver identity/port/TLS configuration and an additional negative test; it must not be relabelled as the final combined-source run. The unchanged SQL and later current-source CI remain independently identifiable.

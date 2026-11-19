@@ -1,28 +1,35 @@
 # Cloudlane — integration progress
 
-Recorded: 2026-11-18. CL-001 is integrated on main with reproducible local evidence; no production release or independent security/visual sign-off is claimed.
+Recorded: 2026-11-19 (Africa/Nairobi). Foundation/CI is integrated; prototype parity is ready for review in PR #3; the API/PostgreSQL batch is in development in PR #4. No production release, independent security approval or live resource operation is claimed.
 
-CL-001 passed maintainer source/evidence review after the user authorized continuation. CL-002/003 are implemented with passing clean-checkout evidence and ready for review. CL-004/006 implementation is ready for review; hosted activation and browser acceptance remain blocked. Canonical working records are under `tasks/progress/`; they contain exact checks, scope limits and next actions.
-
-| Area | Integration status |
+| Area | Current state |
 | --- | --- |
-| Approved UI / guide | Available as reference HTML and `docs/00`–`docs/15` |
-| Monorepo, toolchain, basic static dashboard/API | CL-001 integrated; clean-checkout checks pass; independent/visual review remains open |
-| Package boundaries / ADR process | CL-002 ready for review; boundary/process checks and negative tests pass |
-| Draft API / agent contracts | CL-003 ready for review; generated schemas/docs/types, runtime validation and clean-checkout tests pass; no operational auth/agent implied |
-| Task records / progress scripts | Working scaffold; 58 canonical backlog task files |
-| Real authentication and PostgreSQL | Not started |
-| Installer, Go agent and public IP HTTPS | Not started |
-| Real deployments, domains, storage and email | Not started |
-| GitHub CI and branch protection | CL-004 implementation ready; local/clean checks pass; hosted activation and protection blocked without a target repository |
-| Desktop/mobile test harness | CL-006 implementation ready; 45 unit/HTTP/gate tests pass; 20 browser cases discovered, browser acceptance blocked |
+| Monorepo and toolchain | CL-001 integrated; pinned Node 24.22.3/npm 11.9.0 |
+| Package boundaries and draft contracts | CL-002/003 implemented; review pending |
+| CI and desktop/mobile harness | CL-004/006 integrated through PR #1; branch-protection administration remains outstanding |
+| Prototype v1.13 parity | PR #3 corrects the Svelte rendering, screens, forms and sample state. Its required run passes 32 browser cases and 40 direct source screenshot comparisons. Resource actions remain simulated |
+| API authorization foundation | CL-030/PR #4 adds global default-deny policy, a disabled session resolver, request-local server-derived context and safe readiness. It issues/accepts no owner sessions |
+| PostgreSQL foundation | CL-031/PR #4 adds atomic checksummed migrations and installation/user/session/workspace/project/environment tables. Initial hosted SQL run passes 13 cases, with retained hashed reports. Corrected driver configuration passes 65 local unit/HTTP/progress cases; final combined checks/review are tracked by PR #4 |
+| Security threat model | Separate draft PR #2; independent review remains pending |
+| Owner claim, login, MFA and project CRUD | CL-032–036 not implemented; bootstrap/session gates depend on the security review |
+| Installer, agent, pg-boss and real resources | Not implemented; no VPS, Docker, TLS, DNS, mail or storage operation is claimed |
 
-The read-only design preview is privately published at https://cloudlane-foundation.spiritedghat4.chatgpt.site. Publication confirms dashboard hosting only; visual review is blocked by ChatGPT sign-in in the inspection browser.
+The [private dashboard preview](https://cloudlane-foundation.spiritedghat4.chatgpt.site) hosts static Svelte output. It cannot host the separate Nest/PostgreSQL platform. Authentication and resource data are never persisted in browser localStorage; UI preferences only.
 
-CL-002/003 await review. CL-004/006 source and clean-checkout evidence are available; actual hosted/browser acceptance is outstanding. Other downstream task statuses remain not-started. CL-001's partial UI/contract skeleton does not complete CL-003, CL-010–CL-014, CL-020, CL-022, CL-030 or CL-040/041 acceptance gates.
+## Canonical review branches
 
-Next, select the Cloudlane GitHub repository and activate/verify CL-004/006 with `docs/CI_AND_TESTING.md`. CL-005 (security threat model) and CL-030 (API authorization skeleton) remain downstream backlog work. Security-sensitive auth/installer/agent work requires its explicit dependency and review gates. No release percentage, measured VPS resource budget or production-ready claim is made.
+- [PR #3: prototype fidelity](https://github.com/amungadev-ai/server_manager/pull/3), `task/prototype-v1.13-parity`, tested head `2aecfde1257cd317d18d242fb96e8c309a79c519`. Published Site source `92f39bb748a56bed6af727e0ecb02a76fa88602a`. [Audit](docs/evidence/PROTOTYPE_PARITY_V113.md).
+- [PR #4: CL-030/031 API and persistence](https://github.com/amungadev-ai/server_manager/pull/4), `task/CL-030-031-api-persistence`, stacked on PR #3 to preserve the approved UI. Shared claim commit `4828c21c0cf66b6676ec8aee89e4772b1055434e`. [Batch evidence](docs/evidence/API_PERSISTENCE_BATCH.md), [ADR-018](docs/adr/018-api-persistence-foundations.md) and canonical task records contain exact checks/limits. Final PR checks identify the actual tested implementation head.
+- [PR #2: security proposal](https://github.com/amungadev-ai/server_manager/pull/2), `task/CL-005-security-threat-model`, remains a separate draft. Its protocol/crypto decisions have not been approved or silently merged into the backend branch.
 
-CL-002/003 implementation checkpoint: `2444ea50b2490f3081649d1be02ee28255f201aa`. Evidence: `evidence/contracts-checks.md`. Its original 31-test scope and production/preview builds passed.
+## Earlier integration evidence
 
-CL-004/006 implementation checkpoint: `237174e33ea6100a682010ede309a948579b5ea2`. Types, lint, CI policy, 45 unit/HTTP/gate tests, both static builds and clean-checkout reproduction pass. Evidence: `evidence/ci-checks.md` and `evidence/ci-local/`. Browser discovery lists 20 cases; actual execution is NOT RUN. Connected GitHub search found no accessible Cloudlane repository; managed browser preview reports a missing relay. No hosted/browser success or enforced branch rule is claimed. Task records are blocked for these remaining acceptance steps.
+CL-002/003 implementation checkpoint: `2444ea50b2490f3081649d1be02ee28255f201aa`, with its original 31-test evidence in `evidence/contracts-checks.md`.
+
+CL-004/006 integrated through [PR #1](https://github.com/amungadev-ai/server_manager/pull/1), main `104c0974434221e9385bcd336ed5a3daab5ac9e1`, matching tested branch tree `704bac37300715d12b570a44859c0a85116fbdbf`. [Run 44432013149](https://github.com/amungadev-ai/server_manager/actions/runs/44432013149) passed five jobs, 46 unit/HTTP/progress tests and 20 browser cases. That evidence remains scoped to its source. Branch protection is an administrator handoff; no enforcement is claimed.
+
+The prototype batch later passed [run 44476534033](https://github.com/amungadev-ai/server_manager/actions/runs/44476534033): all required jobs, 46 unit/HTTP/progress tests, 32 actual browser cases and 40 direct source screenshot comparisons. Tests load the immutable source HTML with pinned fonts/clock/viewport; no app-generated expected baseline is used. Existing source contrast debt and intentional accessibility/session-memory differences remain documented.
+
+## Next gate
+
+Finish and review CL-030/031 using real PostgreSQL and unchanged desktop/mobile prototype checks. Then resolve CL-005's independent security decisions before CL-032/033 owner claim and session issuance. Project mutation requires CL-036 workspace authorization tests. Production acceptance still needs installation, role provisioning, trusted TLS, backup/restore, agent and VPS evidence. Task states are not promoted to merged/verified by scaffolding or preview publication.

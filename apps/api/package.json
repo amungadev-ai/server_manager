@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
-    "start": "node dist/main.js"
+    "start": "node dist/main.js",
+    "db:migrate": "node dist/database/migrate-cli.js"
   },
   "dependencies": {
     "@cloudlane/contracts": "0.1.0",
@@ -16,6 +17,10 @@
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.2",
     "@nestjs/swagger": "11.4.8",
-    "zod": "4.6.7"
+    "zod": "4.6.7",
+    "pg": "8.23.1"
+  },
+  "devDependencies": {
+    "@types/pg": "8.23.1"
   }
 }

@@ -11,7 +11,7 @@ export interface paths {
         put?: never;
         /**
          * Owner login
-         * @description DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.
+         * @description DECLARED, UNAVAILABLE: Validates request shape and returns 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
          */
         post: operations["login"];
         delete?: never;
@@ -31,7 +31,7 @@ export interface paths {
         put?: never;
         /**
          * End owner session
-         * @description DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.
+         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
          */
         post: operations["logout"];
         delete?: never;
@@ -49,7 +49,7 @@ export interface paths {
         };
         /**
          * Owner session
-         * @description DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.
+         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
          */
         get: operations["getSession"];
         put?: never;
@@ -71,7 +71,7 @@ export interface paths {
         put?: never;
         /**
          * Claim installation
-         * @description DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.
+         * @description DECLARED, UNAVAILABLE: Validates request shape and returns 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
          */
         post: operations["claimInstallation"];
         delete?: never;
@@ -91,7 +91,7 @@ export interface paths {
         put?: never;
         /**
          * Create initial owner
-         * @description DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.
+         * @description DECLARED, UNAVAILABLE: Validates request shape and returns 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
          */
         post: operations["createOwner"];
         delete?: never;
@@ -109,7 +109,7 @@ export interface paths {
         };
         /**
          * Read observed deployment state
-         * @description DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.
+         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
          */
         get: operations["getDeployment"];
         put?: never;
@@ -129,13 +129,13 @@ export interface paths {
         };
         /**
          * List globally registered workspace domains
-         * @description DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.
+         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
          */
         get: operations["listDomains"];
         put?: never;
         /**
          * Register a pending domain with Manual DNS
-         * @description DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.
+         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
          */
         post: operations["createDomain"];
         delete?: never;
@@ -155,7 +155,7 @@ export interface paths {
         put?: never;
         /**
          * Stage a DNS mode change from domain Settings
-         * @description DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.
+         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
          */
         post: operations["transitionDnsMode"];
         delete?: never;
@@ -175,7 +175,7 @@ export interface paths {
         put?: never;
         /**
          * Request actual DNS ownership verification
-         * @description DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.
+         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
          */
         post: operations["verifyDomain"];
         delete?: never;
@@ -196,6 +196,26 @@ export interface paths {
          * @description Implemented read-only platform endpoint.
          */
         get: operations["getHealth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/health/ready": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Dependency readiness; liveness does not imply readiness
+         * @description Implemented read-only platform endpoint.
+         */
+        get: operations["getReadiness"];
         put?: never;
         post?: never;
         delete?: never;
@@ -233,7 +253,7 @@ export interface paths {
         };
         /**
          * Workspace overview projection
-         * @description DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.
+         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
          */
         get: operations["getOverview"];
         put?: never;
@@ -253,13 +273,13 @@ export interface paths {
         };
         /**
          * List projects in the authenticated workspace
-         * @description DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.
+         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
          */
         get: operations["listProjects"];
         put?: never;
         /**
          * Create a project and production environment
-         * @description DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.
+         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
          */
         post: operations["createProject"];
         delete?: never;
@@ -277,7 +297,7 @@ export interface paths {
         };
         /**
          * Read an owned project
-         * @description DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.
+         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
          */
         get: operations["getProject"];
         put?: never;
@@ -299,7 +319,7 @@ export interface paths {
         put?: never;
         /**
          * Queue a static ZIP deployment
-         * @description DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.
+         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
          */
         post: operations["createDeployment"];
         delete?: never;
@@ -319,7 +339,7 @@ export interface paths {
         put?: never;
         /**
          * Queue rollback to a prior healthy release
-         * @description DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.
+         * @description DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.
          */
         post: operations["rollbackDeployment"];
         delete?: never;
@@ -585,6 +605,14 @@ export interface components {
             /** Format: uuid */
             workspaceId: string;
         };
+        ReadinessResponse: {
+            /** @enum {string} */
+            authentication: "unavailable";
+            /** @enum {string} */
+            database: "unconfigured" | "unavailable" | "migration_required" | "ready";
+            /** @enum {string} */
+            status: "not_ready";
+        };
         /** Format: uuid */
         ResourceId: string;
         RollbackRequest: {
@@ -667,7 +695,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
-            /** @description Current result for valid requests. No operation is performed. */
+            /** @description Result for valid requests after required authorization. No operation is performed. */
             501: {
                 headers: {
                     [name: string]: unknown;
@@ -709,6 +737,24 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
+            /** @description Owner session required; current default for protected operations. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Actor or route policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
             /** @description JSON body too large. */
             413: {
                 headers: {
@@ -727,8 +773,17 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
-            /** @description Current result for valid requests. No operation is performed. */
+            /** @description Result for valid requests after required authorization. No operation is performed. */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Session verifier unavailable; access denied. */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -765,8 +820,35 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
-            /** @description Current result for valid requests. No operation is performed. */
+            /** @description Owner session required; current default for protected operations. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Actor or route policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Result for valid requests after required authorization. No operation is performed. */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Session verifier unavailable; access denied. */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -825,7 +907,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
-            /** @description Current result for valid requests. No operation is performed. */
+            /** @description Result for valid requests after required authorization. No operation is performed. */
             501: {
                 headers: {
                     [name: string]: unknown;
@@ -885,7 +967,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
-            /** @description Current result for valid requests. No operation is performed. */
+            /** @description Result for valid requests after required authorization. No operation is performed. */
             501: {
                 headers: {
                     [name: string]: unknown;
@@ -925,8 +1007,35 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
-            /** @description Current result for valid requests. No operation is performed. */
+            /** @description Owner session required; current default for protected operations. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Actor or route policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Result for valid requests after required authorization. No operation is performed. */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Session verifier unavailable; access denied. */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -966,8 +1075,35 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
-            /** @description Current result for valid requests. No operation is performed. */
+            /** @description Owner session required; current default for protected operations. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Actor or route policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Result for valid requests after required authorization. No operation is performed. */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Session verifier unavailable; access denied. */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1011,6 +1147,24 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
+            /** @description Owner session required; current default for protected operations. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Actor or route policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
             /** @description JSON body too large. */
             413: {
                 headers: {
@@ -1029,8 +1183,17 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
-            /** @description Current result for valid requests. No operation is performed. */
+            /** @description Result for valid requests after required authorization. No operation is performed. */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Session verifier unavailable; access denied. */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1076,6 +1239,24 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
+            /** @description Owner session required; current default for protected operations. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Actor or route policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
             /** @description JSON body too large. */
             413: {
                 headers: {
@@ -1094,8 +1275,17 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
-            /** @description Current result for valid requests. No operation is performed. */
+            /** @description Result for valid requests after required authorization. No operation is performed. */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Session verifier unavailable; access denied. */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1141,6 +1331,24 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
+            /** @description Owner session required; current default for protected operations. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Actor or route policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
             /** @description JSON body too large. */
             413: {
                 headers: {
@@ -1159,8 +1367,17 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
-            /** @description Current result for valid requests. No operation is performed. */
+            /** @description Result for valid requests after required authorization. No operation is performed. */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Session verifier unavailable; access denied. */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1195,6 +1412,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+        };
+    };
+    getReadiness: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Invalid request or JSON. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Current response. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReadinessResponse"];
                 };
             };
         };
@@ -1255,8 +1501,35 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
-            /** @description Current result for valid requests. No operation is performed. */
+            /** @description Owner session required; current default for protected operations. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Actor or route policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Result for valid requests after required authorization. No operation is performed. */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Session verifier unavailable; access denied. */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1296,8 +1569,35 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
-            /** @description Current result for valid requests. No operation is performed. */
+            /** @description Owner session required; current default for protected operations. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Actor or route policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Result for valid requests after required authorization. No operation is performed. */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Session verifier unavailable; access denied. */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1341,6 +1641,24 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
+            /** @description Owner session required; current default for protected operations. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Actor or route policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
             /** @description JSON body too large. */
             413: {
                 headers: {
@@ -1359,8 +1677,17 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
-            /** @description Current result for valid requests. No operation is performed. */
+            /** @description Result for valid requests after required authorization. No operation is performed. */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Session verifier unavailable; access denied. */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1399,8 +1726,35 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
-            /** @description Current result for valid requests. No operation is performed. */
+            /** @description Owner session required; current default for protected operations. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Actor or route policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Result for valid requests after required authorization. No operation is performed. */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Session verifier unavailable; access denied. */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1446,6 +1800,24 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
+            /** @description Owner session required; current default for protected operations. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Actor or route policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
             /** @description JSON body too large. */
             413: {
                 headers: {
@@ -1464,8 +1836,17 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
-            /** @description Current result for valid requests. No operation is performed. */
+            /** @description Result for valid requests after required authorization. No operation is performed. */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Session verifier unavailable; access denied. */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1511,6 +1892,24 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
+            /** @description Owner session required; current default for protected operations. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Actor or route policy denied. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
             /** @description JSON body too large. */
             413: {
                 headers: {
@@ -1529,8 +1928,17 @@ export interface operations {
                     "application/json": components["schemas"]["ApiErrorEnvelope"];
                 };
             };
-            /** @description Current result for valid requests. No operation is performed. */
+            /** @description Result for valid requests after required authorization. No operation is performed. */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorEnvelope"];
+                };
+            };
+            /** @description Session verifier unavailable; access denied. */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };

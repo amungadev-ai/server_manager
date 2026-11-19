@@ -53,6 +53,18 @@ export const InstallationStatusSchema = z.strictObject({
 });
 export type HealthResponse = z.infer<typeof HealthResponseSchema>;
 export type InstallationStatus = z.infer<typeof InstallationStatusSchema>;
+export const DatabaseStatusSchema = z.enum([
+  'unconfigured',
+  'unavailable',
+  'migration_required',
+  'ready',
+]);
+export type DatabaseStatus = z.infer<typeof DatabaseStatusSchema>;
+export const ReadinessResponseSchema = z.strictObject({
+  status: z.literal('not_ready'),
+  database: DatabaseStatusSchema,
+  authentication: z.literal('unavailable'),
+});
 
 const ProjectNameSchema = z.string().trim().min(1).max(80);
 const SlugSchema = z
@@ -279,6 +291,7 @@ export const httpSchemas = {
   ResourceId: ResourceIdSchema,
   ApiErrorEnvelope: ApiErrorEnvelopeSchema,
   HealthResponse: HealthResponseSchema,
+  ReadinessResponse: ReadinessResponseSchema,
   InstallationStatus: InstallationStatusSchema,
   CreateProjectRequest: CreateProjectRequestSchema,
   ProjectRecord: ProjectRecordSchema,

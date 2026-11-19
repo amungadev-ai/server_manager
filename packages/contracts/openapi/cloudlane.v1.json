@@ -1101,6 +1101,38 @@
         ],
         "type": "object"
       },
+      "ReadinessResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "authentication": {
+            "enum": [
+              "unavailable"
+            ],
+            "type": "string"
+          },
+          "database": {
+            "enum": [
+              "unconfigured",
+              "unavailable",
+              "migration_required",
+              "ready"
+            ],
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "not_ready"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "database",
+          "authentication"
+        ],
+        "type": "object"
+      },
       "ResourceId": {
         "format": "uuid",
         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
@@ -1191,11 +1223,19 @@
         ],
         "type": "object"
       }
+    },
+    "securitySchemes": {
+      "ownerSession": {
+        "description": "Proposed owner cookie; this batch does not issue or accept sessions.",
+        "in": "cookie",
+        "name": "__Host-cloudlane_session",
+        "type": "apiKey"
+      }
     }
   },
   "info": {
     "contact": {},
-    "description": "Development contract. Only health and unconfigured installation status are implemented. All other documented operations validate shape and return 501. Success response schemas are drafts, not evidence of operational authentication or infrastructure. The same-origin API is served by NestJS on the VPS, not by the static preview host.",
+    "description": "Development contract. Public liveness, dependency readiness and unconfigured installation status are implemented. Readiness remains 503 until authentication is implemented, even when the PostgreSQL schema is current. Protected operations require an owner session; the default resolver denies every session until CL-033. Anonymous protected requests return 401 before shape validation. Public login/bootstrap declarations return 501 for valid requests. Success schemas and the cookie scheme are drafts, not evidence of operational authentication or infrastructure. The same-origin API runs on the VPS, not the static preview host.",
     "title": "Cloudlane API",
     "version": "0.1.0-draft.1"
   },
@@ -1203,7 +1243,7 @@
   "paths": {
     "/api/v1/auth/login": {
       "post": {
-        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "description": "DECLARED, UNAVAILABLE: Validates request shape and returns 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.",
         "operationId": "login",
         "parameters": [],
         "requestBody": {
@@ -1265,19 +1305,20 @@
                 }
               }
             },
-            "description": "Current result for valid requests. No operation is performed."
+            "description": "Result for valid requests after required authorization. No operation is performed."
           }
         },
         "summary": "Owner login",
         "tags": [
           "Authentication — unavailable"
         ],
+        "x-cloudlane-access": "public",
         "x-cloudlane-implementation": "unavailable"
       }
     },
     "/api/v1/auth/logout": {
       "post": {
-        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "description": "DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.",
         "operationId": "logout",
         "parameters": [],
         "requestBody": {
@@ -1311,6 +1352,26 @@
             },
             "description": "Invalid request or JSON."
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Owner session required; current default for protected operations."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Actor or route policy denied."
+          },
           "413": {
             "content": {
               "application/json": {
@@ -1339,19 +1400,35 @@
                 }
               }
             },
-            "description": "Current result for valid requests. No operation is performed."
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Session verifier unavailable; access denied."
           }
         },
+        "security": [
+          {
+            "ownerSession": []
+          }
+        ],
         "summary": "End owner session",
         "tags": [
           "Authentication — unavailable"
         ],
+        "x-cloudlane-access": "owner",
         "x-cloudlane-implementation": "unavailable"
       }
     },
     "/api/v1/auth/session": {
       "get": {
-        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "description": "DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.",
         "operationId": "getSession",
         "parameters": [],
         "responses": {
@@ -1375,6 +1452,26 @@
             },
             "description": "Invalid request or JSON."
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Owner session required; current default for protected operations."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Actor or route policy denied."
+          },
           "501": {
             "content": {
               "application/json": {
@@ -1383,19 +1480,35 @@
                 }
               }
             },
-            "description": "Current result for valid requests. No operation is performed."
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Session verifier unavailable; access denied."
           }
         },
+        "security": [
+          {
+            "ownerSession": []
+          }
+        ],
         "summary": "Owner session",
         "tags": [
           "Authentication — unavailable"
         ],
+        "x-cloudlane-access": "owner",
         "x-cloudlane-implementation": "unavailable"
       }
     },
     "/api/v1/bootstrap/claim": {
       "post": {
-        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "description": "DECLARED, UNAVAILABLE: Validates request shape and returns 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.",
         "operationId": "claimInstallation",
         "parameters": [],
         "requestBody": {
@@ -1457,19 +1570,20 @@
                 }
               }
             },
-            "description": "Current result for valid requests. No operation is performed."
+            "description": "Result for valid requests after required authorization. No operation is performed."
           }
         },
         "summary": "Claim installation",
         "tags": [
           "Authentication — unavailable"
         ],
+        "x-cloudlane-access": "public",
         "x-cloudlane-implementation": "unavailable"
       }
     },
     "/api/v1/bootstrap/owner": {
       "post": {
-        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "description": "DECLARED, UNAVAILABLE: Validates request shape and returns 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.",
         "operationId": "createOwner",
         "parameters": [],
         "requestBody": {
@@ -1531,19 +1645,20 @@
                 }
               }
             },
-            "description": "Current result for valid requests. No operation is performed."
+            "description": "Result for valid requests after required authorization. No operation is performed."
           }
         },
         "summary": "Create initial owner",
         "tags": [
           "Authentication — unavailable"
         ],
+        "x-cloudlane-access": "public",
         "x-cloudlane-implementation": "unavailable"
       }
     },
     "/api/v1/deployments/{deploymentId}": {
       "get": {
-        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "description": "DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.",
         "operationId": "getDeployment",
         "parameters": [
           {
@@ -1578,6 +1693,26 @@
             },
             "description": "Invalid request or JSON."
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Owner session required; current default for protected operations."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Actor or route policy denied."
+          },
           "501": {
             "content": {
               "application/json": {
@@ -1586,19 +1721,35 @@
                 }
               }
             },
-            "description": "Current result for valid requests. No operation is performed."
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Session verifier unavailable; access denied."
           }
         },
+        "security": [
+          {
+            "ownerSession": []
+          }
+        ],
         "summary": "Read observed deployment state",
         "tags": [
           "Resources — unavailable"
         ],
+        "x-cloudlane-access": "owner",
         "x-cloudlane-implementation": "unavailable"
       }
     },
     "/api/v1/domains": {
       "get": {
-        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "description": "DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.",
         "operationId": "listDomains",
         "parameters": [
           {
@@ -1645,6 +1796,26 @@
             },
             "description": "Invalid request or JSON."
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Owner session required; current default for protected operations."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Actor or route policy denied."
+          },
           "501": {
             "content": {
               "application/json": {
@@ -1653,17 +1824,33 @@
                 }
               }
             },
-            "description": "Current result for valid requests. No operation is performed."
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Session verifier unavailable; access denied."
           }
         },
+        "security": [
+          {
+            "ownerSession": []
+          }
+        ],
         "summary": "List globally registered workspace domains",
         "tags": [
           "Resources — unavailable"
         ],
+        "x-cloudlane-access": "owner",
         "x-cloudlane-implementation": "unavailable"
       },
       "post": {
-        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "description": "DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.",
         "operationId": "createDomain",
         "parameters": [
           {
@@ -1709,6 +1896,26 @@
             },
             "description": "Invalid request or JSON."
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Owner session required; current default for protected operations."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Actor or route policy denied."
+          },
           "413": {
             "content": {
               "application/json": {
@@ -1737,19 +1944,35 @@
                 }
               }
             },
-            "description": "Current result for valid requests. No operation is performed."
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Session verifier unavailable; access denied."
           }
         },
+        "security": [
+          {
+            "ownerSession": []
+          }
+        ],
         "summary": "Register a pending domain with Manual DNS",
         "tags": [
           "Resources — unavailable"
         ],
+        "x-cloudlane-access": "owner",
         "x-cloudlane-implementation": "unavailable"
       }
     },
     "/api/v1/domains/{zoneId}/dns-mode-transitions": {
       "post": {
-        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "description": "DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.",
         "operationId": "transitionDnsMode",
         "parameters": [
           {
@@ -1805,6 +2028,26 @@
             },
             "description": "Invalid request or JSON."
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Owner session required; current default for protected operations."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Actor or route policy denied."
+          },
           "413": {
             "content": {
               "application/json": {
@@ -1833,19 +2076,35 @@
                 }
               }
             },
-            "description": "Current result for valid requests. No operation is performed."
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Session verifier unavailable; access denied."
           }
         },
+        "security": [
+          {
+            "ownerSession": []
+          }
+        ],
         "summary": "Stage a DNS mode change from domain Settings",
         "tags": [
           "Resources — unavailable"
         ],
+        "x-cloudlane-access": "owner",
         "x-cloudlane-implementation": "unavailable"
       }
     },
     "/api/v1/domains/{zoneId}/verify": {
       "post": {
-        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "description": "DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.",
         "operationId": "verifyDomain",
         "parameters": [
           {
@@ -1901,6 +2160,26 @@
             },
             "description": "Invalid request or JSON."
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Owner session required; current default for protected operations."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Actor or route policy denied."
+          },
           "413": {
             "content": {
               "application/json": {
@@ -1929,13 +2208,29 @@
                 }
               }
             },
-            "description": "Current result for valid requests. No operation is performed."
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Session verifier unavailable; access denied."
           }
         },
+        "security": [
+          {
+            "ownerSession": []
+          }
+        ],
         "summary": "Request actual DNS ownership verification",
         "tags": [
           "Resources — unavailable"
         ],
+        "x-cloudlane-access": "owner",
         "x-cloudlane-implementation": "unavailable"
       }
     },
@@ -1970,6 +2265,42 @@
         "tags": [
           "Platform"
         ],
+        "x-cloudlane-access": "public",
+        "x-cloudlane-implementation": "implemented"
+      }
+    },
+    "/api/v1/health/ready": {
+      "get": {
+        "description": "Implemented read-only platform endpoint.",
+        "operationId": "getReadiness",
+        "parameters": [],
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request or JSON."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadinessResponse"
+                }
+              }
+            },
+            "description": "Current response."
+          }
+        },
+        "summary": "Dependency readiness; liveness does not imply readiness",
+        "tags": [
+          "Platform"
+        ],
+        "x-cloudlane-access": "public",
         "x-cloudlane-implementation": "implemented"
       }
     },
@@ -2004,12 +2335,13 @@
         "tags": [
           "Platform"
         ],
+        "x-cloudlane-access": "public",
         "x-cloudlane-implementation": "implemented"
       }
     },
     "/api/v1/overview": {
       "get": {
-        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "description": "DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.",
         "operationId": "getOverview",
         "parameters": [],
         "responses": {
@@ -2033,6 +2365,26 @@
             },
             "description": "Invalid request or JSON."
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Owner session required; current default for protected operations."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Actor or route policy denied."
+          },
           "501": {
             "content": {
               "application/json": {
@@ -2041,19 +2393,35 @@
                 }
               }
             },
-            "description": "Current result for valid requests. No operation is performed."
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Session verifier unavailable; access denied."
           }
         },
+        "security": [
+          {
+            "ownerSession": []
+          }
+        ],
         "summary": "Workspace overview projection",
         "tags": [
           "Resources — unavailable"
         ],
+        "x-cloudlane-access": "owner",
         "x-cloudlane-implementation": "unavailable"
       }
     },
     "/api/v1/projects": {
       "get": {
-        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "description": "DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.",
         "operationId": "listProjects",
         "parameters": [
           {
@@ -2100,6 +2468,26 @@
             },
             "description": "Invalid request or JSON."
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Owner session required; current default for protected operations."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Actor or route policy denied."
+          },
           "501": {
             "content": {
               "application/json": {
@@ -2108,17 +2496,33 @@
                 }
               }
             },
-            "description": "Current result for valid requests. No operation is performed."
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Session verifier unavailable; access denied."
           }
         },
+        "security": [
+          {
+            "ownerSession": []
+          }
+        ],
         "summary": "List projects in the authenticated workspace",
         "tags": [
           "Resources — unavailable"
         ],
+        "x-cloudlane-access": "owner",
         "x-cloudlane-implementation": "unavailable"
       },
       "post": {
-        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "description": "DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.",
         "operationId": "createProject",
         "parameters": [
           {
@@ -2164,6 +2568,26 @@
             },
             "description": "Invalid request or JSON."
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Owner session required; current default for protected operations."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Actor or route policy denied."
+          },
           "413": {
             "content": {
               "application/json": {
@@ -2192,19 +2616,35 @@
                 }
               }
             },
-            "description": "Current result for valid requests. No operation is performed."
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Session verifier unavailable; access denied."
           }
         },
+        "security": [
+          {
+            "ownerSession": []
+          }
+        ],
         "summary": "Create a project and production environment",
         "tags": [
           "Resources — unavailable"
         ],
+        "x-cloudlane-access": "owner",
         "x-cloudlane-implementation": "unavailable"
       }
     },
     "/api/v1/projects/{projectId}": {
       "get": {
-        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "description": "DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.",
         "operationId": "getProject",
         "parameters": [
           {
@@ -2239,6 +2679,26 @@
             },
             "description": "Invalid request or JSON."
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Owner session required; current default for protected operations."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Actor or route policy denied."
+          },
           "501": {
             "content": {
               "application/json": {
@@ -2247,19 +2707,35 @@
                 }
               }
             },
-            "description": "Current result for valid requests. No operation is performed."
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Session verifier unavailable; access denied."
           }
         },
+        "security": [
+          {
+            "ownerSession": []
+          }
+        ],
         "summary": "Read an owned project",
         "tags": [
           "Resources — unavailable"
         ],
+        "x-cloudlane-access": "owner",
         "x-cloudlane-implementation": "unavailable"
       }
     },
     "/api/v1/services/{serviceId}/deployments": {
       "post": {
-        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "description": "DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.",
         "operationId": "createDeployment",
         "parameters": [
           {
@@ -2315,6 +2791,26 @@
             },
             "description": "Invalid request or JSON."
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Owner session required; current default for protected operations."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Actor or route policy denied."
+          },
           "413": {
             "content": {
               "application/json": {
@@ -2343,19 +2839,35 @@
                 }
               }
             },
-            "description": "Current result for valid requests. No operation is performed."
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Session verifier unavailable; access denied."
           }
         },
+        "security": [
+          {
+            "ownerSession": []
+          }
+        ],
         "summary": "Queue a static ZIP deployment",
         "tags": [
           "Resources — unavailable"
         ],
+        "x-cloudlane-access": "owner",
         "x-cloudlane-implementation": "unavailable"
       }
     },
     "/api/v1/services/{serviceId}/rollbacks": {
       "post": {
-        "description": "DECLARED, UNAVAILABLE: validates request shape and currently returns 501. The success shape is a draft for a future implementation; no authentication, resource mutation or queued work is performed.",
+        "description": "DECLARED, UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled until CL-033. Authorized requests will validate shape and return 501. The success shape is a draft; no authentication issuance, resource mutation or queued work is performed.",
         "operationId": "rollbackDeployment",
         "parameters": [
           {
@@ -2411,6 +2923,26 @@
             },
             "description": "Invalid request or JSON."
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Owner session required; current default for protected operations."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Actor or route policy denied."
+          },
           "413": {
             "content": {
               "application/json": {
@@ -2439,13 +2971,29 @@
                 }
               }
             },
-            "description": "Current result for valid requests. No operation is performed."
+            "description": "Result for valid requests after required authorization. No operation is performed."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Session verifier unavailable; access denied."
           }
         },
+        "security": [
+          {
+            "ownerSession": []
+          }
+        ],
         "summary": "Queue rollback to a prior healthy release",
         "tags": [
           "Resources — unavailable"
         ],
+        "x-cloudlane-access": "owner",
         "x-cloudlane-implementation": "unavailable"
       }
     }

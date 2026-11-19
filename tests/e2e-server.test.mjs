@@ -55,8 +55,8 @@ test('loopback harness separates static/demo, typed HTTP fixtures and the real u
   const actualSession = await fetch(
     `${harness.urls.unconfigured}/api/v1/auth/session`,
   );
-  assert.equal(actualSession.status, 501);
-  assert.equal((await actualSession.json()).error.code, 'NOT_IMPLEMENTED');
+  assert.equal(actualSession.status, 401);
+  assert.equal((await actualSession.json()).error.code, 'SESSION_REQUIRED');
   const actualStatus = await fetch(
     `${harness.urls.unconfigured}/api/v1/installation/status`,
   );

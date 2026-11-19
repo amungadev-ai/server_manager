@@ -1,0 +1,41 @@
+
+> cloudlane@0.1.0 test:postgres
+> npm run build:api && node scripts/run-postgres-tests.mjs
+
+
+> cloudlane@0.1.0 build:api
+> npm run build:contracts && npm run build --workspace @cloudlane/api
+
+
+> cloudlane@0.1.0 build:contracts
+> npm run build --workspace @cloudlane/contracts
+
+
+> @cloudlane/contracts@0.1.0 build
+> node ../../scripts/build-contracts.mjs
+
+
+> @cloudlane/api@0.1.0 build
+> tsc -p tsconfig.json
+
+✔ fresh migration creates a durable single installation and no users, sessions or fixtures (32.437462ms)
+✔ reruns preserve installation identity and existing owner/project data across new connections (26.578796ms)
+✔ two concurrent migrators apply exactly once and produce one installation (20.381996ms)
+✔ failure on first install rolls back schema, ledger and installation together (29.266998ms)
+✔ failed upgrade preserves the previous identity, data and migration ledger (22.416772ms)
+✔ changed checksum and newer unknown migration histories block further migration (21.049737ms)
+✔ a busy migration lock fails within the bounded timeout and can be retried (5018.532926ms)
+✔ database constraints enforce one installation and one owner under concurrent inserts (23.173026ms)
+✔ workspace/project compound foreign keys reject cross-workspace environments (25.251991ms)
+✔ project slugs are constrained and unique within each workspace (32.242317ms)
+✔ session records require hashes, valid lifetime ordering and an owned workspace (43.63438ms)
+✔ a readiness-only runtime role can read the ledger but cannot modify it (49.958795ms)
+✔ real database readiness detects migration state and never reports authentication ready (102.131622ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5751.426811
