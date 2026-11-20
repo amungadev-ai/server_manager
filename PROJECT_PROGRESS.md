@@ -13,7 +13,7 @@ Recorded: 2026-11-19 (Africa/Nairobi). Foundation/CI is integrated; prototype an
 | Security threat model | Separate draft PR #2; independent review remains pending |
 | Owner claim and login | CL-032/033 isolated development candidate in PR #5; default API authentication remains disabled pending independent security review |
 | MFA and authentication screens | CL-034/035 implementation candidate in PR #6; normal activation and independent security review remain gated |
-| Authenticated project CRUD | CL-036 is the next feature batch; no real project mutation is enabled |
+| Authenticated project metadata | CL-036 development candidate in PR #7; scoped persistence in the review profile, normal activation disabled |
 | Installer, agent, pg-boss and real resources | Not implemented; no VPS, Docker, TLS, DNS, mail or storage operation is claimed |
 
 The [private dashboard preview](https://cloudlane-foundation.spiritedghat4.chatgpt.site) hosts static Svelte output. It cannot host the separate Nest/PostgreSQL platform. Authentication and resource data are never persisted in browser localStorage; UI preferences only.
@@ -45,3 +45,7 @@ The CL-032/033 implementation checkpoint `30e611aa238a6b781c234be18b611c82d0e197
 ## MFA and authentication UI development batch
 
 [PR #6](https://github.com/amungadev-ai/server_manager/pull/6), branch `task/CL-034-035-mfa-auth-screens`, is stacked on PR #5. CL-034/035 now have an implementation candidate: mandatory encrypted TOTP, once-displayed single-use recovery codes, challenge/CSRF/epoch/session revocation and separate `/setup`, `/login`, `/recover`, `/auth/security` screens. [ADR-020](docs/adr/020-mfa-recovery-and-auth-ui.md) and [evidence](docs/evidence/MFA_AUTH_UI_REVIEW.md) record the exact checks and limits. Password-only review sessions are superseded. The dashboard stays faithful to the supplied prototype; the Site auth flow is explicitly a read-only synthetic walkthrough. Local root recovery remains contract-only. Independent security review and production activation remain open; CL-036 authenticated project CRUD is the next feature batch.
+
+## Authenticated project metadata development batch
+
+CL-036 / [PR #7](https://github.com/amungadev-ai/server_manager/pull/7), branch `task/CL-036-authenticated-projects`, is stacked on PR #6. It adds transactional project plus production-environment metadata, durable idempotency, scoped list/detail/cursors and an honest project-only overview. HTTP project screens use the API, preserve prototype styling and handle ambiguous retries without duplicate success claims. The static Site remains a simulation. [ADR-021](docs/adr/021-authenticated-project-metadata.md), [evidence](docs/evidence/AUTHENTICATED_PROJECTS.md) and the canonical task record identify actual checks. Normal authentication, independent security approval, workload provisioning and production activation remain closed. Installer preflight/design (CL-080) is the next bounded backlog area; review dependencies before executing host work.

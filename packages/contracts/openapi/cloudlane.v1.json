@@ -1089,6 +1089,11 @@
             "items": {
               "additionalProperties": false,
               "properties": {
+                "createdAt": {
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "type": "string"
+                },
                 "description": {
                   "maxLength": 240,
                   "type": "string"
@@ -1118,6 +1123,12 @@
             },
             "maxItems": 1000,
             "type": "array"
+          },
+          "scope": {
+            "enum": [
+              "project_metadata"
+            ],
+            "type": "string"
           },
           "server": {
             "additionalProperties": false,
@@ -1636,7 +1647,7 @@
   "paths": {
     "/api/v1/auth/login": {
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "login",
         "parameters": [],
         "requestBody": {
@@ -1712,7 +1723,7 @@
     },
     "/api/v1/auth/logout": {
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "logout",
         "parameters": [],
         "requestBody": {
@@ -1823,7 +1834,7 @@
     },
     "/api/v1/auth/mfa/confirm": {
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "confirmMfa",
         "parameters": [],
         "requestBody": {
@@ -1899,7 +1910,7 @@
     },
     "/api/v1/auth/mfa/enroll": {
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "enrollMfa",
         "parameters": [],
         "requestBody": {
@@ -1975,7 +1986,7 @@
     },
     "/api/v1/auth/mfa/verify": {
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "verifyMfa",
         "parameters": [],
         "requestBody": {
@@ -2051,7 +2062,7 @@
     },
     "/api/v1/auth/recovery/acknowledge": {
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "acknowledgeRecoveryCodes",
         "parameters": [],
         "requestBody": {
@@ -2127,7 +2138,7 @@
     },
     "/api/v1/auth/recovery/regenerate": {
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "regenerateRecoveryCodes",
         "parameters": [],
         "requestBody": {
@@ -2238,7 +2249,7 @@
     },
     "/api/v1/auth/recovery/use": {
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "useRecoveryCode",
         "parameters": [],
         "requestBody": {
@@ -2314,7 +2325,7 @@
     },
     "/api/v1/auth/session": {
       "get": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "getSession",
         "parameters": [],
         "responses": {
@@ -2395,7 +2406,7 @@
     },
     "/api/v1/auth/session/rotate": {
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "rotateSession",
         "parameters": [],
         "requestBody": {
@@ -2506,7 +2517,7 @@
     },
     "/api/v1/bootstrap/claim": {
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "claimInstallation",
         "parameters": [],
         "requestBody": {
@@ -2582,7 +2593,7 @@
     },
     "/api/v1/bootstrap/owner": {
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: Validates request shape and returns 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "createOwner",
         "parameters": [],
         "requestBody": {
@@ -3341,7 +3352,7 @@
     },
     "/api/v1/overview": {
       "get": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "getOverview",
         "parameters": [],
         "responses": {
@@ -3416,12 +3427,13 @@
           "Resources — unavailable"
         ],
         "x-cloudlane-access": "owner",
-        "x-cloudlane-implementation": "unavailable"
+        "x-cloudlane-implementation": "unavailable",
+        "x-cloudlane-review-candidate": true
       }
     },
     "/api/v1/projects": {
       "get": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "listProjects",
         "parameters": [
           {
@@ -3519,14 +3531,15 @@
           "Resources — unavailable"
         ],
         "x-cloudlane-access": "owner",
-        "x-cloudlane-implementation": "unavailable"
+        "x-cloudlane-implementation": "unavailable",
+        "x-cloudlane-review-candidate": true
       },
       "post": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "createProject",
         "parameters": [
           {
-            "description": "UUID v4 retry key. Persistence/deduplication is not implemented.",
+            "description": "UUID v4 retry key, scoped to the authenticated workspace/user in the review profile. Same key/body returns the original result; changed body returns 409.",
             "in": "header",
             "name": "Idempotency-Key",
             "required": true,
@@ -3639,12 +3652,13 @@
           "Resources — unavailable"
         ],
         "x-cloudlane-access": "owner",
-        "x-cloudlane-implementation": "unavailable"
+        "x-cloudlane-implementation": "unavailable",
+        "x-cloudlane-review-candidate": true
       }
     },
     "/api/v1/projects/{projectId}": {
       "get": {
-        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. Success shape remains a draft; no resource mutation or queued work is performed.",
+        "description": "NORMAL ENTRY POINT UNAVAILABLE: requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501. This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.",
         "operationId": "getProject",
         "parameters": [
           {
@@ -3730,7 +3744,8 @@
           "Resources — unavailable"
         ],
         "x-cloudlane-access": "owner",
-        "x-cloudlane-implementation": "unavailable"
+        "x-cloudlane-implementation": "unavailable",
+        "x-cloudlane-review-candidate": true
       }
     },
     "/api/v1/services/{serviceId}/deployments": {

@@ -3,6 +3,7 @@
   import { infrastructure } from '#lib/stores/infrastructure.svelte.ts';
   import Dialog from './Dialog.svelte';
   import Icon from './Icon.svelte';
+  import HttpProjectForm from '#lib/features/HttpProjectForm.svelte';
   import ResourceForm from '#lib/features/ResourceForm.svelte';
   import DomainForm from '#lib/features/DomainForm.svelte';
   import StorageForm from '#lib/features/StorageForm.svelte';
@@ -166,7 +167,11 @@
         ].includes(ui.modal ?? '')
       ? 16
       : 18}
-  onclose={() => (ui.modal = null)}
+  closeDisabled={ui.modalBusy}
+  readable={infrastructure.mode === 'http' && ui.modal === 'project'}
+  onclose={() => {
+    if (!ui.modalBusy) ui.modal = null;
+  }}
 >
   {#key `${ui.modal}:${JSON.stringify(ui.modalData)}`}{#if ui.modal === 'create'}<div
         class="tile-options"
@@ -186,6 +191,8 @@
         Mobile app build and distribution features are intentionally deferred to
         a later phase.
       </p>
+    {:else if ui.modal === 'project' && infrastructure.mode === 'http'}<HttpProjectForm
+      />
     {:else if ui.modal && ['project', 'application', 'database', 'cron', 'storage'].includes(ui.modal)}<ResourceForm
         kind={ui.modal}
       />
@@ -196,7 +203,9 @@
         kind={ui.modal}
       />
     {:else if ui.modal}<AccountDialog kind={ui.modal} />{/if}{/key}
-  {#if infrastructure.mode !== 'demo' && ui.modal !== 'create'}<p class="hint">
+  {#if infrastructure.mode !== 'demo' && ui.modal !== 'create' && ui.modal !== 'project'}<p
+      class="hint"
+    >
       This operation requires the connected Cloudlane API. No changes can be
       applied here.
     </p>{/if}

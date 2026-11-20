@@ -173,3 +173,37 @@ test('request cancellation propagates instead of becoming a network error', asyn
     (error) => error.name === 'AbortError',
   );
 });
+
+test('bounded overview accepts the full metadata contract including escaped descriptions, then cancels above 4 MiB', async (t) => {
+  const snapshot = emptySnapshot();
+  snapshot.projects = Array.from({ length: 1000 }, () => ({
+    id: randomUUID(),
+    name: 'x'.repeat(80),
+    description: '\u0000'.repeat(240),
+    updatedLabel: 'Updated',
+  }));
+  let oversized = false,
+    cancelled = false;
+  t.mock.method(globalThis, 'fetch', async (path) => {
+    if (path.endsWith('/session')) return Response.json(session());
+    if (!oversized) return Response.json(snapshot);
+    return new Response(
+      new ReadableStream({
+        pull(controller) {
+          controller.enqueue(new Uint8Array(1024 * 1024));
+        },
+        cancel() {
+          cancelled = true;
+        },
+      }),
+      { headers: { 'Content-Type': 'application/json' } },
+    );
+  });
+  assert.deepEqual(await new HttpInfrastructureApi().getSnapshot(), snapshot);
+  oversized = true;
+  await assert.rejects(
+    new HttpInfrastructureApi().getSnapshot(),
+    (error) => error.code === 'INVALID_API_RESPONSE',
+  );
+  assert.equal(cancelled, true);
+});

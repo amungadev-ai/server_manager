@@ -1,5 +1,6 @@
 export const ui = $state({
   modal: null as string | null,
+  modalBusy: false,
   modalData: {} as Record<string, string>,
   toast: null as { message: string; error: boolean } | null,
   assistantOpen: false,

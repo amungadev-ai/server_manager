@@ -130,7 +130,7 @@ test('failure on first install rolls back schema, ledger and installation togeth
   const broken = [
     ...loadMigrations(),
     {
-      id: '0004_fail',
+      id: '0005_fail',
       sql: 'CREATE TABLE cloudlane.rollback_probe (id integer); SELECT * FROM cloudlane.missing_table;',
     },
   ];
@@ -149,7 +149,7 @@ test('failed upgrade preserves the previous identity, data and migration ledger'
     migrate(pool, [
       ...loadMigrations(),
       {
-        id: '0004_fail',
+        id: '0005_fail',
         sql: 'CREATE TABLE cloudlane.rollback_probe (id integer); SELECT 1/0;',
       },
     ]),

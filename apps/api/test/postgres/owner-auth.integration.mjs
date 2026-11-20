@@ -1336,3 +1336,459 @@ test('MFA audit contains no secret, code, challenge credential or nonce', async 
   assert.ok(serialized.includes('mfa_verify'));
   assert.ok(serialized.includes('mfa_enroll'));
 });
+
+// Project scope tests use the same real password+MFA HTTPS fixture above.
+const { ProjectStore } = require('./dist/projects/store.js');
+const { projectCursor } = require('./dist/projects/cursor.js');
+async function projectContext(s) {
+  const row = await review.store.lookup(value(s.cookie), false);
+  assert.ok(row);
+  return {
+    userId: row.user_id,
+    workspaceId: row.workspace_id,
+    sessionId: row.id,
+  };
+}
+function createProject(
+  s,
+  body = { name: 'Real metadata project' },
+  key = randomUUID(),
+  options = {},
+) {
+  return post('projects', body, {
+    ...options,
+    headers: { ...authHeaders(s), 'Idempotency-Key': key, ...options.headers },
+  });
+}
+async function secondWorkspace(s) {
+  const row = await review.store.lookup(value(s.cookie), false),
+    workspace = randomUUID(),
+    family = randomUUID();
+  return review.store.transaction(async (client) => {
+    const user = (
+      await client.query(
+        'SELECT installation_id FROM cloudlane.users WHERE id=$1',
+        [row.user_id],
+      )
+    ).rows[0];
+    await client.query(
+      "INSERT INTO cloudlane.workspaces (id,installation_id,owner_user_id,name) VALUES ($1,$2,$3,'Other workspace')",
+      [workspace, user.installation_id, row.user_id],
+    );
+    await client.query(
+      'INSERT INTO cloudlane.session_families (id,user_id,workspace_id) VALUES ($1,$2,$3)',
+      [family, row.user_id, workspace],
+    );
+    // Trusted fixture binding of already-verified owner proof; no workspace-switch endpoint is introduced.
+    const next = await review.store.insertSession(
+      client,
+      row.user_id,
+      workspace,
+      family,
+      {
+        epoch: row.mfa_epoch,
+        verifiedAt: row.mfa_verified_at,
+        method: row.authentication_method,
+      },
+    );
+    return {
+      cookie: SESSION_COOKIE + '=' + next.credential,
+      csrf: next.csrf.toString('base64url'),
+      workspace,
+    };
+  });
+}
+test('project create is durable across a restarted HTTPS app and includes exactly one production environment', async () => {
+  await owned();
+  const s = await login(),
+    made = await createProject(s, {
+      name: 'Saved project 雪',
+      description: 'Durable metadata',
+    });
+  assert.equal(made.status, 201);
+  assert.equal(made.body.project.name, 'Saved project 雪');
+  assert.equal(made.body.environment.name, 'production');
+  assert.equal(made.body.environment.projectId, made.body.project.id);
+  const restarted = await createApp({
+    documentation: false,
+    ownerAuthReview: new OwnerAuthReview(pool, origin, { mfaEncryptionKey }),
+    https: { key, cert },
+  });
+  await restarted.listen(0, '127.0.0.1');
+  try {
+    const got = await call('projects/' + made.body.project.id, {
+      targetPort: restarted.getHttpServer().address().port,
+      headers: authHeaders(s),
+    });
+    assert.equal(got.status, 200);
+    assert.deepEqual(got.body, made.body.project);
+  } finally {
+    await restarted.close();
+  }
+  const counts = (
+    await pool.query(
+      'SELECT (SELECT count(*) FROM cloudlane.projects)::integer AS p,(SELECT count(*) FROM cloudlane.environments)::integer AS e,(SELECT count(*) FROM cloudlane.project_create_requests)::integer AS r',
+    )
+  ).rows[0];
+  assert.deepEqual(counts, { p: 1, e: 1, r: 1 });
+});
+test('concurrent same-key project creates commit one project and return the same response; changed body conflicts', async () => {
+  await owned();
+  const s = await login(),
+    key = randomUUID();
+  const pair = await Promise.all([
+    createProject(s, { name: 'One' }, key),
+    createProject(s, { name: 'One' }, key),
+  ]);
+  assert.equal(pair[0].status, 201);
+  assert.equal(pair[1].status, 201);
+  assert.deepEqual(pair[0].body, pair[1].body);
+  denied(await createProject(s, { name: 'Different' }, key), 409, 'CONFLICT');
+  const counts = (
+    await pool.query(
+      'SELECT (SELECT count(*) FROM cloudlane.projects)::integer AS p,(SELECT count(*) FROM cloudlane.environments)::integer AS e',
+    )
+  ).rows[0];
+  assert.deepEqual(counts, { p: 1, e: 1 });
+  assert.deepEqual(
+    (
+      await pool.query(
+        'SELECT action FROM cloudlane.project_audit ORDER BY created_at',
+      )
+    ).rows.map((r) => r.action),
+    ['created', 'replayed'],
+  );
+});
+test('project and environment inserts roll back together when a later audit insert fails; the retry can then succeed', async () => {
+  await owned();
+  const s = await login(),
+    key = randomUUID();
+  await pool.query(
+    "CREATE FUNCTION cloudlane.fail_project_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'private-project-database-details'; END $$; CREATE TRIGGER fail_project_audit BEFORE INSERT ON cloudlane.project_audit FOR EACH ROW EXECUTE FUNCTION cloudlane.fail_project_audit()",
+  );
+  const result = await createProject(s, { name: 'Atomic' }, key);
+  denied(result, 503, 'API_UNAVAILABLE');
+  assert.ok(
+    !JSON.stringify(result).includes('private-project-database-details'),
+  );
+  for (const table of [
+    'projects',
+    'environments',
+    'project_create_requests',
+    'project_audit',
+  ])
+    assert.equal(
+      (
+        await pool.query(
+          'SELECT count(*)::integer AS n FROM cloudlane.' + table,
+        )
+      ).rows[0].n,
+      0,
+    );
+  await pool.query(
+    'DROP TRIGGER fail_project_audit ON cloudlane.project_audit',
+  );
+  assert.equal((await createProject(s, { name: 'Atomic' }, key)).status, 201);
+});
+test('project slugs are workspace-unique and SQL-like names are stored as data', async () => {
+  await owned();
+  const s = await login(),
+    name = "Project '; SELECT 1; --";
+  const one = await createProject(s, { name, slug: 'chosen-slug' });
+  assert.equal(one.status, 201);
+  assert.equal(one.body.project.name, name);
+  denied(
+    await createProject(s, { name: 'Other', slug: 'chosen-slug' }),
+    409,
+    'CONFLICT',
+  );
+  assert.equal(
+    (await pool.query('SELECT count(*)::integer AS n FROM cloudlane.projects'))
+      .rows[0].n,
+    1,
+  );
+});
+test('project list, detail, cursors and create requests cannot cross a server session workspace', async () => {
+  await owned();
+  const a = await login(),
+    b = await secondWorkspace(a),
+    key = randomUUID();
+  const one = await createProject(a, { name: 'Workspace A' }, key),
+    two = await createProject(b, { name: 'Workspace B' }, key);
+  assert.equal(one.status, 201);
+  assert.equal(two.status, 201);
+  const list = await call('projects?limit=1', {
+    headers: {
+      ...authHeaders(a),
+      'X-Workspace-Id': b.workspace,
+      'X-User-Role': 'owner',
+    },
+  });
+  assert.equal(list.status, 200);
+  assert.deepEqual(
+    list.body.items.map((p) => p.id),
+    [one.body.project.id],
+  );
+  denied(
+    await call('projects/' + two.body.project.id, { headers: authHeaders(a) }),
+    404,
+    'NOT_FOUND',
+  );
+  denied(
+    await call('projects/' + randomUUID(), { headers: authHeaders(a) }),
+    404,
+    'NOT_FOUND',
+  );
+  for (const marker of [
+    projectCursor(b.workspace, two.body.project.id),
+    projectCursor(one.body.project.workspaceId, two.body.project.id),
+  ])
+    denied(
+      await call('projects?cursor=' + marker, { headers: authHeaders(a) }),
+      400,
+      'VALIDATION_ERROR',
+    );
+  denied(
+    await createProject(a, { name: 'Forged', workspaceId: b.workspace }),
+    400,
+    'VALIDATION_ERROR',
+  );
+  const bList = await call('projects', { headers: authHeaders(b) });
+  assert.deepEqual(
+    bList.body.items.map((p) => p.id),
+    [two.body.project.id],
+  );
+});
+test('project pagination keeps microsecond ordering and UUID ties without duplicates or missing items', async () => {
+  await owned();
+  const s = await login(),
+    ids = [];
+  for (let i = 0; i < 5; i++) {
+    const made = await createProject(s, { name: 'Page ' + i });
+    assert.equal(made.status, 201);
+    ids.push(made.body.project.id);
+    await pool.query(
+      "UPDATE cloudlane.projects SET created_at='2026-11-19 00:00:00.123001+00'::timestamptz + $2 * interval '1 microsecond' WHERE id=$1",
+      [made.body.project.id, i < 3 ? 0 : i],
+    );
+  }
+  const expected = (
+      await pool.query(
+        'SELECT id FROM cloudlane.projects ORDER BY created_at,id',
+      )
+    ).rows.map((p) => p.id),
+    seen = [];
+  let cursor;
+  do {
+    const response = await call(
+      'projects?limit=2' + (cursor ? '&cursor=' + cursor : ''),
+      { headers: authHeaders(s) },
+    );
+    assert.equal(response.status, 200);
+    assert.ok(response.body.items.length <= 2);
+    seen.push(...response.body.items.map((p) => p.id));
+    cursor = response.body.nextCursor;
+  } while (cursor);
+  assert.deepEqual(seen, expected);
+  assert.equal(new Set(seen).size, 5);
+});
+test('project boundary accepts only declared GET pagination and keeps mutations/auth query-free', async () => {
+  await owned();
+  const s = await login();
+  for (const path of [
+    'projects?workspaceId=' + randomUUID(),
+    'projects?limit=1&limit=2',
+    'projects?cursor=abc&cursor=def',
+    'projects?password=private',
+  ])
+    denied(await call(path, { headers: authHeaders(s) }), 403, 'FORBIDDEN');
+  for (const path of [
+    'projects?limit=0',
+    'projects?limit=101',
+    'projects?cursor=invalid',
+  ])
+    denied(
+      await call(path, { headers: authHeaders(s) }),
+      400,
+      'VALIDATION_ERROR',
+    );
+  denied(
+    await call('auth/session?limit=1', { headers: authHeaders(s) }),
+    403,
+    'FORBIDDEN',
+  );
+  denied(
+    await post(
+      'projects?limit=1',
+      { name: 'No query' },
+      { headers: { ...authHeaders(s), 'Idempotency-Key': randomUUID() } },
+    ),
+    403,
+    'FORBIDDEN',
+  );
+});
+test('project create retains current MFA, CSRF, origin, HTTPS and retry-key requirements', async () => {
+  await owned();
+  const c = await passwordChallenge();
+  denied(await createProject(c), 401, 'SESSION_REQUIRED');
+  const batch = await enroll(c);
+  denied(await createProject(batch), 401, 'SESSION_REQUIRED');
+  const done = await post(
+    'auth/recovery/acknowledge',
+    { acknowledged: true },
+    { headers: authHeaders(batch) },
+  );
+  const s = { cookie: cookie(done, SESSION_COOKIE), csrf: done.body.csrfToken };
+  for (const headers of [
+    { 'X-CSRF-Token': null },
+    { 'X-CSRF-Token': 'wrong' },
+    { Origin: 'https://evil.example.test' },
+    { 'X-Cloudlane-Request': null },
+  ])
+    denied(
+      await createProject(s, { name: 'Denied' }, randomUUID(), { headers }),
+      403,
+      'FORBIDDEN',
+    );
+  denied(
+    await createProject(s, { name: 'Denied' }, randomUUID(), {
+      plaintext: true,
+    }),
+    403,
+    'FORBIDDEN',
+  );
+  denied(
+    await post('projects', { name: 'Denied' }, { headers: authHeaders(s) }),
+    400,
+    'VALIDATION_ERROR',
+  );
+  denied(
+    await createProject(s, { name: 'Denied' }, 'not-a-uuid'),
+    400,
+    'VALIDATION_ERROR',
+  );
+  assert.equal(
+    (await pool.query('SELECT count(*)::integer AS n FROM cloudlane.projects'))
+      .rows[0].n,
+    0,
+  );
+});
+test('project mutation rechecks revocation, rotation and critical MFA epochs after authorization preflight', async () => {
+  await owned();
+  let s = await login(),
+    ctx = await projectContext(s);
+  const store = new ProjectStore(review.store);
+  assert.equal(
+    (await post('auth/session/rotate', {}, { headers: authHeaders(s) })).status,
+    200,
+  );
+  await assert.rejects(
+    store.create(ctx, { name: 'Stale rotation' }, randomUUID(), randomUUID()),
+    (e) => e.code === 'SESSION_REQUIRED',
+  );
+  s = await login();
+  ctx = await projectContext(s);
+  const recovered = await passwordChallenge();
+  assert.equal(
+    (
+      await post(
+        'auth/recovery/use',
+        { code: recoveryCodes.shift() },
+        { headers: authHeaders(recovered) },
+      )
+    ).status,
+    200,
+  );
+  await assert.rejects(
+    store.create(ctx, { name: 'Stale MFA' }, randomUUID(), randomUUID()),
+    (e) => e.code === 'SESSION_REQUIRED',
+  );
+  assert.equal(
+    (await pool.query('SELECT count(*)::integer AS n FROM cloudlane.projects'))
+      .rows[0].n,
+    0,
+  );
+});
+test('overview exposes only owned durable project metadata and no invented infrastructure', async () => {
+  await owned();
+  const a = await login(),
+    b = await secondWorkspace(a);
+  const one = await createProject(a, { name: 'Visible' });
+  await createProject(b, { name: 'Hidden' });
+  const response = await call('overview', { headers: authHeaders(a) });
+  assert.equal(response.status, 200);
+  assert.equal(response.body.scope, 'project_metadata');
+  assert.deepEqual(
+    response.body.projects.map((p) => p.id),
+    [one.body.project.id],
+  );
+  assert.equal(response.body.projects[0].createdAt, one.body.project.createdAt);
+  for (const field of ['services', 'domains', 'activity'])
+    assert.deepEqual(response.body[field], []);
+  assert.equal(response.body.server, null);
+  assert.equal(
+    (
+      await post(
+        'domains',
+        { name: 'never-provision.example.test' },
+        { headers: { ...authHeaders(a), 'Idempotency-Key': randomUUID() } },
+      )
+    ).status,
+    501,
+  );
+});
+test('project limit is atomic and same-key retries still work at the metadata ceiling', async () => {
+  await owned();
+  const s = await login(),
+    key = randomUUID(),
+    first = await createProject(s, { name: 'At ceiling' }, key);
+  await pool.query(
+    "INSERT INTO cloudlane.projects (workspace_id,name,slug) SELECT $1,'Seed metadata '||n,'seed-'||n FROM generate_series(1,999) n",
+    [first.body.project.workspaceId],
+  );
+  denied(await createProject(s, { name: 'Over ceiling' }), 409, 'CONFLICT');
+  const retry = await createProject(s, { name: 'At ceiling' }, key);
+  assert.equal(retry.status, 201);
+  assert.deepEqual(retry.body, first.body);
+});
+test('project transaction authority serializes with logout rather than leaving an authorized stale write', async () => {
+  await owned();
+  const s = await login(),
+    lock = await pool.connect();
+  const latch = 360036;
+  await lock.query('SELECT pg_advisory_lock($1)', [latch]);
+  await pool.query(
+    `CREATE FUNCTION cloudlane.pause_project() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN PERFORM pg_advisory_xact_lock(${latch}); RETURN NEW; END $$; CREATE TRIGGER pause_project BEFORE INSERT ON cloudlane.projects FOR EACH ROW EXECUTE FUNCTION cloudlane.pause_project()`,
+  );
+  let made, out;
+  async function waitFor(query, values = []) {
+    for (let i = 0; i < 100; i++) {
+      if ((await pool.query(query, values)).rows[0].found) return;
+      await new Promise((r) => setTimeout(r, 10));
+    }
+    throw new Error('Expected database lock was not observed');
+  }
+  try {
+    made = createProject(s, { name: 'Serialized' });
+    await waitFor(
+      "SELECT EXISTS(SELECT 1 FROM pg_locks WHERE locktype='advisory' AND objid=$1 AND NOT granted) AS found",
+      [latch],
+    );
+    out = post('auth/logout', {}, { headers: authHeaders(s) });
+    await waitFor(
+      "SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE wait_event_type='Lock' AND query LIKE 'SELECT id FROM cloudlane.session_families%') AS found",
+    );
+    await lock.query('SELECT pg_advisory_unlock($1)', [latch]);
+    assert.equal((await made).status, 201);
+    assert.equal((await out).status, 200);
+    denied(
+      await createProject(s, { name: 'After logout' }),
+      401,
+      'SESSION_REQUIRED',
+    );
+  } finally {
+    await lock.query('SELECT pg_advisory_unlock_all()');
+    lock.release();
+    await Promise.allSettled([made, out].filter(Boolean));
+  }
+});

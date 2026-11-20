@@ -205,7 +205,13 @@
           <button class="btn" onclick={() => loadInfrastructure()}>
             <Icon name="refresh" size={16} />Try again
           </button>
-        </section>{:else}{@render children()}{/if}
+        </section>{:else}{#if infrastructure.data?.scope === 'project_metadata'}<p
+            class="hint"
+            role="note"
+          >
+            Projects are connected. Service provisioning and server metrics are
+            not available yet.
+          </p>{/if}{@render children()}{/if}
     </main>
   </div>
 </div>
