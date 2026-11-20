@@ -279,7 +279,9 @@ test('HTTPS project form saves only after API confirmation, reloads durable meta
   await page.getByRole('button', { name: 'Add service', exact: true }).click();
   await page.getByRole('button', { name: /^Application/ }).click();
   await expect(
-    page.getByRole('button', { name: 'Deploy application', exact: true }),
+    page
+      .getByRole('dialog', { name: 'Deploy application', exact: true })
+      .getByRole('button', { name: 'Start deployment', exact: true }),
   ).toBeDisabled();
   await page.keyboard.press('Escape');
   await navigate(page, 'Projects', isMobile);
