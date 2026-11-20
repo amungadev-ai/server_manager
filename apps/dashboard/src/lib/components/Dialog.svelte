@@ -8,6 +8,7 @@
     wide = false,
     closeIconSize = 18,
     closeDisabled = false,
+    readable = false,
     onclose,
     children,
     footer,
@@ -18,6 +19,7 @@
     wide?: boolean;
     closeIconSize?: number;
     closeDisabled?: boolean;
+    readable?: boolean;
     onclose: () => void;
     children: Snippet;
     footer?: Snippet;
@@ -33,6 +35,7 @@
 <dialog
   class="modal"
   class:wide
+  class:http-project-readable={readable}
   bind:this={element}
   aria-labelledby="dialog-title"
   {onclose}
@@ -69,3 +72,9 @@
   <div class="modal-body">{@render children()}</div>
   {#if footer}<div class="modal-footer">{@render footer()}</div>{/if}
 </dialog>
+
+<style>
+  .http-project-readable .modal-head p {
+    color: var(--text);
+  }
+</style>

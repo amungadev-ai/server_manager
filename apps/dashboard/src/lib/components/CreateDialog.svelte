@@ -168,6 +168,7 @@
       ? 16
       : 18}
   closeDisabled={ui.modalBusy}
+  readable={infrastructure.mode === 'http' && ui.modal === 'project'}
   onclose={() => {
     if (!ui.modalBusy) ui.modal = null;
   }}

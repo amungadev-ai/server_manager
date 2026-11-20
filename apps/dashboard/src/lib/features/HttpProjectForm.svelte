@@ -105,3 +105,11 @@
     {busy}
   />
 </form>
+
+<style>
+  .hint,
+  input::placeholder {
+    color: var(--text);
+    opacity: 1;
+  }
+</style>
