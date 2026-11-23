@@ -38,6 +38,7 @@ export class InfrastructureError extends Error {
 export async function readJson(
   response: Response,
   signal?: AbortSignal,
+  maximum = RESPONSE_LIMIT,
 ): Promise<unknown> {
   const invalid = () =>
     new InfrastructureError(
@@ -53,7 +54,7 @@ export async function readJson(
       .match(/^application\/(?:[a-z0-9.-]+\+)?json$/i)
   )
     throw invalid();
-  if (Number(response.headers.get('content-length') ?? 0) > RESPONSE_LIMIT)
+  if (Number(response.headers.get('content-length') ?? 0) > maximum)
     throw invalid();
   const reader = response.body?.getReader();
   if (!reader) throw invalid();
@@ -65,7 +66,7 @@ export async function readJson(
       const { value, done } = await reader.read();
       if (done) break;
       length += value.byteLength;
-      if (length > RESPONSE_LIMIT) {
+      if (length > maximum) {
         await reader.cancel();
         throw invalid();
       }
@@ -128,7 +129,11 @@ export class HttpInfrastructureApi implements InfrastructureApi {
         0,
       );
     }
-    const body = await readJson(response, signal);
+    const body = await readJson(
+      response,
+      signal,
+      path === '/overview' ? 4 * 1024 * 1024 : RESPONSE_LIMIT,
+    );
     if (!response.ok) {
       const result = ApiErrorEnvelopeSchema.safeParse(body);
       if (!result.success)

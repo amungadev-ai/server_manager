@@ -1,0 +1,52 @@
+
+> cloudlane@0.1.0 check
+> npm run build:api && npm run check:boundaries && npm run check:ci && npm run check:e2e && npm run check --workspaces --if-present && node tools/contract-generator/generate.mjs --check && python3 scripts/validate_progress.py
+
+
+> cloudlane@0.1.0 build:api
+> npm run build:contracts && npm run build --workspace @cloudlane/api
+
+
+> cloudlane@0.1.0 build:contracts
+> npm run build --workspace @cloudlane/contracts
+
+
+> @cloudlane/contracts@0.1.0 build
+> node ../../scripts/build-contracts.mjs
+
+
+> @cloudlane/api@0.1.0 build
+> tsc -p tsconfig.json
+
+
+> cloudlane@0.1.0 check:boundaries
+> node scripts/check-boundaries.mjs
+
+PASS: package and import boundaries
+
+> cloudlane@0.1.0 check:ci
+> node scripts/validate-ci.mjs
+
+PASS: CI triggers, gates, pinned actions, browser matrix and evidence policy
+
+> cloudlane@0.1.0 check:e2e
+> tsc -p tests/e2e/tsconfig.json
+
+
+> @cloudlane/api@0.1.0 check
+> tsc -p tsconfig.json --noEmit
+
+
+> @cloudlane/dashboard@0.1.0 check
+> svelte-kit sync && svelte-check --tsconfig ./tsconfig.json
+
+Loading svelte-check in workspace: /home/runner/work/server_manager/server_manager/apps/dashboard
+Getting Svelte diagnostics...
+
+svelte-check found 0 errors and 0 warnings
+
+> @cloudlane/contracts@0.1.0 check
+> tsc -p tsconfig.json --noEmit
+
+PASS: checked OpenAPI, client types and agent schemas (24 HTTP paths)
+PASS: task records valid

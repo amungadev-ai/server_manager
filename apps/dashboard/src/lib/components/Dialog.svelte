@@ -7,6 +7,8 @@
     description = '',
     wide = false,
     closeIconSize = 18,
+    closeDisabled = false,
+    readable = false,
     onclose,
     children,
     footer,
@@ -16,6 +18,8 @@
     description?: string;
     wide?: boolean;
     closeIconSize?: number;
+    closeDisabled?: boolean;
+    readable?: boolean;
     onclose: () => void;
     children: Snippet;
     footer?: Snippet;
@@ -31,12 +35,13 @@
 <dialog
   class="modal"
   class:wide
+  class:http-project-readable={readable}
   bind:this={element}
   aria-labelledby="dialog-title"
   {onclose}
   oncancel={(event) => {
     event.preventDefault();
-    onclose();
+    if (!closeDisabled) onclose();
   }}
   onclick={(event) => {
     if (event.target !== element) return;
@@ -47,7 +52,7 @@
       event.clientY < rect.top ||
       event.clientY > rect.bottom
     )
-      onclose();
+      if (!closeDisabled) onclose();
   }}
 >
   <div class="modal-head">
@@ -55,10 +60,21 @@
       <h2 id="dialog-title">{title}</h2>
       {#if description}<p>{description}</p>{/if}
     </div>
-    <button class="icon-btn" onclick={onclose} aria-label="Close dialog">
+    <button
+      class="icon-btn"
+      disabled={closeDisabled}
+      onclick={onclose}
+      aria-label="Close dialog"
+    >
       <Icon name="close" size={closeIconSize} />
     </button>
   </div>
   <div class="modal-body">{@render children()}</div>
   {#if footer}<div class="modal-footer">{@render footer()}</div>{/if}
 </dialog>
+
+<style>
+  .http-project-readable .modal-head p {
+    color: var(--text);
+  }
+</style>

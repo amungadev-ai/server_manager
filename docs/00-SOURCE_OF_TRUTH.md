@@ -69,3 +69,9 @@ The initial pack inventory has been updated for the repository foundation. Exact
 ## Mandatory MFA and authentication screens
 
 [PR #6](https://github.com/amungadev-ai/server_manager/pull/6), [ADR-020](adr/020-mfa-recovery-and-auth-ui.md) and [batch evidence](evidence/MFA_AUTH_UI_REVIEW.md) extend the isolated development profile with mandatory TOTP/recovery challenges and separate Svelte auth routes. Password-only sessions are no longer accepted by this candidate. The static Site offers a read-only synthetic auth walkthrough; normal API activation stays disabled. Local root recovery is a documented installer contract, not an executable command. Independent security review and actual installer/TLS/VPS acceptance remain open.
+
+## Authenticated project metadata
+
+CL-036 in [PR #7](https://github.com/amungadev-ai/server_manager/pull/7) extends the isolated MFA profile with scoped project create/list/detail and overview metadata. [ADR-021](adr/021-authenticated-project-metadata.md) defines atomic production-environment creation, retry keys, pagination and session rechecks. [Batch evidence](evidence/AUTHENTICATED_PROJECTS.md) records checks and limits. The existing project form/list use the real API in HTTP builds; static demo actions stay simulated. Normal authentication, workload provisioning and production activation remain gated.
+
+Validated on 2026-11-23 (Africa/Nairobi): implementation checkpoint `e5a314e03ba1ea03a9a100825fabb5925c08dc21` passes all six jobs in [run 44701008424](https://github.com/amungadev-ai/server_manager/actions/runs/44701008424): 87 unit/HTTP/progress, 58 PostgreSQL/HTTPS, 54 actual browser cases and 40 direct prototype comparisons. [Retained reports](../evidence/projects/README.md) preserve tested source/tree and artifact/file hashes. Final PR checks cover the later evidence-only handoff. Independent security review and production activation remain open.

@@ -33,6 +33,7 @@ export function RouteContract(
     mutation?: boolean;
     access?: 'public' | 'owner';
     review?: boolean;
+    retryImplemented?: boolean;
   } = {},
 ) {
   const implemented = options.implemented === true;
@@ -45,7 +46,7 @@ export function RouteContract(
       summary,
       description: implemented
         ? 'Implemented read-only platform endpoint.'
-        : `NORMAL ENTRY POINT UNAVAILABLE: ${ownerOnly ? 'requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501.' : 'Validates request shape and returns 501.'} ${options.review ? 'This operation has an isolated HTTPS development candidate under ADR-019/020, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.' : 'Success shape remains a draft; no resource mutation or queued work is performed.'}`,
+        : `NORMAL ENTRY POINT UNAVAILABLE: ${ownerOnly ? 'requires a server-resolved owner session before request validation; anonymous callers receive 401. Session resolution is disabled in the normal entry point. Authorized requests will validate shape and return 501.' : 'Validates request shape and returns 501.'} ${options.review ? 'This operation has an isolated HTTPS development candidate under ADR-019/020/021, rejected in production mode; it requires exact Host/Origin, a custom owner-auth request header, and the session/setup/challenge CSRF nonce where applicable. Independent security review is pending.' : 'Success shape remains a draft; no resource mutation or queued work is performed.'}`,
     }),
     ApiExtension(
       'x-cloudlane-implementation',
@@ -118,8 +119,9 @@ export function RouteContract(
           ApiHeader({
             name: 'Idempotency-Key',
             required: true,
-            description:
-              'UUID v4 retry key. Persistence/deduplication is not implemented.',
+            description: options.retryImplemented
+              ? 'UUID v4 retry key, scoped to the authenticated workspace/user in the review profile. Same key/body returns the original result; changed body returns 409.'
+              : 'UUID v4 retry key. Persistence/deduplication is not implemented.',
             schema: z.toJSONSchema(IdempotencyKeySchema, {
               target: 'openapi-3.0',
             }) as SchemaObject,

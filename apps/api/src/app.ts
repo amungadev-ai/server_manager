@@ -12,10 +12,11 @@ import { ResourceContractModule } from './modules/resources.module';
 import { createOpenApiDocument } from './openapi';
 import { AuthorizationModule } from './common/authorization';
 import { DatabaseModule, PlatformDatabase } from './database/database';
+import { ProjectStore } from './projects/store';
 import type { OwnerAuthReview } from './auth/review';
 
 @Module({
-  imports: [PlatformModule, ResourceContractModule],
+  imports: [PlatformModule],
 })
 class AppModule {}
 
@@ -38,6 +39,11 @@ export async function createApp(
     {
       module: AppModule,
       imports: [
+        ResourceContractModule.configure(
+          options.ownerAuthReview
+            ? new ProjectStore(options.ownerAuthReview.store)
+            : undefined,
+        ),
         DatabaseModule.configure(options.database ?? new PlatformDatabase()),
         AuthorizationModule.configure(options.ownerAuthReview),
         AuthContractModule.configure(options.ownerAuthReview),
