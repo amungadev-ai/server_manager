@@ -1,0 +1,652 @@
+{
+  "status": "passed",
+  "runId": "77128008-0db0-4a63-891d-5cd7d7a52b11",
+  "commit": "26bc2381cf6aca2689aa01c4defb94f91ac3b4c5",
+  "cases": [
+    {
+      "id": "d748ac400d08b85935ef-ff7bcbc6d249e893a3b3",
+      "title": " / mobile / auth.spec.ts / auth demo walkthrough stays read-only, needs recovery acknowledgement and makes no API calls",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/auth-auth-demo-walkthrough-98d12-ment-and-makes-no-API-calls-mobile/attachments/rendered-page-8ef2253b4e8212c2beb9ec5be0a87801cab76b45.png"
+        }
+      ]
+    },
+    {
+      "id": "d748ac400d08b85935ef-560cf299ec4153a9ef64",
+      "title": " / mobile / auth.spec.ts / HTTP production auth refuses secret entry and unconfigured HTTPS presents a clear unavailable state",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/auth-HTTP-production-auth--a0aeb-s-a-clear-unavailable-state-mobile/attachments/rendered-page-affac6fff7f88398a6c185fce4ae8e30df3f26db.png"
+        }
+      ]
+    },
+    {
+      "id": "d748ac400d08b85935ef-7e3961953a1eb39c6487",
+      "title": " / mobile / auth.spec.ts / HTTPS UI contract setup validates passwords, generates QR locally and acknowledges codes with rotated CSRF",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/auth-HTTPS-UI-contract-set-c417a-ges-codes-with-rotated-CSRF-mobile/attachments/rendered-page-f22cda52b1fc9d14b88c37624e89fb06a7969394.png"
+        }
+      ]
+    },
+    {
+      "id": "d748ac400d08b85935ef-62150f279c7d0f78ab86",
+      "title": " / mobile / auth.spec.ts / HTTPS UI contract login requires MFA and exposes safe retry errors with focus",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/auth-HTTPS-UI-contract-log-ebba6-afe-retry-errors-with-focus-mobile/attachments/rendered-page-25afdd3d5457a903917bee096d38d9337a96067c.png"
+        }
+      ]
+    },
+    {
+      "id": "d748ac400d08b85935ef-821db682b4c60bdde7a1",
+      "title": " / mobile / auth.spec.ts / HTTPS UI contract recovery still verifies password and sends one code through the challenge",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/auth-HTTPS-UI-contract-rec-70ebf--code-through-the-challenge-mobile/attachments/rendered-page-9c4b68ce4706610df3582775f9ef42bb8d5d4225.png"
+        }
+      ]
+    },
+    {
+      "id": "d748ac400d08b85935ef-a4512aaf730f31b54548",
+      "title": " / mobile / auth.spec.ts / HTTPS UI contract security requires step-up and auth form has no serious accessibility failures",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/auth-HTTPS-UI-contract-sec-680c6-ious-accessibility-failures-mobile/attachments/rendered-page-ec7d567c3b4d47fa5ac1fd90dd6a1fb0ecbe9ccc.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-a48d4b1d50c16b941469",
+      "title": " / mobile / dashboard.spec.ts / demo overview is explicitly labelled and fits the viewport",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-demo-overview-is-8e02c-elled-and-fits-the-viewport-mobile/attachments/rendered-page-8a7d89a7fcff730883fdbf120dc5f274eec3e706.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-a0ec65cbab8fff43ee52",
+      "title": " / mobile / dashboard.spec.ts / project search, detail navigation and reload use the static SPA fallback",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-project-search-d-0fd8b-use-the-static-SPA-fallback-mobile/attachments/rendered-page-85adb2e4f8782d6d17ab8f971371dcfb1fa6f5e8.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-709703c2988aea4a0d11",
+      "title": " / mobile / dashboard.spec.ts / Add Domain has one field and returns focus on Escape",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-Add-Domain-has-o-d7945-and-returns-focus-on-Escape-mobile/attachments/rendered-page-bc6221d654e87207fd854d33a8d55701434d378a.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-85568d57170c5300bbbc",
+      "title": " / mobile / dashboard.spec.ts / domain detail has exactly seven sections and DNS mode is in Settings",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-domain-detail-ha-71658-and-DNS-mode-is-in-Settings-mobile/attachments/rendered-page-15ad74d180dda1991ab58a4e269b8a59ab1ef9ef.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-81c0b3c58d1b18e75a2e",
+      "title": " / mobile / dashboard.spec.ts / appearance persists across reload for every palette and theme",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-appearance-persi-5ffd4-for-every-palette-and-theme-mobile/attachments/rendered-page-3e34903d2c3baa999a8cf33d65c763c35a592292.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-6a07b1a9a0a454d45920",
+      "title": " / mobile / dashboard.spec.ts / default overview has no new serious or critical accessibility violations against the approved prototype",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "axe-results",
+          "path": null
+        },
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-default-overview-d2490-inst-the-approved-prototype-mobile/attachments/rendered-page-b17e29bb8ad6b54e59874fdd333e7ea39ee318e8.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-675803a9ff3c5964cc77",
+      "title": " / mobile / dashboard.spec.ts / HTTP fixture data is rendered without demo fallback or invented server health",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-HTTP-fixture-dat-cccde-k-or-invented-server-health-mobile/attachments/rendered-page-18b1c27b2f912b2390c03763c3b5220e7516af47.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-3d7104f827dba581be47",
+      "title": " / mobile / dashboard.spec.ts / a rejected fixture session prevents overview loading",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-a-rejected-fixtu-cbfce-n-prevents-overview-loading-mobile/attachments/rendered-page-0d0b48d4d27fd95af6e3a409ad315650db0a2657.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-4404876d4b2be62d684c",
+      "title": " / mobile / dashboard.spec.ts / malformed HTTP fixture data becomes an explicit connection error",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-malformed-HTTP-f-e1884-n-explicit-connection-error-mobile/attachments/rendered-page-25c428469a2def071ffcb0aac74d5d8b107ce5ba.png"
+        }
+      ]
+    },
+    {
+      "id": "90cda532ab82d274b30b-5d12c15ce027fc323191",
+      "title": " / mobile / dashboard.spec.ts / actual unconfigured NestJS API never masquerades as an owner session",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/dashboard-actual-unconfigu-79043-uerades-as-an-owner-session-mobile/attachments/rendered-page-0619ff85f364774a247177967c43b91fdafdde57.png"
+        }
+      ]
+    },
+    {
+      "id": "3a2958b1096c5d9a8472-c732b1984c4a400d99ec",
+      "title": " / mobile / projects.spec.ts / HTTPS project UI lists paginated metadata and searches loaded projects without demo data",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/projects-HTTPS-project-UI--602bd--projects-without-demo-data-mobile/attachments/rendered-page-cc65d623b042773d01ae675547f2f7f53d6ec6f7.png"
+        }
+      ]
+    },
+    {
+      "id": "3a2958b1096c5d9a8472-47a5527cb272f3c7f206",
+      "title": " / mobile / projects.spec.ts / HTTPS project form saves only after API confirmation, reloads durable metadata and keeps service mutations unavailable",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/projects-HTTPS-project-for-7fe4f-rvice-mutations-unavailable-mobile/attachments/rendered-page-f7e40d7f43ae3baf21e6a64e8117a54b9bd59dfe.png"
+        }
+      ]
+    },
+    {
+      "id": "3a2958b1096c5d9a8472-1d4ed028619e2afc952b",
+      "title": " / mobile / projects.spec.ts / HTTPS project retry reuses the original key and body after a lost acknowledgement",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/projects-HTTPS-project-ret-1da88-fter-a-lost-acknowledgement-mobile/attachments/rendered-page-79c573b173b421a04e648ed377f4ce5a8d17d654.png"
+        }
+      ]
+    },
+    {
+      "id": "3a2958b1096c5d9a8472-546fc95bb37b311e9dde",
+      "title": " / mobile / projects.spec.ts / HTTPS project list errors stay explicit without a fake empty state or untrusted server text",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/projects-HTTPS-project-lis-99100-te-or-untrusted-server-text-mobile/attachments/rendered-page-7bdddd39e59d54177700709464c8126503a0fe77.png"
+        }
+      ]
+    },
+    {
+      "id": "3a2958b1096c5d9a8472-5096d6e8b31c1ea715ab",
+      "title": " / mobile / projects.spec.ts / HTTPS project form prevents duplicate submissions and dismissal while a create is pending",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/projects-HTTPS-project-for-8f46e-l-while-a-create-is-pending-mobile/attachments/rendered-page-8bd0284b330e0657cab0edb4a6fe3b6badd60440.png"
+        }
+      ]
+    },
+    {
+      "id": "19b1a4b9c75f61794625-629e5353faa3aa12cf1f",
+      "title": " / mobile / prototype.spec.ts / render the immutable v1.13 reference beside all primary Svelte screens",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "overview-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/overview-reference-5ba706ad424edbed4365acd3722c40a9ebe57ed9.png"
+        },
+        {
+          "name": "overview-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/overview-app-6eafb3d56f3f4efa7f5fe5ef40f12359191c547d.png"
+        },
+        {
+          "name": "projects-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/projects-reference-84d7903081c027a3273e206cabbffc9cef1e8943.png"
+        },
+        {
+          "name": "projects-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/projects-app-ad9d2727cb355c8241902d39d9a831264371b32a.png"
+        },
+        {
+          "name": "project-services-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/project-services-reference-f9d163d5bb38175647e2e756d7ff0e5f2a8090e3.png"
+        },
+        {
+          "name": "project-services-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/project-services-app-33fd3bc76e4a97a424cb6a7773f9f778ab2a98d2.png"
+        },
+        {
+          "name": "project-architecture-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/project-architecture-reference-aa9ee55378f5e60c3869aa5c1725847e0873d098.png"
+        },
+        {
+          "name": "project-architecture-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/project-architecture-app-444f259fbcb780233a45735f2fded2c34ef53fb4.png"
+        },
+        {
+          "name": "project-storage-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/project-storage-reference-c7201e5c99b16d604c2dde21bdd73c427d260f0d.png"
+        },
+        {
+          "name": "project-storage-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/project-storage-app-41d6e2b402e8478b281ec9b9f6e766e00cfe193c.png"
+        },
+        {
+          "name": "domains-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/domains-reference-3363686e1375afaf2c9aa919cc6f2337bf254a14.png"
+        },
+        {
+          "name": "domains-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/domains-app-67a9d809f8c1744027426319c986983b76afbeed.png"
+        },
+        {
+          "name": "domain-overview-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/domain-overview-reference-07003f09f67f7d859f7e1d26fea7250b5117280b.png"
+        },
+        {
+          "name": "domain-overview-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/domain-overview-app-27587c4522a78f7240f7588b967ff8fe01268a66.png"
+        },
+        {
+          "name": "domain-records-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/domain-records-reference-978ae5023a73d7f8b8f61f540e30f65e64a5a6bc.png"
+        },
+        {
+          "name": "domain-records-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/domain-records-app-c595ded401d895ce1653c13a9d37be4fe90885dc.png"
+        },
+        {
+          "name": "domain-settings-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/domain-settings-reference-98e03cec68ac45be5d6e67554c51a93c962270fe.png"
+        },
+        {
+          "name": "domain-settings-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/domain-settings-app-775e261c0652df05bb37f4d91af95c747189f02e.png"
+        },
+        {
+          "name": "domain-managed-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/domain-managed-reference-3644e0d9370a1b2fbfa703c504b162dd94c3c6fc.png"
+        },
+        {
+          "name": "domain-managed-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/domain-managed-app-c9a9651940c7dfa9ce3fc3c93702d186edd7858d.png"
+        },
+        {
+          "name": "app-overview-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/app-overview-reference-c8f14c2dad418824d6ff0a6a7b7fcdc77f71db48.png"
+        },
+        {
+          "name": "app-overview-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/app-overview-app-c3195a3aa3d57b73afaed77a99facd50c164a030.png"
+        },
+        {
+          "name": "app-terminal-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/app-terminal-reference-b5f6e39671e080935b9b97191dc112eddbc691fd.png"
+        },
+        {
+          "name": "app-terminal-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/app-terminal-app-f8bb753df7fecd0358a2d57624e1111a4f8ef6ce.png"
+        },
+        {
+          "name": "app-artifacts-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/app-artifacts-reference-6a00c3182418ee30cbdb2a451637bf9f32ad6f71.png"
+        },
+        {
+          "name": "app-artifacts-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/app-artifacts-app-9cf15df7689e644fdcd062bbcfe66df6ec5145f3.png"
+        },
+        {
+          "name": "database-overview-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/database-overview-reference-206247916ad952337bdbb9f8638d9ed9311cc2fd.png"
+        },
+        {
+          "name": "database-overview-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/database-overview-app-7c2ea82e3053aa4a3bbf465a69780a3a6b2307fc.png"
+        },
+        {
+          "name": "database-console-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/database-console-reference-1a0251383370c843f9b8c28aebcefadea48976d1.png"
+        },
+        {
+          "name": "database-console-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/database-console-app-f9cd34b8df3ea0732916e0341761eed3729d925a.png"
+        },
+        {
+          "name": "cron-overview-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/cron-overview-reference-1c1dbe282ecba404984ac1d612c902513f4940f2.png"
+        },
+        {
+          "name": "cron-overview-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/cron-overview-app-f0ff3c1982d9672c87613515ca3e70916f343adb.png"
+        },
+        {
+          "name": "storage-overview-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/storage-overview-reference-5921d279e1a620ea5821ec63cba59ba8de27eeea.png"
+        },
+        {
+          "name": "storage-overview-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/storage-overview-app-1c008042e9742b47026dc9722e8aed8ea1b70cc2.png"
+        },
+        {
+          "name": "storage-files-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/storage-files-reference-58edfbe05458ec52741a95f97b5979852812eeac.png"
+        },
+        {
+          "name": "storage-files-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/storage-files-app-c9ed354230992c3ec3def19d4103987491dad0e8.png"
+        },
+        {
+          "name": "databases-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/databases-reference-583aa1e4dd10124a5b5f7a95e3738ad796fe6b5f.png"
+        },
+        {
+          "name": "databases-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/databases-app-d82417b012f173d9899b51ea3ed852fce4f97338.png"
+        },
+        {
+          "name": "email-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/email-reference-2987a02350ce96e3e91a2db6e41c8803b79c4980.png"
+        },
+        {
+          "name": "email-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/email-app-af98a4d1b9b9f7a08d4a44bab475a51645f831be.png"
+        },
+        {
+          "name": "cron-jobs-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/cron-jobs-reference-f1533f8f0ca078b254654110e5f9a292c044d747.png"
+        },
+        {
+          "name": "cron-jobs-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/cron-jobs-app-2f3d0290c19653c735e7bf502caa992c6a80c282.png"
+        },
+        {
+          "name": "server-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/server-reference-515562f6a761510915584395a05b85d09fe23ad4.png"
+        },
+        {
+          "name": "server-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/server-app-ef9ecd3199ff1e67e1372660b9251f369fac7b45.png"
+        },
+        {
+          "name": "activity-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/activity-reference-691ee9be317aa03abad49d228e363c1115aac65e.png"
+        },
+        {
+          "name": "activity-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/activity-app-a6e1a07ec7e78aba760ee8ddba786623aca6cfd8.png"
+        },
+        {
+          "name": "settings-workspace-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/settings-workspace-reference-dd7b4fb9b48a258fe0608bc9662b9ea45ed3d7bc.png"
+        },
+        {
+          "name": "settings-workspace-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/settings-workspace-app-2c8e2c58f6747960029723124bc17465ae4bf178.png"
+        },
+        {
+          "name": "settings-preferences-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/settings-preferences-reference-86ebde2a2f947e2167373e9fb4ced22858459aaa.png"
+        },
+        {
+          "name": "settings-preferences-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/settings-preferences-app-447a1d869ea374ac2f8835b15046a5fa3a9319fc.png"
+        },
+        {
+          "name": "create-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/create-reference-5bcb5edcd05d8d0234e8eae9efdd9a52e86f3d36.png"
+        },
+        {
+          "name": "create-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/create-app-6a80194de1988fd458b9381cbd8e4f251152a6dd.png"
+        },
+        {
+          "name": "deploy-zip-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/deploy-zip-reference-6b52326cb78f3e34c910d4c52336cc30806bc09a.png"
+        },
+        {
+          "name": "deploy-zip-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/deploy-zip-app-7c12ed6df867fa2e598cb183d7292b4bf32cc09e.png"
+        },
+        {
+          "name": "add-domain-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/add-domain-reference-972e09d93cec508b457496fd9c1f7eb20fd34247.png"
+        },
+        {
+          "name": "add-domain-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/add-domain-app-16d641e85710c4c5b1523e5651bc18bef719359f.png"
+        },
+        {
+          "name": "assistant-reference",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/assistant-reference-862138627fcc29cf33ed46429352948cbc36e44d.png"
+        },
+        {
+          "name": "assistant-app",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/assistant-app-2d518b1b97d5bea62c7b4ae4a4a844bc45fa5fbd.png"
+        },
+        {
+          "name": "prototype-layout-comparison",
+          "path": null
+        },
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-render-the-immut-4e2d4--all-primary-Svelte-screens-mobile/attachments/rendered-page-d547c45614eb2c6125851317d5298517e056c3f8.png"
+        }
+      ]
+    },
+    {
+      "id": "19b1a4b9c75f61794625-fdb5ccb9438da33406af",
+      "title": " / mobile / prototype.spec.ts / domain connections and DNS transitions preserve the central registry",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-domain-connectio-ce92d-eserve-the-central-registry-mobile/attachments/rendered-page-4f695e0486e199d6cbb685d6173d0e7be74e07ca.png"
+        }
+      ]
+    },
+    {
+      "id": "19b1a4b9c75f61794625-71be2bf3980c28193aa1",
+      "title": " / mobile / prototype.spec.ts / service previews enforce terminal and SQL boundaries and discard resource state on reload",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-service-previews-b2f39-rd-resource-state-on-reload-mobile/attachments/rendered-page-d629aeaaf10ad906fbeb2fb060df948c31c8987e.png"
+        }
+      ]
+    },
+    {
+      "id": "19b1a4b9c75f61794625-684a475abef11c638283",
+      "title": " / mobile / prototype.spec.ts / every prototype detail tab contains a working view",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-every-prototype-detail-tab-contains-a-working-view-mobile/attachments/rendered-page-5145b387fb0efd715a4fab249ef578d71af721e4.png"
+        }
+      ]
+    },
+    {
+      "id": "19b1a4b9c75f61794625-94477ed5f0487642c120",
+      "title": " / mobile / prototype.spec.ts / storage and API key workflows stay scoped and simulated",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-storage-and-API--6fd3e-s-stay-scoped-and-simulated-mobile/attachments/rendered-page-c21fc7db990900fc1e3fdbe84e6b3c0c926427f1.png"
+        }
+      ]
+    },
+    {
+      "id": "19b1a4b9c75f61794625-add446291b68c03bc493",
+      "title": " / mobile / prototype.spec.ts / assistant drag persists a bounded UI preference and plans require approval",
+      "project": "mobile",
+      "status": "passed",
+      "retry": 0,
+      "browserVersion": "159.0.8154.6",
+      "viewport": "{\"width\":390,\"height\":844}",
+      "attachments": [
+        {
+          "name": "rendered-page",
+          "path": "/home/runner/work/server_manager/server_manager/test-results/e2e/artifacts/prototype-assistant-drag-p-b5c8a--and-plans-require-approval-mobile/attachments/rendered-page-303d2b1767d565587a117654bc37f9dcf3b922bd.png"
+        }
+      ]
+    }
+  ]
+}

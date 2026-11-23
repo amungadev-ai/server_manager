@@ -1,0 +1,90 @@
+{
+  "label": "installer",
+  "commit": "26bc2381cf6aca2689aa01c4defb94f91ac3b4c5",
+  "workingTreeDirty": false,
+  "recordedUtc": "2026-11-23T11:38:30.145Z",
+  "node": "v24.22.3",
+  "npm": "11.9.0",
+  "lockSha256": "cbd7ea4e6d8b0892ef5d766871785360bb2698d6ab8e49b0157cd58eaff9df5d",
+  "github": {
+    "runId": "45166802363",
+    "attempt": "1",
+    "event": "pull_request"
+  },
+  "browser": {
+    "execution": "not-run",
+    "reportStatus": "missing"
+  },
+  "files": [
+    {
+      "path": "test-results/ci/installer.log",
+      "bytes": 594,
+      "sha256": "ad1083e9105061f6f5b8a785cdb06f5393a786c26b99c421f51c1c1e529df88e"
+    },
+    {
+      "path": "test-results/ci/steps.json",
+      "bytes": 240,
+      "sha256": "bd49a24b91e45f4d48d52b15bf52aa178f33876148767b7f620fb64a66125253"
+    },
+    {
+      "path": "test-results/installer/build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "test-results/installer/cloudlane-installer_0.0.0_linux_amd64",
+      "bytes": 5000169,
+      "sha256": "400dc91e2f7893efc341444b8314ac7d33b314beb96de12a78ec2e8becf48835"
+    },
+    {
+      "path": "test-results/installer/coverage.out",
+      "bytes": 14644,
+      "sha256": "8d662892f824af3eee148cd2af7b1cbeb81de693daddd8b675df77f1a96a0ac1"
+    },
+    {
+      "path": "test-results/installer/format.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "test-results/installer/host-preflight.json",
+      "bytes": 2397,
+      "sha256": "4e582cad58e6b46b96ea4d4786b36fb4314a98ee4f0bc076add838659a531845"
+    },
+    {
+      "path": "test-results/installer/host-preflight.log",
+      "bytes": 2397,
+      "sha256": "4e582cad58e6b46b96ea4d4786b36fb4314a98ee4f0bc076add838659a531845"
+    },
+    {
+      "path": "test-results/installer/repeat-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "test-results/installer/steps.json",
+      "bytes": 505,
+      "sha256": "bfcdd72e98d701abc2a391d78c4efe63989b8bd503a7c02d00bf3cd0112b38f7"
+    },
+    {
+      "path": "test-results/installer/summary.json",
+      "bytes": 587,
+      "sha256": "1150d61018165f393811f364fcb35934d62db215b330d8038ae72ae14d075719"
+    },
+    {
+      "path": "test-results/installer/tests.log",
+      "bytes": 123877,
+      "sha256": "450f78d6a7c3286c3e909b659367310bf4907ed164f53ea531f6e44a6b1d8e9b"
+    },
+    {
+      "path": "test-results/installer/toolchain.log",
+      "bytes": 32,
+      "sha256": "a29205bd83967c2f70e6768fae009600038d6056499fa289de9d5f9b79beaef4"
+    },
+    {
+      "path": "test-results/installer/vet.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

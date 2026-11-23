@@ -1,0 +1,40 @@
+[
+  {
+    "command": [
+      "/opt/hostedtoolcache/node/24.22.3/x64/bin/node",
+      "--test",
+      "--test-reporter=spec",
+      "--test-reporter=junit",
+      "--test-reporter-destination=stdout",
+      "--test-reporter-destination=test-results/unit/node-junit.xml",
+      "apps/api/test/app.test.mjs",
+      "apps/api/test/authorization.test.mjs",
+      "apps/api/test/database.test.mjs",
+      "apps/api/test/mfa-crypto.test.mjs",
+      "apps/api/test/owner-auth.test.mjs",
+      "apps/api/test/projects.test.mjs",
+      "tests/auth-client.test.mjs",
+      "tests/boundaries.test.mjs",
+      "tests/ci-gates.test.mjs",
+      "tests/e2e-server.test.mjs",
+      "tests/http-adapter.test.mjs",
+      "tests/postgres-gates.test.mjs",
+      "tests/projects-client.test.mjs",
+      "packages/contracts/test/contracts.test.mjs"
+    ],
+    "status": "passed",
+    "exitCode": 0,
+    "started": "2026-11-23T11:38:26.559Z",
+    "finished": "2026-11-23T11:38:28.505Z"
+  },
+  {
+    "command": [
+      "python3",
+      "tests/run_python_tests.py"
+    ],
+    "status": "passed",
+    "exitCode": 0,
+    "started": "2026-11-23T11:38:28.505Z",
+    "finished": "2026-11-23T11:38:28.811Z"
+  }
+]
