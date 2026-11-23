@@ -1,5 +1,5 @@
 export function assertRequiredResults(results) {
-  const expected = ['progress', 'verify', 'postgres', 'e2e'];
+  const expected = ['progress', 'verify', 'postgres', 'installer', 'e2e'];
   for (const name of expected)
     if (results[name]?.result !== 'success')
       throw new Error(
