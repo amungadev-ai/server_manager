@@ -1,0 +1,14 @@
+[
+  {
+    "label": "installer",
+    "command": [
+      "npm",
+      "run",
+      "test:installer"
+    ],
+    "started": "2026-11-23T11:37:56.283Z",
+    "finished": "2026-11-23T11:38:30.087Z",
+    "status": "passed",
+    "exitCode": 0
+  }
+]

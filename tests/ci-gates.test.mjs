@@ -14,10 +14,11 @@ test('required gate rejects failed, cancelled, skipped and missing jobs', () => 
     progress: { result: 'success' },
     verify: { result: 'success' },
     postgres: { result: 'success' },
+    installer: { result: 'success' },
     e2e: { result: 'success' },
   };
   assert.doesNotThrow(() => assertRequiredResults(passed));
-  for (const name of ['e2e', 'postgres'])
+  for (const name of ['e2e', 'postgres', 'installer'])
     for (const status of ['failure', 'cancelled', 'skipped', undefined])
       assert.throws(() =>
         assertRequiredResults({
@@ -116,8 +117,8 @@ test('workflow validation accepts the actual policy and rejects weakened gates',
   for (const changed of [
     source.replace('contents: read', 'contents: write'),
     source.replace(
-      'if: ${{ always() }}\n    needs: [progress, verify, postgres, e2e]',
-      'if: ${{ success() }}\n    needs: [progress, verify, postgres, e2e]',
+      'if: ${{ always() }}\n    needs: [progress, verify, postgres, installer, e2e]',
+      'if: ${{ success() }}\n    needs: [progress, verify, postgres, installer, e2e]',
     ),
     source.replace('project: [desktop, mobile]', 'project: [desktop]'),
     source.replace(
@@ -126,6 +127,31 @@ test('workflow validation accepts the actual policy and rejects weakened gates',
     ),
   ])
     assert.ok(validateWorkflow(changed).length > 0);
+});
+
+test('installer checks cannot be omitted, skipped or moved off the pinned target', () => {
+  const source = readFileSync('.github/workflows/ci.yml', 'utf8');
+  for (const mutate of [
+    (jobs) => delete jobs.installer,
+    (jobs) =>
+      (jobs.required.needs = jobs.required.needs.filter(
+        (id) => id !== 'installer',
+      )),
+    (jobs) => (jobs.installer.if = '${{ false }}'),
+    (jobs) => (jobs.installer['runs-on'] = 'ubuntu-latest'),
+    (jobs) =>
+      (jobs.installer.steps.find((step) =>
+        step.run?.includes('npm run test:installer'),
+      ).if = '${{ false }}'),
+    (jobs) =>
+      (jobs.installer.steps.find((step) =>
+        step.uses?.startsWith('actions/setup-go@'),
+      ).with['go-version-file'] = 'untrusted-version'),
+  ]) {
+    const workflow = parse(source);
+    mutate(workflow.jobs);
+    assert.ok(validateWorkflow(stringify(workflow)).length > 0);
+  }
 });
 
 test('CI command capture preserves nonzero status and records a failed step', (t) => {

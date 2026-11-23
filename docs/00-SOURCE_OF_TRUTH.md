@@ -25,7 +25,7 @@
 | SvelteKit dashboard | Prototype parity corrected in PR #3; 40 direct screenshot comparisons and 32 browser cases pass. Resource actions remain memory-only simulation |
 | NestJS API, PostgreSQL migrations, pg-boss | CL-030/031 add default-deny API guards, readiness and transactional PostgreSQL schema; exact checks in the batch evidence. Normal authentication, resource CRUD and pg-boss remain unavailable |
 | Go agent and Docker provisioning | Not implemented yet |
-| Installer and first-owner flow | Claim/owner/MFA development candidate in PR #5/#6; operational installer not implemented |
+| Installer and first-owner flow | Read-only CL-080 preflight/offline verification candidate in PR #8; claim/owner/MFA development candidate in PR #5/#6. Host installation remains unimplemented |
 | Caddy public IP HTTPS / DNS / certificates | Planned and subject to live integration tests |
 | Owner authentication | Isolated PostgreSQL/HTTPS candidate under ADR-019/020; normal activation disabled pending independent security review |
 | GitHub webhook, storage, mail, DNS | Not implemented |
@@ -75,3 +75,9 @@ The initial pack inventory has been updated for the repository foundation. Exact
 CL-036 in [PR #7](https://github.com/amungadev-ai/server_manager/pull/7) extends the isolated MFA profile with scoped project create/list/detail and overview metadata. [ADR-021](adr/021-authenticated-project-metadata.md) defines atomic production-environment creation, retry keys, pagination and session rechecks. [Batch evidence](evidence/AUTHENTICATED_PROJECTS.md) records checks and limits. The existing project form/list use the real API in HTTP builds; static demo actions stay simulated. Normal authentication, workload provisioning and production activation remain gated.
 
 Validated on 2026-11-23 (Africa/Nairobi): implementation checkpoint `e5a314e03ba1ea03a9a100825fabb5925c08dc21` passes all six jobs in [run 44701008424](https://github.com/amungadev-ai/server_manager/actions/runs/44701008424): 87 unit/HTTP/progress, 58 PostgreSQL/HTTPS, 54 actual browser cases and 40 direct prototype comparisons. [Retained reports](../evidence/projects/README.md) preserve tested source/tree and artifact/file hashes. Final PR checks cover the later evidence-only handoff. Independent security review and production activation remain open.
+
+## Read-only installer preparation
+
+[PR #8](https://github.com/amungadev-ai/server_manager/pull/8), [ADR-022](adr/022-installer-preflight-and-release-trust.md) and [installer documentation](../installer/README.md) prepare Ubuntu 24.04 x86_64 host diagnostics and exact-version signed local artifact verification. Reports always leave installation readiness false; host mutation, independent publisher trust/revocation/provenance, dedicated-VPS capacity and network/TLS acceptance remain open. No production signing key, install command, agent or dashboard change is included. The canonical CL-080 task and CI evidence identify actual verification.
+
+Validated on 2026-11-23 (Africa/Nairobi): CL-080 implementation head `4c1d78c72cb847f8e6e6171b87915b30c2b708be` passes all 7 required jobs in [run 45166802363](https://github.com/amungadev-ai/server_manager/actions/runs/45166802363): 88 unit/HTTP/progress, 58 PostgreSQL/HTTPS, 24 Go tests plus 107 subtests, 54 actual browser cases and 40 prototype comparisons. [Retained reports](../evidence/installer/README.md) bind source/tree and archive/file hashes. Independent review and all operational installer/release/VPS gates remain open.

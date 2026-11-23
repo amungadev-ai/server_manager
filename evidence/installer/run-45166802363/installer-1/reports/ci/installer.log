@@ -1,0 +1,5 @@
+
+> cloudlane@0.1.0 test:installer
+> node scripts/run-installer-tests.mjs
+
+{"scope":"development-only; no host installation or production signing","toolchain":"go version go1.27.4 linux/amd64","topLevelTests":24,"subtests":107,"skipped":0,"packages":["cloudlane.local/installer/cmd/cloudlane-installer","cloudlane.local/installer/internal/preflight","cloudlane.local/installer/internal/release"],"raceDetector":true,"vet":"passed","repeatedBuild":"byte-identical","artifactSHA256":"400dc91e2f7893efc341444b8314ac7d33b314beb96de12a78ec2e8becf48835","hostStatus":"blocked","readyToInstall":false}

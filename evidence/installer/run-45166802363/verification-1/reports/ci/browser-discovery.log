@@ -1,0 +1,60 @@
+
+> cloudlane@0.1.0 test:e2e:list
+> node scripts/run-browser-tests.mjs --list --reporter=list
+
+Listing tests:
+  [desktop] › auth.spec.ts:148:1 › auth demo walkthrough stays read-only, needs recovery acknowledgement and makes no API calls
+  [desktop] › auth.spec.ts:183:1 › HTTP production auth refuses secret entry and unconfigured HTTPS presents a clear unavailable state
+  [desktop] › auth.spec.ts:199:1 › HTTPS UI contract setup validates passwords, generates QR locally and acknowledges codes with rotated CSRF
+  [desktop] › auth.spec.ts:264:1 › HTTPS UI contract login requires MFA and exposes safe retry errors with focus
+  [desktop] › auth.spec.ts:306:1 › HTTPS UI contract recovery still verifies password and sends one code through the challenge
+  [desktop] › auth.spec.ts:333:1 › HTTPS UI contract security requires step-up and auth form has no serious accessibility failures
+  [desktop] › dashboard.spec.ts:5:1 › demo overview is explicitly labelled and fits the viewport
+  [desktop] › dashboard.spec.ts:17:1 › project search, detail navigation and reload use the static SPA fallback
+  [desktop] › dashboard.spec.ts:35:1 › Add Domain has one field and returns focus on Escape
+  [desktop] › dashboard.spec.ts:53:1 › domain detail has exactly seven sections and DNS mode is in Settings
+  [desktop] › dashboard.spec.ts:88:1 › appearance persists across reload for every palette and theme
+  [desktop] › dashboard.spec.ts:112:1 › default overview has no new serious or critical accessibility violations against the approved prototype
+  [desktop] › dashboard.spec.ts:162:1 › HTTP fixture data is rendered without demo fallback or invented server health
+  [desktop] › dashboard.spec.ts:179:1 › a rejected fixture session prevents overview loading
+  [desktop] › dashboard.spec.ts:194:1 › malformed HTTP fixture data becomes an explicit connection error
+  [desktop] › dashboard.spec.ts:210:1 › actual unconfigured NestJS API never masquerades as an owner session
+  [desktop] › projects.spec.ts:205:1 › HTTPS project UI lists paginated metadata and searches loaded projects without demo data
+  [desktop] › projects.spec.ts:227:1 › HTTPS project form saves only after API confirmation, reloads durable metadata and keeps service mutations unavailable
+  [desktop] › projects.spec.ts:294:1 › HTTPS project retry reuses the original key and body after a lost acknowledgement
+  [desktop] › projects.spec.ts:317:1 › HTTPS project list errors stay explicit without a fake empty state or untrusted server text
+  [desktop] › projects.spec.ts:337:1 › HTTPS project form prevents duplicate submissions and dismissal while a create is pending
+  [desktop] › prototype.spec.ts:213:1 › render the immutable v1.13 reference beside all primary Svelte screens
+  [desktop] › prototype.spec.ts:376:1 › domain connections and DNS transitions preserve the central registry
+  [desktop] › prototype.spec.ts:417:1 › service previews enforce terminal and SQL boundaries and discard resource state on reload
+  [desktop] › prototype.spec.ts:485:1 › every prototype detail tab contains a working view
+  [desktop] › prototype.spec.ts:551:1 › storage and API key workflows stay scoped and simulated
+  [desktop] › prototype.spec.ts:604:1 › assistant drag persists a bounded UI preference and plans require approval
+  [mobile] › auth.spec.ts:148:1 › auth demo walkthrough stays read-only, needs recovery acknowledgement and makes no API calls
+  [mobile] › auth.spec.ts:183:1 › HTTP production auth refuses secret entry and unconfigured HTTPS presents a clear unavailable state
+  [mobile] › auth.spec.ts:199:1 › HTTPS UI contract setup validates passwords, generates QR locally and acknowledges codes with rotated CSRF
+  [mobile] › auth.spec.ts:264:1 › HTTPS UI contract login requires MFA and exposes safe retry errors with focus
+  [mobile] › auth.spec.ts:306:1 › HTTPS UI contract recovery still verifies password and sends one code through the challenge
+  [mobile] › auth.spec.ts:333:1 › HTTPS UI contract security requires step-up and auth form has no serious accessibility failures
+  [mobile] › dashboard.spec.ts:5:1 › demo overview is explicitly labelled and fits the viewport
+  [mobile] › dashboard.spec.ts:17:1 › project search, detail navigation and reload use the static SPA fallback
+  [mobile] › dashboard.spec.ts:35:1 › Add Domain has one field and returns focus on Escape
+  [mobile] › dashboard.spec.ts:53:1 › domain detail has exactly seven sections and DNS mode is in Settings
+  [mobile] › dashboard.spec.ts:88:1 › appearance persists across reload for every palette and theme
+  [mobile] › dashboard.spec.ts:112:1 › default overview has no new serious or critical accessibility violations against the approved prototype
+  [mobile] › dashboard.spec.ts:162:1 › HTTP fixture data is rendered without demo fallback or invented server health
+  [mobile] › dashboard.spec.ts:179:1 › a rejected fixture session prevents overview loading
+  [mobile] › dashboard.spec.ts:194:1 › malformed HTTP fixture data becomes an explicit connection error
+  [mobile] › dashboard.spec.ts:210:1 › actual unconfigured NestJS API never masquerades as an owner session
+  [mobile] › projects.spec.ts:205:1 › HTTPS project UI lists paginated metadata and searches loaded projects without demo data
+  [mobile] › projects.spec.ts:227:1 › HTTPS project form saves only after API confirmation, reloads durable metadata and keeps service mutations unavailable
+  [mobile] › projects.spec.ts:294:1 › HTTPS project retry reuses the original key and body after a lost acknowledgement
+  [mobile] › projects.spec.ts:317:1 › HTTPS project list errors stay explicit without a fake empty state or untrusted server text
+  [mobile] › projects.spec.ts:337:1 › HTTPS project form prevents duplicate submissions and dismissal while a create is pending
+  [mobile] › prototype.spec.ts:213:1 › render the immutable v1.13 reference beside all primary Svelte screens
+  [mobile] › prototype.spec.ts:376:1 › domain connections and DNS transitions preserve the central registry
+  [mobile] › prototype.spec.ts:417:1 › service previews enforce terminal and SQL boundaries and discard resource state on reload
+  [mobile] › prototype.spec.ts:485:1 › every prototype detail tab contains a working view
+  [mobile] › prototype.spec.ts:551:1 › storage and API key workflows stay scoped and simulated
+  [mobile] › prototype.spec.ts:604:1 › assistant drag persists a bounded UI preference and plans require approval
+Total: 54 tests in 4 files

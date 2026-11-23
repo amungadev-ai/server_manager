@@ -33,17 +33,42 @@ export function validateWorkflow(source) {
     'Workflow permissions must be contents:read only',
   );
   const jobs = workflow.jobs ?? {};
-  for (const job of ['progress', 'verify', 'postgres', 'e2e', 'required'])
+  for (const job of [
+    'progress',
+    'verify',
+    'postgres',
+    'installer',
+    'e2e',
+    'required',
+  ])
     fail(!!jobs[job], `Missing ${job} job`);
   fail(
     jobs.required?.if === '${{ always() }}',
     'Required gate must always run',
   );
   fail(
-    ['progress', 'verify', 'postgres', 'e2e'].every((name) =>
+    ['progress', 'verify', 'postgres', 'installer', 'e2e'].every((name) =>
       jobs.required?.needs?.includes(name),
     ),
     'Required gate must depend on every required job',
+  );
+  const installerRun = jobs.installer?.steps?.find(
+    (step) =>
+      step.run === 'node scripts/ci-step.mjs installer npm run test:installer',
+  );
+  const goSetup = jobs.installer?.steps?.find((step) =>
+    step.uses?.startsWith('actions/setup-go@'),
+  );
+  fail(
+    jobs.installer?.needs === 'progress' &&
+      jobs.installer?.['runs-on'] === 'ubuntu-24.04' &&
+      !jobs.installer?.if &&
+      !!installerRun &&
+      !installerRun.if &&
+      goSetup?.with?.['go-version-file'] === 'installer/.go-version' &&
+      goSetup?.with?.cache === false &&
+      !goSetup?.if,
+    'Installer checks require unconditional Ubuntu 24.04 execution with the pinned Go version',
   );
   fail(
     JSON.stringify(jobs.e2e?.strategy?.matrix?.project) ===
