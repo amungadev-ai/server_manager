@@ -1,0 +1,78 @@
+{
+  "implementationHead": "e5a314e03ba1ea03a9a100825fabb5925c08dc21",
+  "testedMerge": "46d822eca59b020336cb87f161aefa8c7befed94",
+  "tree": "cbb5fc71fd2174ee7baf44dd70da3063d4d946ee",
+  "runId": 44701008424,
+  "attempt": 1,
+  "artifacts": [
+    {
+      "job": "mobile",
+      "artifact": 14613335963,
+      "digest": "sha256:7445a7c7d303ec814ed732674473845c7b86e0a0d96750695f447d9d93245ae9",
+      "verifiedFiles": 258,
+      "omittedManifestFiles": 1,
+      "node": "v24.22.3",
+      "npm": "11.9.0",
+      "status": "passed",
+      "cases": 27,
+      "passed": 27,
+      "retries": 0,
+      "browsers": [
+        "159.0.8154.6"
+      ]
+    },
+    {
+      "job": "verify",
+      "artifact": 14612507954,
+      "digest": "sha256:e4dd2a24fb42747022e1644b3970972319432b83541d794343e22aabee05efb6",
+      "verifiedFiles": 9,
+      "omittedManifestFiles": 1,
+      "node": "v24.22.3",
+      "npm": "11.9.0",
+      "junit": {
+        "unit/node-junit.xml": {
+          "cases": 77,
+          "failures": 0,
+          "skipped": 0
+        },
+        "unit/python-junit.xml": {
+          "cases": 10,
+          "failures": 0,
+          "skipped": 0
+        }
+      }
+    },
+    {
+      "job": "desktop",
+      "artifact": 14612364753,
+      "digest": "sha256:71c36b62a686de61bd37b8bd1032b293d1426800b5ded6e7e5523658ef4c6a69",
+      "verifiedFiles": 261,
+      "omittedManifestFiles": 1,
+      "node": "v24.22.3",
+      "npm": "11.9.0",
+      "status": "passed",
+      "cases": 27,
+      "passed": 27,
+      "retries": 0,
+      "browsers": [
+        "159.0.8154.6"
+      ]
+    },
+    {
+      "job": "postgres",
+      "artifact": 14612309699,
+      "digest": "sha256:b30d4f7113a627a4fc5df340c66975486a3ea96898d67e89e255e5a773667f2f",
+      "verifiedFiles": 5,
+      "omittedManifestFiles": 0,
+      "node": "v24.22.3",
+      "npm": "11.9.0",
+      "junit": {
+        "postgres/junit.xml": {
+          "cases": 58,
+          "failures": 0,
+          "skipped": 0
+        }
+      }
+    }
+  ]
+}

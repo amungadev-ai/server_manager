@@ -8,7 +8,7 @@ The existing HTTP project form and list use same-origin HTTPS, session CSRF, bou
 
 ## Verification checkpoint
 
-PASS local npm run check (0 Svelte errors/warnings), npm test (77 Node + 10 Python), progress and whitespace checks. Required HTTP/demo builds and hosted PostgreSQL/HTTPS plus desktop/mobile browser cases are pending. No pending result is counted as passing.
+Validated 2026-11-23 (Africa/Nairobi). PASS local type/Svelte/contract/progress/whitespace checks, 77 Node + 10 Python cases, and supported HTTP/demo builds. [Run 44701008424](https://github.com/amungadev-ai/server_manager/actions/runs/44701008424) passes all six jobs for implementation checkpoint `e5a314e03ba1ea03a9a100825fabb5925c08dc21`: 87 unit/HTTP/progress, 58 real PostgreSQL/HTTPS, 54 actual browser cases and 40 direct prototype comparisons. Desktop and mobile each pass 27 cases without retries, including all ten palette/theme form checks. [Retained evidence](../../evidence/projects/README.md) binds the reports to tested source/tree and archive/file hashes. Final PR checks cover the subsequent evidence-only handoff; no independent security approval is inferred.
 
 Real SQL cases cover durable restart, atomic rollback, same-key concurrency, body conflict, workspace/ID/cursor/key isolation, microsecond/tie ordering, mutation/boundary/CSRF/MFA checks, authority rechecks and logout serialization. Browser contract fixtures render actual Svelte forms/list/retry/error/loading/reload states. They are explicitly synthetic route fulfillment, not real public-CA/browser-to-database evidence. Existing immutable-reference prototype comparisons stay required.
 

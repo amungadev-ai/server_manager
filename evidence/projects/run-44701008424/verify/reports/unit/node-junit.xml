@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="liveness truthfully distinguishes an unconfigured platform from a ready one" time="0.105735" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/app.test.mjs"/>
+	<testcase name="installation status is public-safe and contains no bootstrap material" time="0.022927" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/app.test.mjs"/>
+	<testcase name="readiness is a safe 503 while dependencies and authentication are unconfigured" time="0.006834" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/app.test.mjs"/>
+	<testcase name="normal entry point keeps all MFA and recovery operations disabled" time="0.029718" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/app.test.mjs"/>
+	<testcase name="public owner-setup and login declarations cannot report operational success" time="0.011300" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/app.test.mjs"/>
+	<testcase name="all protected resource and session routes deny anonymous and forged authority" time="0.014959" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/app.test.mjs"/>
+	<testcase name="request validation blocks caller authority fields and keeps Add Domain one-field" time="0.005592" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/app.test.mjs"/>
+	<testcase name="body size, content type and malformed JSON have safe consistent errors" time="0.006483" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/app.test.mjs"/>
+	<testcase name="anonymous callers cannot probe resource validation or bypass authorization using retry headers" time="0.008199" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/app.test.mjs"/>
+	<testcase name="deployment and routing declarations remain unavailable and reject command injection" time="0.005260" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/app.test.mjs"/>
+	<testcase name="unknown routes return JSON errors and request IDs are server-owned" time="0.001576" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/app.test.mjs"/>
+	<testcase name="OpenAPI is valid, matches generated artifacts and labels unavailable endpoints" time="0.307703" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/app.test.mjs"/>
+	<testcase name="the local API documentation is readable with request submission disabled" time="0.002267" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/app.test.mjs"/>
+	<testcase name="missing route policy denies access even with a valid server principal" time="0.001719" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/authorization.test.mjs"/>
+	<testcase name="public routes work without a session store and never create owner authority" time="0.000312" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/authorization.test.mjs"/>
+	<testcase name="forged headers, body fields and request.user cannot authenticate" time="0.000795" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/authorization.test.mjs"/>
+	<testcase name="expired, boundary-expired, revoked and malformed sessions are denied" time="0.002508" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/authorization.test.mjs"/>
+	<testcase name="agent/API-key identities and future non-owner roles cannot become a human owner" time="0.000740" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/authorization.test.mjs"/>
+	<testcase name="owner context comes only from the resolver, is frozen and cannot bleed across requests" time="0.000915" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/authorization.test.mjs"/>
+	<testcase name="session store failures deny access with a sanitized availability error" time="0.000213" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/authorization.test.mjs"/>
+	<testcase name="database configuration has no ambient defaults, remote hosts or URL overrides" time="0.001187" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/database.test.mjs"/>
+	<testcase name="host PG environment settings cannot replace the configured identity, port or TLS policy" time="0.000698" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/database.test.mjs"/>
+	<testcase name="an unconfigured database does not connect using PG environment fallbacks" time="0.000173" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/database.test.mjs"/>
+	<testcase name="an unreachable database returns only a coarse unavailable state" time="0.006827" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/database.test.mjs"/>
+	<testcase name="migration history rejects altered, unknown, duplicate and non-prefix releases" time="0.001106" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/database.test.mjs"/>
+	<testcase name="failed rollback discards the client exactly once and redacts driver errors" time="0.001123" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/database.test.mjs"/>
+	<testcase name="connection and commit-acknowledgement failures are redacted without promising rollback" time="0.000242" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/database.test.mjs"/>
+	<testcase name="migration CLI rejects arbitrary paths/arguments and never prints configured secrets" time="0.080222" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/database.test.mjs"/>
+	<testcase name="RFC 6238 SHA1 vectors match six-digit TOTP and reject replay" time="0.003051" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/mfa-crypto.test.mjs"/>
+	<testcase name="AES-GCM uses independent nonces and binds the installation and user; wrong keys and corruption fail" time="0.001976" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/mfa-crypto.test.mjs"/>
+	<testcase name="review preparation rejects missing or malformed MFA keys before any password work" time="0.000761" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/mfa-crypto.test.mjs"/>
+	<testcase name="opaque credentials are canonical, purpose-separated and never authority-bearing IDs" time="0.001338" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/owner-auth.test.mjs"/>
+	<testcase name="duplicate, encoded and oversized cookie credentials are rejected" time="0.000284" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/owner-auth.test.mjs"/>
+	<testcase name="real Argon2id hashing preserves long/unicode passwords, salts independently and fails closed on unsupported PHC costs" time="0.224266" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/owner-auth.test.mjs"/>
+	<testcase name="password hashing admits two operations and rejects excess work without queuing" time="0.059543" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/owner-auth.test.mjs"/>
+	<testcase name="owner contract enforces length/UTF-8 limits and rejects caller authority" time="0.003013" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/owner-auth.test.mjs"/>
+	<testcase name="review origin configuration rejects HTTP, credentials, paths and noncanonical origins" time="0.001130" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/owner-auth.test.mjs"/>
+	<testcase name="factory rejects review activation without TLS and in production; main has no activation path" time="0.001510" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/owner-auth.test.mjs"/>
+	<testcase name="project cursor is a strict canonical position marker, never a workspace override" time="0.003835" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/projects.test.mjs"/>
+	<testcase name="project store fails closed and redacts an unavailable connection before any query can run" time="0.002107" classname="test" file="/home/runner/work/server_manager/server_manager/apps/api/test/projects.test.mjs"/>
+	<testcase name="resource IDs reject demo identifiers, nil values and non-v4 UUIDs" time="0.004407" classname="test" file="/home/runner/work/server_manager/server_manager/packages/contracts/test/contracts.test.mjs"/>
+	<testcase name="create-project accepts bounded data but never caller workspace/owner authority" time="0.006534" classname="test" file="/home/runner/work/server_manager/server_manager/packages/contracts/test/contracts.test.mjs"/>
+	<testcase name="Add Domain is exactly one field, with no mode or verification shortcut" time="0.003693" classname="test" file="/home/runner/work/server_manager/server_manager/packages/contracts/test/contracts.test.mjs"/>
+	<testcase name="pagination limits and opaque cursor syntax are bounded" time="0.001158" classname="test" file="/home/runner/work/server_manager/server_manager/packages/contracts/test/contracts.test.mjs"/>
+	<testcase name="static deployment requests cannot inject a host command or container options" time="0.000914" classname="test" file="/home/runner/work/server_manager/server_manager/packages/contracts/test/contracts.test.mjs"/>
+	<testcase name="agent structure accepts a typed candidate, without claiming signature/expiry/ownership verification" time="0.009285" classname="test" file="/home/runner/work/server_manager/server_manager/packages/contracts/test/contracts.test.mjs"/>
+	<testcase name="agent contract rejects generic operations, unsafe mounts, injected fields and inverted timestamps" time="0.003600" classname="test" file="/home/runner/work/server_manager/server_manager/packages/contracts/test/contracts.test.mjs"/>
+	<testcase name="auth client restricts secret submission to its canonical HTTPS origin" time="0.001180" classname="test" file="/home/runner/work/server_manager/server_manager/tests/auth-client.test.mjs"/>
+	<testcase name="auth client sends cookies, custom header and memory-only rotating CSRF; redirect following is disabled" time="0.042157" classname="test" file="/home/runner/work/server_manager/server_manager/tests/auth-client.test.mjs"/>
+	<testcase name="password responses cannot masquerade as full sessions; unverified session responses are denied" time="0.002219" classname="test" file="/home/runner/work/server_manager/server_manager/tests/auth-client.test.mjs"/>
+	<testcase name="auth client sanitizes API errors and rejects HTML or redirects without echoing secrets" time="0.001514" classname="test" file="/home/runner/work/server_manager/server_manager/tests/auth-client.test.mjs"/>
+	<testcase name="boundaries allow a portable contract and separate consumers" time="0.005239" classname="test" file="/home/runner/work/server_manager/server_manager/tests/boundaries.test.mjs"/>
+	<testcase name="boundaries reject a browser import of API implementation or agent contract" time="0.001834" classname="test" file="/home/runner/work/server_manager/server_manager/tests/boundaries.test.mjs"/>
+	<testcase name="boundaries reject Node-only contract imports and direct API host execution" time="0.001818" classname="test" file="/home/runner/work/server_manager/server_manager/tests/boundaries.test.mjs"/>
+	<testcase name="required gate rejects failed, cancelled, skipped and missing jobs" time="0.001328" classname="test" file="/home/runner/work/server_manager/server_manager/tests/ci-gates.test.mjs"/>
+	<testcase name="progress event selection uses validated base SHAs for PRs, merge queues and pushes" time="0.001158" classname="test" file="/home/runner/work/server_manager/server_manager/tests/ci-gates.test.mjs"/>
+	<testcase name="discovery and missing browser markers cannot count as browser execution" time="0.000342" classname="test" file="/home/runner/work/server_manager/server_manager/tests/ci-gates.test.mjs"/>
+	<testcase name="workflow validation accepts the actual policy and rejects weakened gates" time="0.060964" classname="test" file="/home/runner/work/server_manager/server_manager/tests/ci-gates.test.mjs"/>
+	<testcase name="CI command capture preserves nonzero status and records a failed step" time="0.075163" classname="test" file="/home/runner/work/server_manager/server_manager/tests/ci-gates.test.mjs"/>
+	<testcase name="browser job reruns retain the verified artifact identity" time="0.027329" classname="test" file="/home/runner/work/server_manager/server_manager/tests/ci-gates.test.mjs"/>
+	<testcase name="fixture upload rejects download-only inputs and missing names or output IDs" time="0.051938" classname="test" file="/home/runner/work/server_manager/server_manager/tests/ci-gates.test.mjs"/>
+	<testcase name="loopback harness separates static/demo, typed HTTP fixtures and the real unconfigured API" time="0.443168" classname="test" file="/home/runner/work/server_manager/server_manager/tests/e2e-server.test.mjs"/>
+	<testcase name="HTTP requests validate a real session before fetching protected data and include cookies" time="0.031633" classname="test" file="/home/runner/work/server_manager/server_manager/tests/http-adapter.test.mjs"/>
+	<testcase name="a rejected session does not request protected data or fall back to fixtures" time="0.002319" classname="test" file="/home/runner/work/server_manager/server_manager/tests/http-adapter.test.mjs"/>
+	<testcase name="HTML and malformed JSON are reported as invalid API responses" time="0.001325" classname="test" file="/home/runner/work/server_manager/server_manager/tests/http-adapter.test.mjs"/>
+	<testcase name="a forged or malformed success session cannot unlock the overview request" time="0.002057" classname="test" file="/home/runner/work/server_manager/server_manager/tests/http-adapter.test.mjs"/>
+	<testcase name="HTTP overview data rejects synthetic IDs, unbounded metrics and unknown fields" time="0.005906" classname="test" file="/home/runner/work/server_manager/server_manager/tests/http-adapter.test.mjs"/>
+	<testcase name="malformed server error envelopes never surface arbitrary response text" time="0.000544" classname="test" file="/home/runner/work/server_manager/server_manager/tests/http-adapter.test.mjs"/>
+	<testcase name="streamed responses are bounded even without a Content-Length header" time="0.001930" classname="test" file="/home/runner/work/server_manager/server_manager/tests/http-adapter.test.mjs"/>
+	<testcase name="request cancellation propagates instead of becoming a network error" time="0.000791" classname="test" file="/home/runner/work/server_manager/server_manager/tests/http-adapter.test.mjs"/>
+	<testcase name="bounded overview accepts the full metadata contract including escaped descriptions, then cancels above 4 MiB" time="0.045486" classname="test" file="/home/runner/work/server_manager/server_manager/tests/http-adapter.test.mjs"/>
+	<testcase name="database tests refuse absent opt-in, non-loopback hosts and non-disposable database names" time="0.001403" classname="test" file="/home/runner/work/server_manager/server_manager/tests/postgres-gates.test.mjs"/>
+	<testcase name="CI rejects a missing, unpinned, optional or disconnected PostgreSQL test gate" time="0.123349" classname="test" file="/home/runner/work/server_manager/server_manager/tests/postgres-gates.test.mjs"/>
+	<testcase name="project client rejects insecure/cross-origin targets and unverified sessions before mutation" time="0.032730" classname="test" file="/home/runner/work/server_manager/server_manager/tests/projects-client.test.mjs"/>
+	<testcase name="project client binds create to current MFA CSRF and retains the caller retry key across ambiguous failures" time="0.003772" classname="test" file="/home/runner/work/server_manager/server_manager/tests/projects-client.test.mjs"/>
+	<testcase name="project list/detail/create responses reject foreign workspace scope and mismatched environment links" time="0.003127" classname="test" file="/home/runner/work/server_manager/server_manager/tests/projects-client.test.mjs"/>
+	<testcase name="project errors never echo raw response text and definitive conflicts are not ambiguous" time="0.001586" classname="test" file="/home/runner/work/server_manager/server_manager/tests/projects-client.test.mjs"/>
+	<!-- tests 77 -->
+	<!-- suites 0 -->
+	<!-- pass 77 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 1859.281613 -->
+</testsuites>

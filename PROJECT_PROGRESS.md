@@ -1,6 +1,6 @@
 # Cloudlane — integration progress
 
-Recorded: 2026-11-19 (Africa/Nairobi). Foundation/CI is integrated; prototype and API/PostgreSQL foundations are ready for review in PR #3/#4; the owner-auth/MFA candidates are prepared for independent review in PR #5/#6. No production release, independent security approval or live resource operation is claimed.
+Recorded: 2026-11-23 (Africa/Nairobi). Foundation/CI is integrated; prototype and API/PostgreSQL foundations are ready for review in PR #3/#4; the owner-auth/MFA candidates are prepared for independent review in PR #5/#6. No production release, independent security approval or live resource operation is claimed.
 
 | Area | Current state |
 | --- | --- |
@@ -49,3 +49,5 @@ The CL-032/033 implementation checkpoint `30e611aa238a6b781c234be18b611c82d0e197
 ## Authenticated project metadata development batch
 
 CL-036 / [PR #7](https://github.com/amungadev-ai/server_manager/pull/7), branch `task/CL-036-authenticated-projects`, is stacked on PR #6. It adds transactional project plus production-environment metadata, durable idempotency, scoped list/detail/cursors and an honest project-only overview. HTTP project screens use the API, preserve prototype styling and handle ambiguous retries without duplicate success claims. The static Site remains a simulation. [ADR-021](docs/adr/021-authenticated-project-metadata.md), [evidence](docs/evidence/AUTHENTICATED_PROJECTS.md) and the canonical task record identify actual checks. Normal authentication, independent security approval, workload provisioning and production activation remain closed. Installer preflight/design (CL-080) is the next bounded backlog area; review dependencies before executing host work.
+
+Validated on 2026-11-23 (Africa/Nairobi): implementation checkpoint `e5a314e03ba1ea03a9a100825fabb5925c08dc21` passes all six jobs in [run 44701008424](https://github.com/amungadev-ai/server_manager/actions/runs/44701008424): 87 unit/HTTP/progress, 58 PostgreSQL/HTTPS, 54 actual browser cases and 40 direct prototype comparisons. [Retained reports](evidence/projects/README.md) preserve tested source/tree and artifact/file hashes. Final PR checks cover the later evidence-only handoff. Independent security review and production activation remain open.
