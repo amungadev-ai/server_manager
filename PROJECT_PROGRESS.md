@@ -1,6 +1,6 @@
 # Cloudlane — integration progress
 
-Recorded: 2026-11-23 (Africa/Nairobi). Foundation/CI is integrated; prototype and API/PostgreSQL foundations are ready for review in PR #3/#4; the owner-auth/MFA candidates are prepared for independent review in PR #5/#6. No production release, independent security approval or live resource operation is claimed.
+Recorded: 2026-11-24 (Africa/Nairobi). Foundation/CI is integrated; prototype and API/PostgreSQL foundations are ready for review in PR #3/#4; the owner-auth/MFA candidates are prepared for independent review in PR #5/#6. No production release, independent security approval or live resource operation is claimed.
 
 | Area | Current state |
 | --- | --- |
@@ -14,7 +14,7 @@ Recorded: 2026-11-23 (Africa/Nairobi). Foundation/CI is integrated; prototype an
 | Owner claim and login | CL-032/033 isolated development candidate in PR #5; default API authentication remains disabled pending independent security review |
 | MFA and authentication screens | CL-034/035 implementation candidate in PR #6; normal activation and independent security review remain gated |
 | Authenticated project metadata | CL-036 development candidate in PR #7; scoped persistence in the review profile, normal activation disabled |
-| Installer preparation | CL-080 / PR #8 read-only preflight and offline signed local artifact verification candidate; host installation and release trust remain gated |
+| Installer preparation | CL-080 / PR #8 preflight/offline verification; CL-081 / PR #9 adds durable journal, owned-resource resume/repair and an isolated component installation candidate. Native boot, release trust and public activation remain gated |
 | Agent, pg-boss and real resources | Not implemented; no VPS, Docker, TLS, DNS, mail or storage operation is claimed |
 
 The [private dashboard preview](https://cloudlane-foundation.spiritedghat4.chatgpt.site) hosts static Svelte output. It cannot host the separate Nest/PostgreSQL platform. Authentication and resource data are never persisted in browser localStorage; UI preferences only.
@@ -58,3 +58,7 @@ Validated on 2026-11-23 (Africa/Nairobi): implementation checkpoint `e5a314e03ba
 CL-080 / [PR #8](https://github.com/amungadev-ai/server_manager/pull/8), branch `task/CL-080-installer-preflight`, is stacked on PR #7. [ADR-022](docs/adr/022-installer-preflight-and-release-trust.md) and [installer instructions](installer/README.md) define read-only diagnostics, existing-state preservation and independently anchored exact-version local artifact verification. No installation/service/network mutation, production signing key, authenticated bootstrap, agent or UI change is included. The required installer job runs Go race tests, vet, format, reproducible builds and actual host diagnostics. Independent CL-005 review, publisher operations and dedicated-VPS acceptance remain pending; CL-081 is the next installation implementation batch. Exact results belong to the canonical CL-080 record and batch evidence.
 
 Validated on 2026-11-23 (Africa/Nairobi): CL-080 implementation head `4c1d78c72cb847f8e6e6171b87915b30c2b708be` passes all 7 required jobs in [run 45166802363](https://github.com/amungadev-ai/server_manager/actions/runs/45166802363): 88 unit/HTTP/progress, 58 PostgreSQL/HTTPS, 24 Go tests plus 107 subtests, 54 actual browser cases and 40 prototype comparisons. [Retained reports](evidence/installer/README.md) bind source/tree and archive/file hashes. Independent review and all operational installer/release/VPS gates remain open.
+
+## Restartable installer development batch
+
+CL-081 / [PR #9](https://github.com/amungadev-ai/server_manager/pull/9), branch `task/CL-081-installer-journal`, is stacked on PR #8. [ADR-023](docs/adr/023-restartable-platform-installation.md) and [batch evidence](docs/evidence/INSTALLER_JOURNAL.md) describe signed plans, protected atomic journal/secrets, identity-preserving retries/repair and real isolated Docker component startup. Only a host-loopback review endpoint is published. Systemd definitions are staged and checked offline, not enabled on the host. The mandatory live platform job covers real PostgreSQL/Caddy/API/static behavior; local Go evidence does not substitute for it. Independent security/publisher review, dedicated-VPS bootstrap/boot/reboot, trusted IP TLS/renewal and owner-claim/agent identity remain open. The prototype and normal default-deny API are unchanged.

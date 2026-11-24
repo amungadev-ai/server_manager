@@ -1,6 +1,6 @@
-# Installer preflight — CL-080 development candidate
+# Installer — CL-080/081 development candidates
 
-This Go module implements **read-only diagnostics and offline artifact verification**. It has no installation, repair, download, host-shell or service-control command. Production publisher keys/releases and independent security approval do not exist yet. See [ADR-022](../docs/adr/022-installer-preflight-and-release-trust.md) and [the full installation requirements](../docs/04-INSTALLATION.md).
+This Go module implements **read-only host diagnostics, offline artifact verification and an isolated review installation**. There is no operational root installer or host-service activation command. The explicit non-root review profile uses an existing local Docker daemon, a private workspace and host-loopback publication only. Production publisher keys/releases and independent security approval do not exist yet. See [ADR-022](../docs/adr/022-installer-preflight-and-release-trust.md) and [the full installation requirements](../docs/04-INSTALLATION.md).
 
 Use the pinned Go version in `.go-version` on Linux amd64. From the repository root:
 
@@ -20,4 +20,24 @@ The `verify` command requires local manifest/signature/artifact files, a previou
 
 `npm run test:installer` requires the exact pinned Linux amd64 Go toolchain and a C compiler for race instrumentation. It runs race-enabled tests (including real loopback TCP/UDP observation), vet, gofmt, two byte-identical static builds and the actual host CLI. Ignored `test-results/installer/` contains logs, Go JSON, coverage, unsigned development binary, a sanitized host report and summary. Required CI records source/artifact hashes. Hosted Ubuntu runner evidence is not dedicated-VPS installation, arm64/22.04 support, public TLS or a tested 1 GB deployment.
 
-CL-081 implements protected journal/resume/host services after review; CL-082 proves trusted IP HTTPS or secure tunnel fallback; CL-083 handles claim/agent identity. The dashboard/prototype and default-deny API remain unchanged by this module.
+## Restartable review installation (CL-081)
+
+[ADR-023](../docs/adr/023-restartable-platform-installation.md) specifies the signed platform plan, filesystem custody, typed Docker policy and restart semantics. `review --operation install` requires a **new** caller-owned private directory, port 1024..65535, exact release version and independently trusted plan/key/signature pins. It runs only as non-root Linux amd64 and cannot select a remote Docker host, public bind address, container name, role, mount, shell or resource override. Help lists the concrete flags; no production plan/key exists to copy into a public install command.
+
+The journal binds review profile, native preflight snapshot, installation/plan/version/port and database UUID. Existing native-host conflicts are recorded honestly; this private Docker profile does not convert them into host-install readiness. Atomic fsynced checkpoints and an exclusive lock protect stage progression. Private passwords/environment files are created once. Runtime env metadata is visible to trusted Docker administrators; it is never emitted in reports or placed in command arguments/image layers. Lost acknowledgements are resolved by checking actual resources before retry.
+
+Use the same signed plan and workspace with `--operation resume`. Completed-stage drift requires `--operation repair`; repair is a **read-only dry-run** until `--apply` is explicit. `--operation doctor` checks current component postconditions without writing the journal. Missing initialized database data, changed schema/UUID, unsafe files or foreign labels/configuration fail closed. There is no purge/reset/uninstall path. Keep all private workspace files; do not copy them into artifacts or Git.
+
+The isolated database, migrator, API and Caddy share a private platform network namespace while keeping separate filesystems/PIDs. Only Caddy 8080 is mapped to host `127.0.0.1:<selected port>`. Database/API/admin ports stay unpublished; containers have non-root users, read-only root, dropped capabilities, no-new-privileges and bounded memory/PIDs/tmpfs/logs. DB admin, migrator and runtime credentials are separate; runtime DDL and migration-ledger writes are denied. Prebuilt API/static images are assembled in CI, never compiled on the target VPS.
+
+Internal health finishes at `awaiting_tls_and_claim`, with `ready_to_claim: false`. Plaintext setup/login/recovery/auth/bootstrap routes are blocked by Caddy, and the existing frontend also refuses insecure owner authentication. The normal API resolver remains disabled. Four systemd startup definitions are staged in the private workspace and verified offline; they are not installed or enabled. Native Docker installation/reuse, privileged file/service custody, boot/reboot, actual public TLS and capacity remain review/VPS gates.
+
+To reproduce the **disposable development integration** on a non-root Linux amd64 machine with an existing local Docker daemon, the pinned Go toolchain and systemd-analyze:
+
+```bash
+CLOUDLANE_INSTALLER_STACK_TESTS=1 npm run test:installer-stack
+```
+
+This builds precompiled API/Caddy review images from the locked dependencies, creates uniquely labelled private test resources and checks real PostgreSQL migrations, role denial, HTTP/static routing, idempotent resume, interrupted acknowledgement, repair dry-run/apply, foreign-resource preservation, missing-data refusal, actual CLI doctor and offline systemd validation. Cleanup removes only verified resources created by the test. It does not certify a dedicated VPS, host boot, power-loss recovery or the proposed 1 GB profile. Private runtime workspaces/bundles are excluded from uploaded text reports.
+
+CL-082 proves trusted IP HTTPS/renewal or secure tunnel fallback; CL-083 handles claim/agent identity. Independent security/publisher review and dedicated-VPS acceptance are still required before any operational host installer. The supplied dashboard/prototype remain unchanged.

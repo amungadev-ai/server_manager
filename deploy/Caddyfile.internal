@@ -1,0 +1,22 @@
+{
+	admin off
+	auto_https off
+	persist_config off
+}
+
+# Private platform network namespace only; host publication is 127.0.0.1.
+:8080 {
+	@pending path /setup /setup/* /login /login/* /recover /recover/* /auth /auth/* /api/v1/auth /api/v1/auth/* /api/v1/bootstrap /api/v1/bootstrap/*
+	handle @pending {
+		respond "Trusted TLS and owner setup are pending." 503
+	}
+	@api path /api/v1 /api/v1/*
+	handle @api {
+		reverse_proxy 127.0.0.1:3001
+	}
+	handle {
+		root * /srv/cloudlane/dashboard
+		try_files {path} {path}/index.html /index.html
+		file_server
+	}
+}
