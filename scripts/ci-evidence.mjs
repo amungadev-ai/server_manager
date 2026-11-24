@@ -40,6 +40,7 @@ const paths = [
   'test-results/unit',
   'test-results/postgres',
   'test-results/installer',
+  'test-results/platform',
   'test-results/e2e',
   'playwright-report',
 ]

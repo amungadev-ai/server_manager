@@ -25,7 +25,7 @@
 | SvelteKit dashboard | Prototype parity corrected in PR #3; 40 direct screenshot comparisons and 32 browser cases pass. Resource actions remain memory-only simulation |
 | NestJS API, PostgreSQL migrations, pg-boss | CL-030/031 add default-deny API guards, readiness and transactional PostgreSQL schema; exact checks in the batch evidence. Normal authentication, resource CRUD and pg-boss remain unavailable |
 | Go agent and Docker provisioning | Not implemented yet |
-| Installer and first-owner flow | Read-only CL-080 preflight/offline verification candidate in PR #8; claim/owner/MFA development candidate in PR #5/#6. Host installation remains unimplemented |
+| Installer and first-owner flow | CL-081 isolated restartable component-installation candidate in PR #9, built on CL-080. Native privileged bootstrap/boot, trusted TLS and owner activation remain gated |
 | Caddy public IP HTTPS / DNS / certificates | Planned and subject to live integration tests |
 | Owner authentication | Isolated PostgreSQL/HTTPS candidate under ADR-019/020; normal activation disabled pending independent security review |
 | GitHub webhook, storage, mail, DNS | Not implemented |
@@ -81,3 +81,9 @@ Validated on 2026-11-23 (Africa/Nairobi): implementation checkpoint `e5a314e03ba
 [PR #8](https://github.com/amungadev-ai/server_manager/pull/8), [ADR-022](adr/022-installer-preflight-and-release-trust.md) and [installer documentation](../installer/README.md) prepare Ubuntu 24.04 x86_64 host diagnostics and exact-version signed local artifact verification. Reports always leave installation readiness false; host mutation, independent publisher trust/revocation/provenance, dedicated-VPS capacity and network/TLS acceptance remain open. No production signing key, install command, agent or dashboard change is included. The canonical CL-080 task and CI evidence identify actual verification.
 
 Validated on 2026-11-23 (Africa/Nairobi): CL-080 implementation head `4c1d78c72cb847f8e6e6171b87915b30c2b708be` passes all 7 required jobs in [run 45166802363](https://github.com/amungadev-ai/server_manager/actions/runs/45166802363): 88 unit/HTTP/progress, 58 PostgreSQL/HTTPS, 24 Go tests plus 107 subtests, 54 actual browser cases and 40 prototype comparisons. [Retained reports](../evidence/installer/README.md) bind source/tree and archive/file hashes. Independent review and all operational installer/release/VPS gates remain open.
+
+## Restartable isolated platform installation
+
+[PR #9](https://github.com/amungadev-ai/server_manager/pull/9), [ADR-023](adr/023-restartable-platform-installation.md) and [installer instructions](../installer/README.md) implement private signed-plan/journal/identity custody and typed image/component reconciliation. The non-root review profile uses real loopback-only Caddy/PostgreSQL/API/static dashboard containers and stages systemd definitions for offline validation. It cannot enable native services, reset data, activate owner auth or mark public readiness. Exact local/hosted results live in the CL-081 task and [batch evidence](evidence/INSTALLER_JOURNAL.md); independent review, publisher operations and dedicated-VPS boot/TLS acceptance remain open.
+
+Validated: CL-081 implementation `2f2cab2c81a85e6c115ad62ab5fabf25a8084273` passes all 8 required jobs in [run 45486627138](https://github.com/amungadev-ai/server_manager/actions/runs/45486627138): 89 unit/HTTP/progress, 52 Go tests + 169 subtests, 9 live component scenarios, 58 PostgreSQL/HTTPS, 54 browser cases and 40 prototype comparisons. [Retained reports](../evidence/installer-journal/README.md) bind tested source/tree and six archive digests. Native boot, public TLS/claim, publisher operations and independent review remain open.

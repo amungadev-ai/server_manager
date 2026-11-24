@@ -1,0 +1,6 @@
+FROM node:24.22.3-bookworm-slim@sha256:873f586f3794f52281bd039bf02c048a0be08fde619338f9941bad1eb6b34530
+WORKDIR /opt/cloudlane
+COPY api/ ./
+USER 10001:10001
+ENTRYPOINT ["node", "--max-old-space-size=192"]
+CMD ["apps/api/dist/main.js"]

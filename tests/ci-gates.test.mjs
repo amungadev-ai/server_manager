@@ -15,10 +15,11 @@ test('required gate rejects failed, cancelled, skipped and missing jobs', () => 
     verify: { result: 'success' },
     postgres: { result: 'success' },
     installer: { result: 'success' },
+    platform: { result: 'success' },
     e2e: { result: 'success' },
   };
   assert.doesNotThrow(() => assertRequiredResults(passed));
-  for (const name of ['e2e', 'postgres', 'installer'])
+  for (const name of ['e2e', 'postgres', 'installer', 'platform'])
     for (const status of ['failure', 'cancelled', 'skipped', undefined])
       assert.throws(() =>
         assertRequiredResults({
@@ -117,8 +118,8 @@ test('workflow validation accepts the actual policy and rejects weakened gates',
   for (const changed of [
     source.replace('contents: read', 'contents: write'),
     source.replace(
-      'if: ${{ always() }}\n    needs: [progress, verify, postgres, installer, e2e]',
-      'if: ${{ success() }}\n    needs: [progress, verify, postgres, installer, e2e]',
+      'if: ${{ always() }}\n    needs: [progress, verify, postgres, installer, platform, e2e]',
+      'if: ${{ success() }}\n    needs: [progress, verify, postgres, installer, platform, e2e]',
     ),
     source.replace('project: [desktop, mobile]', 'project: [desktop]'),
     source.replace(
@@ -132,6 +133,16 @@ test('workflow validation accepts the actual policy and rejects weakened gates',
 test('installer checks cannot be omitted, skipped or moved off the pinned target', () => {
   const source = readFileSync('.github/workflows/ci.yml', 'utf8');
   for (const mutate of [
+    (jobs) => delete jobs.platform,
+    (jobs) => (jobs.platform.if = '${{ false }}'),
+    (jobs) =>
+      (jobs.platform.steps.find((step) =>
+        step.run?.includes('npm run test:installer-stack'),
+      ).env.CLOUDLANE_INSTALLER_STACK_TESTS = '0'),
+    (jobs) =>
+      (jobs.required.needs = jobs.required.needs.filter(
+        (id) => id !== 'platform',
+      )),
     (jobs) => delete jobs.installer,
     (jobs) =>
       (jobs.required.needs = jobs.required.needs.filter(

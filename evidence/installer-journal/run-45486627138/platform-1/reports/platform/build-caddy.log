@@ -1,0 +1,33 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from caddy.Dockerfile
+#1 transferring dockerfile: 380B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/caddy:2.11.9-alpine@sha256:003a97808e781aa9f7e75cc2f43d34d461099031faf5e20faefb9f61126836f0
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/4] FROM docker.io/library/caddy:2.11.9-alpine@sha256:003a97808e781aa9f7e75cc2f43d34d461099031faf5e20faefb9f61126836f0
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 876.89kB 0.1s done
+#5 DONE 0.1s
+
+#6 [2/4] COPY dashboard/ /srv/cloudlane/dashboard/
+#6 DONE 0.0s
+
+#7 [3/4] COPY Caddyfile /etc/caddy/Caddyfile
+#7 DONE 0.0s
+
+#8 [4/4] RUN chown -R 10001:10001 /data /config
+#8 DONE 0.0s
+
+#9 exporting to image
+#9 exporting layers 0.0s done
+#9 writing image sha256:49425f51b3d47a31611a34f22ce932c2051002e465bc86b8e5f0f4f0fb7dc008 done
+#9 DONE 0.0s

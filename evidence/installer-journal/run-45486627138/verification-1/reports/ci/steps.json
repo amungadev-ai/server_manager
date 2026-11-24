@@ -1,0 +1,62 @@
+[
+  {
+    "label": "checks",
+    "command": [
+      "npm",
+      "run",
+      "check"
+    ],
+    "started": "2026-11-24T21:00:55.174Z",
+    "finished": "2026-11-24T21:01:12.437Z",
+    "status": "passed",
+    "exitCode": 0
+  },
+  {
+    "label": "formatting",
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "started": "2026-11-24T21:01:12.481Z",
+    "finished": "2026-11-24T21:01:15.979Z",
+    "status": "passed",
+    "exitCode": 0
+  },
+  {
+    "label": "unit",
+    "command": [
+      "npm",
+      "run",
+      "test:ci"
+    ],
+    "started": "2026-11-24T21:01:16.025Z",
+    "finished": "2026-11-24T21:01:23.745Z",
+    "status": "passed",
+    "exitCode": 0
+  },
+  {
+    "label": "static-builds",
+    "command": [
+      "npm",
+      "run",
+      "test:e2e:prepare"
+    ],
+    "started": "2026-11-24T21:01:23.788Z",
+    "finished": "2026-11-24T21:01:41.208Z",
+    "status": "passed",
+    "exitCode": 0
+  },
+  {
+    "label": "browser-discovery",
+    "command": [
+      "npm",
+      "run",
+      "test:e2e:list"
+    ],
+    "started": "2026-11-24T21:01:41.254Z",
+    "finished": "2026-11-24T21:01:42.318Z",
+    "status": "passed",
+    "exitCode": 0
+  }
+]

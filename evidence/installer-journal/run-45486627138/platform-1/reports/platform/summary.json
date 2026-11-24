@@ -1,0 +1,18 @@
+{
+  "source": "a12618cd114853aec175d181db88f32e8225fd99",
+  "status": "passed",
+  "topLevelTests": 1,
+  "subtests": 9,
+  "skipped": 0,
+  "raceDetector": true,
+  "actualComponents": [
+    "PostgreSQL 18.7",
+    "NestJS API on Node 24.22.3",
+    "Caddy 2.11.9",
+    "HTTP static Svelte dashboard"
+  ],
+  "systemd": "offline verify; no boot or host service activation",
+  "hostPublication": "127.0.0.1 only",
+  "finalState": "awaiting_tls_and_claim",
+  "readyToClaim": false
+}

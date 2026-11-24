@@ -1,0 +1,25 @@
+docker.io/library/node@sha256:873f586f3794f52281bd039bf02c048a0be08fde619338f9941bad1eb6b34530: Pulling from library/node
+b1dd3d113aab: Pulling fs layer
+b65f2e54b23e: Pulling fs layer
+fa47c2d97c6f: Pulling fs layer
+1b1d337d4a7c: Pulling fs layer
+bfaf5d99692a: Pulling fs layer
+1b1d337d4a7c: Waiting
+bfaf5d99692a: Waiting
+b65f2e54b23e: Verifying Checksum
+b65f2e54b23e: Download complete
+1b1d337d4a7c: Verifying Checksum
+1b1d337d4a7c: Download complete
+bfaf5d99692a: Download complete
+b1dd3d113aab: Verifying Checksum
+b1dd3d113aab: Download complete
+fa47c2d97c6f: Verifying Checksum
+fa47c2d97c6f: Download complete
+b1dd3d113aab: Pull complete
+b65f2e54b23e: Pull complete
+fa47c2d97c6f: Pull complete
+1b1d337d4a7c: Pull complete
+bfaf5d99692a: Pull complete
+Digest: sha256:873f586f3794f52281bd039bf02c048a0be08fde619338f9941bad1eb6b34530
+Status: Downloaded newer image for node@sha256:873f586f3794f52281bd039bf02c048a0be08fde619338f9941bad1eb6b34530
+docker.io/library/node:24.22.3-bookworm-slim@sha256:873f586f3794f52281bd039bf02c048a0be08fde619338f9941bad1eb6b34530

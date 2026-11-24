@@ -163,6 +163,46 @@ jobs:
           retention-days: 7
           if-no-files-found: error
           include-hidden-files: false
+  platform:
+    name: Live isolated platform installation
+    needs: progress
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      - run: npm install --global npm@11.9.0
+      - run: npm ci
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: installer/.go-version
+          cache: false
+      - name: Test actual private platform containers and startup definitions
+        env:
+          CLOUDLANE_INSTALLER_STACK_TESTS: '1'
+        run: node scripts/ci-step.mjs platform npm run test:installer-stack
+      - name: Record platform installation evidence
+        if: ${{ always() }}
+        run: node scripts/ci-evidence.mjs platform
+      - name: Upload bounded platform installation reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: platform-${{ github.run_attempt }}
+          path: |
+            test-results/ci/
+            test-results/platform/
+            test-results/manifests/
+          retention-days: 7
+          if-no-files-found: error
+          include-hidden-files: false
   e2e:
     name: Browser tests (${{ matrix.project }})
     needs: verify
@@ -226,7 +266,7 @@ jobs:
   required:
     name: Required checks
     if: ${{ always() }}
-    needs: [progress, verify, postgres, installer, e2e]
+    needs: [progress, verify, postgres, installer, platform, e2e]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:

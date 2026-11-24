@@ -38,6 +38,7 @@ export function validateWorkflow(source) {
     'verify',
     'postgres',
     'installer',
+    'platform',
     'e2e',
     'required',
   ])
@@ -47,14 +48,34 @@ export function validateWorkflow(source) {
     'Required gate must always run',
   );
   fail(
-    ['progress', 'verify', 'postgres', 'installer', 'e2e'].every((name) =>
-      jobs.required?.needs?.includes(name),
+    ['progress', 'verify', 'postgres', 'installer', 'platform', 'e2e'].every(
+      (name) => jobs.required?.needs?.includes(name),
     ),
     'Required gate must depend on every required job',
   );
   const installerRun = jobs.installer?.steps?.find(
     (step) =>
       step.run === 'node scripts/ci-step.mjs installer npm run test:installer',
+  );
+  const platformRun = jobs.platform?.steps?.find(
+    (step) =>
+      step.run ===
+      'node scripts/ci-step.mjs platform npm run test:installer-stack',
+  );
+  const platformGo = jobs.platform?.steps?.find((step) =>
+    step.uses?.startsWith('actions/setup-go@'),
+  );
+  fail(
+    jobs.platform?.needs === 'progress' &&
+      jobs.platform?.['runs-on'] === 'ubuntu-24.04' &&
+      !jobs.platform?.if &&
+      !!platformRun &&
+      !platformRun.if &&
+      platformRun.env?.CLOUDLANE_INSTALLER_STACK_TESTS === '1' &&
+      platformGo?.with?.['go-version-file'] === 'installer/.go-version' &&
+      platformGo?.with?.cache === false &&
+      !platformGo?.if,
+    'Live platform installation requires unconditional pinned Ubuntu/Go execution and explicit disposable opt-in',
   );
   const goSetup = jobs.installer?.steps?.find((step) =>
     step.uses?.startsWith('actions/setup-go@'),

@@ -1,0 +1,14 @@
+[
+  {
+    "label": "postgres",
+    "command": [
+      "npm",
+      "run",
+      "test:postgres"
+    ],
+    "started": "2026-11-24T21:01:22.141Z",
+    "finished": "2026-11-24T21:01:39.827Z",
+    "status": "passed",
+    "exitCode": 0
+  }
+]

@@ -65,7 +65,7 @@ try {
   );
   if (
     !passed.length ||
-    packages.length !== 3 ||
+    packages.length !== 7 ||
     events.some((event) => ['fail', 'skip'].includes(event.Action))
   )
     throw new Error('Missing, failed or skipped installer test execution.');

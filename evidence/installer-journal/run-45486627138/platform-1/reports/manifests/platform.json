@@ -1,0 +1,130 @@
+{
+  "label": "platform",
+  "commit": "a12618cd114853aec175d181db88f32e8225fd99",
+  "workingTreeDirty": false,
+  "recordedUtc": "2026-11-24T21:02:13.370Z",
+  "node": "v24.22.3",
+  "npm": "11.9.0",
+  "lockSha256": "cbd7ea4e6d8b0892ef5d766871785360bb2698d6ab8e49b0157cd58eaff9df5d",
+  "github": {
+    "runId": "45486627138",
+    "attempt": "1",
+    "event": "pull_request"
+  },
+  "browser": {
+    "execution": "not-run",
+    "reportStatus": "missing"
+  },
+  "files": [
+    {
+      "path": "test-results/ci/platform.log",
+      "bytes": 491,
+      "sha256": "9e301230f53fc466ad8a628edd407c2d06776bbd2da9f0078f2cfdec28fd273c"
+    },
+    {
+      "path": "test-results/ci/steps.json",
+      "bytes": 245,
+      "sha256": "cfd37710c711b58260f3f53f909953e741b56c3378ccfb87e6a8f0f09cb1f9a0"
+    },
+    {
+      "path": "test-results/platform/build-api.log",
+      "bytes": 970,
+      "sha256": "25fa96854ebf5fdcde2ecef1e972fdc764538c99f41f00c6cdd49af4a718eecf"
+    },
+    {
+      "path": "test-results/platform/build-caddy.log",
+      "bytes": 977,
+      "sha256": "f8ab318329117d6a7920c17c9fcaf6a6cd58d356f6efe9292d3b922e3666a50e"
+    },
+    {
+      "path": "test-results/platform/docker-version.log",
+      "bytes": 7,
+      "sha256": "6bd60857f0062defe4edbffc3b3e49ecd7b055a2598326793fc1cfb435587e0d"
+    },
+    {
+      "path": "test-results/platform/go-version.log",
+      "bytes": 32,
+      "sha256": "a29205bd83967c2f70e6768fae009600038d6056499fa289de9d5f9b79beaef4"
+    },
+    {
+      "path": "test-results/platform/http-build.log",
+      "bytes": 16983,
+      "sha256": "b1c2eedb7e57dbb83befdae275f32991f06552a84f3faa5f15dd5063a9a9940c"
+    },
+    {
+      "path": "test-results/platform/images.json",
+      "bytes": 1070,
+      "sha256": "1b6f2b4c57dad1a77dca1b00be16d93f86f3eca30f815a392ed8997fee03bdce"
+    },
+    {
+      "path": "test-results/platform/installer-binary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "test-results/platform/live-tests.log",
+      "bytes": 10009,
+      "sha256": "1e9bc70a177ece571d6bceb326f66cd51c1d9f14b351e5df54e0807680b75e55"
+    },
+    {
+      "path": "test-results/platform/prebuilt-runtime-dependencies.log",
+      "bytes": 92,
+      "sha256": "2ed6261499492ffa917e29017b27280f3004a20992ab1e7a6e9860b45fe517bf"
+    },
+    {
+      "path": "test-results/platform/pull-caddy.log",
+      "bytes": 1091,
+      "sha256": "255a87f28b1f55c6e27eb3cea18c86076b4a55d3a4f88deac005bf6d8864ad68"
+    },
+    {
+      "path": "test-results/platform/pull-node.log",
+      "bytes": 1062,
+      "sha256": "842c55caabe1d5d47cfc0b484162dc057a32a6687593047cc10a7b6987097130"
+    },
+    {
+      "path": "test-results/platform/pull-postgres.log",
+      "bytes": 2116,
+      "sha256": "20bc9db5fd256438ce0b5e861c7dc04fa0f67d5dfa4bc2df649c7d811b796d9b"
+    },
+    {
+      "path": "test-results/platform/source.log",
+      "bytes": 41,
+      "sha256": "ad14612b23a1d9a74b2ba22d2d534d2a052283c6bb7f60eaa5af77e97e8c8586"
+    },
+    {
+      "path": "test-results/platform/steps.json",
+      "bytes": 918,
+      "sha256": "8788c3623f8155574ec38ecaf144181abffe541d269a3c7379a01aee0d50643f"
+    },
+    {
+      "path": "test-results/platform/summary.json",
+      "bytes": 474,
+      "sha256": "f283f3514db3488c0b2097ccf6ff6a67fa2dc647b04f2c3e7da4fb5b5cbe5401"
+    },
+    {
+      "path": "test-results/platform/systemd-verify.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "test-results/platform/units/cl-82c109a50b908f9d9872923e79104abe-api.service",
+      "bytes": 762,
+      "sha256": "ca2cf6d301287a05c02f844dda88cae816282c90f7ddab3c06b38a34c00ab316"
+    },
+    {
+      "path": "test-results/platform/units/cl-82c109a50b908f9d9872923e79104abe-caddy.service",
+      "bytes": 760,
+      "sha256": "6606cfb912691cd16361a5920ded591c3068a5217f1f450e6601811260f5802d"
+    },
+    {
+      "path": "test-results/platform/units/cl-82c109a50b908f9d9872923e79104abe-db.service",
+      "bytes": 655,
+      "sha256": "fca469fe103ca1c958a57ce294ce22ecedbc484451c1f0f655964f7931c493d7"
+    },
+    {
+      "path": "test-results/platform/units/cl-82c109a50b908f9d9872923e79104abe-migrate.service",
+      "bytes": 785,
+      "sha256": "46287002882e78f27e262fb3a5c4e2211cfaf4d3e369a28c04b319b7ec837739"
+    }
+  ]
+}
