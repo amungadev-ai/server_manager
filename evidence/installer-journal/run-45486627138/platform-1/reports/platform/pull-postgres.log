@@ -1,0 +1,61 @@
+docker.io/library/postgres@sha256:c699303802144847d238196173655dbbecf7a96aeca1565f2b02eb671a1f0b6b: Pulling from library/postgres
+40748add9f4f: Pulling fs layer
+8e4857f35fce: Pulling fs layer
+0f12a37b90bb: Pulling fs layer
+c1436cf65049: Pulling fs layer
+a1361b767ece: Pulling fs layer
+84a852dae169: Pulling fs layer
+7fe3468bf416: Pulling fs layer
+0afa8bd0fe3a: Pulling fs layer
+edf2405c6afe: Pulling fs layer
+1c59edd7eb40: Pulling fs layer
+61061a425fb0: Pulling fs layer
+7cb67b3b537a: Pulling fs layer
+c1436cf65049: Waiting
+0afa8bd0fe3a: Waiting
+edf2405c6afe: Waiting
+1c59edd7eb40: Waiting
+61061a425fb0: Waiting
+7cb67b3b537a: Waiting
+a1361b767ece: Waiting
+84a852dae169: Waiting
+7fe3468bf416: Waiting
+8e4857f35fce: Verifying Checksum
+8e4857f35fce: Download complete
+c1436cf65049: Verifying Checksum
+c1436cf65049: Download complete
+0f12a37b90bb: Verifying Checksum
+0f12a37b90bb: Download complete
+84a852dae169: Verifying Checksum
+84a852dae169: Download complete
+a1361b767ece: Verifying Checksum
+a1361b767ece: Download complete
+7fe3468bf416: Verifying Checksum
+7fe3468bf416: Download complete
+0afa8bd0fe3a: Verifying Checksum
+0afa8bd0fe3a: Download complete
+40748add9f4f: Verifying Checksum
+40748add9f4f: Download complete
+1c59edd7eb40: Verifying Checksum
+1c59edd7eb40: Download complete
+61061a425fb0: Verifying Checksum
+61061a425fb0: Download complete
+7cb67b3b537a: Verifying Checksum
+7cb67b3b537a: Download complete
+40748add9f4f: Pull complete
+8e4857f35fce: Pull complete
+0f12a37b90bb: Pull complete
+c1436cf65049: Pull complete
+a1361b767ece: Pull complete
+84a852dae169: Pull complete
+7fe3468bf416: Pull complete
+0afa8bd0fe3a: Pull complete
+edf2405c6afe: Verifying Checksum
+edf2405c6afe: Download complete
+edf2405c6afe: Pull complete
+1c59edd7eb40: Pull complete
+61061a425fb0: Pull complete
+7cb67b3b537a: Pull complete
+Digest: sha256:c699303802144847d238196173655dbbecf7a96aeca1565f2b02eb671a1f0b6b
+Status: Downloaded newer image for postgres@sha256:c699303802144847d238196173655dbbecf7a96aeca1565f2b02eb671a1f0b6b
+docker.io/library/postgres:18.7@sha256:c699303802144847d238196173655dbbecf7a96aeca1565f2b02eb671a1f0b6b

@@ -14,7 +14,25 @@ API and dashboard images are built in CI from locked dependencies and compiled H
 
 ## Hosted evidence
 
-Initial implementation run 45484944587 started real PostgreSQL, applied all four migrations and started API/Caddy; its live job failed the panel postcondition because Docker cannot publish a host port from an internal-only bridge. The corrected private NAT bridge retains API/DB loopback and host-only publication; it also checks effective mappings and requires Docker 28+. The corrected source still needs a passing full run. This failed run is not completed installation evidence. Do not substitute parent, claim-only, fake-backend or discovery results. Required CI includes existing real PostgreSQL/HTTPS and desktop/mobile prototype checks plus the live private component job. The handoff must bind exact head/merge tree/run, artifact archive digests and retained file hashes.
+[Run 45486627138](https://github.com/amungadev-ai/server_manager/actions/runs/45486627138) passes all **8 required jobs** on implementation head `2f2cab2c81a85e6c115ad62ab5fabf25a8084273`. Tested merge `a12618cd114853aec175d181db88f32e8225fd99` and implementation head have identical tree `332cea1bdcf6e80c569b3a07fc1821e2c036fd37`.
+
+| Verification | Actual result |
+| --- | --- |
+| Unit/HTTP/progress | 79 Node + 10 Python; no failures/skips |
+| Installer Go/race | 52 top-level tests + 169 subtests, 7 packages; vet/format passed; zero skips |
+| Actual component integration | 1 live test + 9 subtests; real PostgreSQL 18.7, Node 24.22.3/NestJS, Caddy 2.11.9 and compiled HTTP Svelte output |
+| Journal/lifecycle integration | Fresh start, idempotent resume, injected lost DB acknowledgement, read-only repair then owned restart, foreign/unrelated resource preservation, missing-data refusal |
+| Identity/auth/permissions | Stable database/container identity on resume; runtime DDL/ledger writes denied; plaintext owner routes blocked; ready_to_claim stays false |
+| Actual CLI / startup files | Public review CLI doctor passed; four staged systemd files passed real offline systemd-analyze verify |
+| Existing PostgreSQL/HTTPS suite | 58 cases, no failures/skips |
+| Actual browser execution | 27 desktop + 27 mobile; zero failures/skips/retries |
+| Prototype rendering | 40 direct comparisons to the immutable supplied HTML passed |
+
+The installer job builds the same unsigned static executable twice, byte-identically; local and hosted SHA-256 is `8996a221d763d4068176435fa1011a752e8b945163cb071bfeffdd32bdb241dd`. No publisher authentication or production provenance is implied by this reproducibility observation.
+
+[Retained reports](../../evidence/installer-journal/README.md) verify six original archive digests, tested source/run/clean-tree fields and all included declared file hashes. Sixty-five bounded text reports include actual live execution/role/lifecycle results, image pins and four verified staged units. Binary/screenshot/trace bytes were checked inside source ZIPs but are not duplicated in Git. Files declared by browser/discovery manifests outside the upload allowlist are recorded as omissions, never claimed verified. The final documentation/evidence-only commit is covered separately by final PR checks.
+
+The initial run 45484944587 failed its panel postcondition because an internal-only bridge does not publish host ports through Docker's gateway endpoint. The corrected private NAT bridge retains database/API loopback and host-127.0.0.1 publication, verifies effective bindings and requires Docker 28+. That failed run is not counted as completed integration acceptance. Ordinary outbound NAT is permitted; no egress firewall is claimed.
 
 ## Outstanding operational acceptance
 

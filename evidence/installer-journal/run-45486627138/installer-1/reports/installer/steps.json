@@ -1,0 +1,37 @@
+[
+  {
+    "label": "toolchain",
+    "exitCode": 0,
+    "passed": true
+  },
+  {
+    "label": "format",
+    "exitCode": 0,
+    "passed": true
+  },
+  {
+    "label": "tests",
+    "exitCode": 0,
+    "passed": true
+  },
+  {
+    "label": "vet",
+    "exitCode": 0,
+    "passed": true
+  },
+  {
+    "label": "build",
+    "exitCode": 0,
+    "passed": true
+  },
+  {
+    "label": "repeat-build",
+    "exitCode": 0,
+    "passed": true
+  },
+  {
+    "label": "host-preflight",
+    "exitCode": 2,
+    "passed": true
+  }
+]

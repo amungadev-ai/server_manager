@@ -1,0 +1,86 @@
+
+> cloudlane@0.1.0 test:postgres
+> npm run build:api && node scripts/run-postgres-tests.mjs
+
+
+> cloudlane@0.1.0 build:api
+> npm run build:contracts && npm run build --workspace @cloudlane/api
+
+
+> cloudlane@0.1.0 build:contracts
+> npm run build --workspace @cloudlane/contracts
+
+
+> @cloudlane/contracts@0.1.0 build
+> node ../../scripts/build-contracts.mjs
+
+
+> @cloudlane/api@0.1.0 build
+> tsc -p tsconfig.json
+
+✔ fresh migration creates a durable single installation and no users, sessions or fixtures (51.150918ms)
+✔ reruns preserve installation identity and existing owner/project data across new connections (48.366701ms)
+✔ two concurrent migrators apply exactly once and produce one installation (41.464688ms)
+✔ failure on first install rolls back schema, ledger and installation together (68.842495ms)
+✔ failed upgrade preserves the previous identity, data and migration ledger (57.180547ms)
+✔ changed checksum and newer unknown migration histories block further migration (42.098983ms)
+✔ a busy migration lock fails within the bounded timeout and can be retried (5043.018796ms)
+✔ database constraints enforce one installation and one owner under concurrent inserts (45.918833ms)
+✔ workspace/project compound foreign keys reject cross-workspace environments (46.432608ms)
+✔ project slugs are constrained and unique within each workspace (54.300711ms)
+✔ session records require hashes, valid lifetime ordering and an owned workspace (65.317877ms)
+✔ a readiness-only runtime role can read the ledger but cannot modify it (44.401936ms)
+✔ real database readiness detects migration state and never reports authentication ready (144.011246ms)
+✔ public lifecycle contains no identity/claim material and never declares production readiness (138.35906ms)
+✔ one claim exchange wins a concurrent race; replay, wrong and cross-instance codes fail (74.778874ms)
+✔ expired claims and regenerated codes cannot open setup (57.267708ms)
+✔ claim verifier attempts remain durable and bounded after ten failures (103.786776ms)
+✔ one owner/workspace is created atomically under concurrent requests; all bootstrap material becomes unusable (105.131514ms)
+✔ owner creation rollback preserves the setup lease and never leaves a partial owner (113.200891ms)
+✔ expired/revoked setup leases, forged authority and wrong setup CSRF cannot create an owner (73.352075ms)
+✔ owner creation rechecks setup expiry after preflight and hashing (68.283885ms)
+✔ login rechecks a password hash changed after credential verification (120.416179ms)
+✔ real Argon2 login returns host-only secure cookies, a CSRF nonce and server-derived owner data (144.742203ms)
+✔ missing users, wrong passwords and disabled owners have identical errors and no cookies (158.148746ms)
+✔ login always replaces an incoming credential and revokes its prior session family (175.674941ms)
+✔ cookie authentication rejects bearer/agent alternatives and duplicate cookie/CSRF inputs (133.685917ms)
+✔ all authenticated mutations reject missing/wrong CSRF and exact-origin violations (159.254711ms)
+✔ login/claim deny cross-origin, missing custom header, query secrets and HTTP even with forged Forwarded headers (73.619788ms)
+✔ idle/absolute expiry, direct revocation and disabled owners invalidate existing cookies (253.473538ms)
+✔ rotation changes credential/CSRF, preserves absolute lifetime and old credential can only revoke its family (161.737728ms)
+✔ concurrent rotations produce one successor and a concurrent logout cannot leave a live successor (155.803569ms)
+✔ durable throttling is shared by independent runtimes and expires without resetting owner data (257.792285ms)
+✔ audit rows and database verifiers contain no raw password, session or claim credential (174.73653ms)
+✔ IP-host TLS cookies have the same flags and cannot change server-derived workspace scope (159.394244ms)
+✔ password success issues only a short-lived challenge; it cannot authorize resources or skip CSRF (108.843315ms)
+✔ enrollment secret is encrypted and displayed once per challenge; replacement needs a new password challenge (144.704188ms)
+✔ MFA proof rotates challenge and nonce; codes must be acknowledged before any owner session (160.277873ms)
+✔ TOTP replay is rejected across password challenges; an unused adjacent step can complete authentication (196.464309ms)
+✔ five bad proofs persist the attempt ceiling; expiry and changed passwords invalidate challenges (275.50685ms)
+✔ wrong wrapping key and modified ciphertext fail closed without owner cookies (111.934317ms)
+✔ concurrent recovery-code use has one winner, consumes the verifier and revokes every old family (209.298933ms)
+✔ recovery-code regeneration requires password, CSRF and fresh TOTP; old codes/sessions become invalid (282.387042ms)
+✔ lost recovery-code display can be replaced after fresh password and TOTP; the old generation cannot acknowledge (214.020087ms)
+✔ legacy password-only rows and stale factor epochs never authorize, including rotation (170.84525ms)
+✔ MFA endpoints retain HTTPS, exact Origin, no-query and duplicate-cookie boundaries and expose no secret retrieval (117.669818ms)
+✔ MFA audit contains no secret, code, challenge credential or nonce (114.258117ms)
+✔ project create is durable across a restarted HTTPS app and includes exactly one production environment (171.56284ms)
+✔ concurrent same-key project creates commit one project and return the same response; changed body conflicts (147.993036ms)
+✔ project and environment inserts roll back together when a later audit insert fails; the retry can then succeed (145.006113ms)
+✔ project slugs are workspace-unique and SQL-like names are stored as data (143.142444ms)
+✔ project list, detail, cursors and create requests cannot cross a server session workspace (222.727252ms)
+✔ project pagination keeps microsecond ordering and UUID ties without duplicates or missing items (206.31608ms)
+✔ project boundary accepts only declared GET pagination and keeps mutations/auth query-free (161.823496ms)
+✔ project create retains current MFA, CSRF, origin, HTTPS and retry-key requirements (171.682022ms)
+✔ project mutation rechecks revocation, rotation and critical MFA epochs after authorization preflight (247.42595ms)
+✔ overview exposes only owned durable project metadata and no invented infrastructure (181.14578ms)
+✔ project limit is atomic and same-key retries still work at the metadata ceiling (178.152883ms)
+✔ project transaction authority serializes with logout rather than leaving an authorized stale write (175.054542ms)
+ℹ tests 58
+ℹ suites 0
+ℹ pass 58
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14157.305553

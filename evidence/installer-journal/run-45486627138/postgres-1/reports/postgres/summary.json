@@ -1,0 +1,7 @@
+{
+  "started": "2026-11-24T21:01:25.626Z",
+  "finished": "2026-11-24T21:01:39.818Z",
+  "status": "passed",
+  "exitCode": 0,
+  "source": "disposable real PostgreSQL; no in-memory SQL substitute"
+}

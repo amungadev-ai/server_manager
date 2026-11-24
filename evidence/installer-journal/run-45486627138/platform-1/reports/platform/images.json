@@ -1,0 +1,21 @@
+{
+  "source": "a12618cd114853aec175d181db88f32e8225fd99",
+  "baseImages": {
+    "node": "node:24.22.3-bookworm-slim@sha256:873f586f3794f52281bd039bf02c048a0be08fde619338f9941bad1eb6b34530",
+    "caddy": "caddy:2.11.9-alpine@sha256:003a97808e781aa9f7e75cc2f43d34d461099031faf5e20faefb9f61126836f0",
+    "postgres": "postgres:18.7@sha256:c699303802144847d238196173655dbbecf7a96aeca1565f2b02eb671a1f0b6b"
+  },
+  "plan": {
+    "schema": 1,
+    "product": "cloudlane-platform-review",
+    "version": "0.1.0",
+    "platform": "linux-amd64",
+    "database_image": "postgres:18.7@sha256:c699303802144847d238196173655dbbecf7a96aeca1565f2b02eb671a1f0b6b",
+    "api_image": "sha256:d567d704233d5afd2d710f0708ab7885eb7d6cf69c51b3ed9e9d39f49e69cbe1",
+    "caddy_image": "sha256:49425f51b3d47a31611a34f22ce932c2051002e465bc86b8e5f0f4f0fb7dc008",
+    "schema_sha256": "d3b42b9257a80ee34e77a9372a98a2f9fb2b88bb46779b31021a78902ac3dd6e",
+    "issued_at": "2026-11-24T21:00:29Z",
+    "expires_at": "2026-11-24T22:01:29Z"
+  },
+  "signing": "ephemeral Go test key; no production release"
+}

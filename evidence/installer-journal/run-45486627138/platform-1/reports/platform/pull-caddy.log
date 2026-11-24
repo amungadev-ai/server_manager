@@ -1,0 +1,26 @@
+docker.io/library/caddy@sha256:003a97808e781aa9f7e75cc2f43d34d461099031faf5e20faefb9f61126836f0: Pulling from library/caddy
+881fc932939e: Pulling fs layer
+c4d6974dbf71: Pulling fs layer
+e3a802d3a0a9: Pulling fs layer
+5000c332a1cc: Pulling fs layer
+4f4fb700ef54: Pulling fs layer
+5000c332a1cc: Waiting
+4f4fb700ef54: Waiting
+e3a802d3a0a9: Verifying Checksum
+e3a802d3a0a9: Download complete
+881fc932939e: Verifying Checksum
+881fc932939e: Download complete
+c4d6974dbf71: Verifying Checksum
+c4d6974dbf71: Download complete
+4f4fb700ef54: Verifying Checksum
+4f4fb700ef54: Download complete
+881fc932939e: Pull complete
+c4d6974dbf71: Pull complete
+e3a802d3a0a9: Pull complete
+5000c332a1cc: Verifying Checksum
+5000c332a1cc: Download complete
+5000c332a1cc: Pull complete
+4f4fb700ef54: Pull complete
+Digest: sha256:003a97808e781aa9f7e75cc2f43d34d461099031faf5e20faefb9f61126836f0
+Status: Downloaded newer image for caddy@sha256:003a97808e781aa9f7e75cc2f43d34d461099031faf5e20faefb9f61126836f0
+docker.io/library/caddy:2.11.9-alpine@sha256:003a97808e781aa9f7e75cc2f43d34d461099031faf5e20faefb9f61126836f0

@@ -1,0 +1,17 @@
+[
+  {
+    "label": "browser",
+    "command": [
+      "npm",
+      "run",
+      "test:e2e:ci",
+      "--",
+      "--project",
+      "mobile"
+    ],
+    "started": "2026-11-24T21:03:05.752Z",
+    "finished": "2026-11-24T21:03:40.773Z",
+    "status": "passed",
+    "exitCode": 0
+  }
+]

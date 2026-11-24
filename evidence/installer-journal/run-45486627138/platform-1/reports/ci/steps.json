@@ -1,0 +1,14 @@
+[
+  {
+    "label": "platform",
+    "command": [
+      "npm",
+      "run",
+      "test:installer-stack"
+    ],
+    "started": "2026-11-24T21:01:05.311Z",
+    "finished": "2026-11-24T21:02:13.317Z",
+    "status": "passed",
+    "exitCode": 0
+  }
+]

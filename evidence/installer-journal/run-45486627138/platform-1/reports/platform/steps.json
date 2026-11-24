@@ -1,0 +1,62 @@
+[
+  {
+    "label": "go-version",
+    "passed": true,
+    "exitCode": 0
+  },
+  {
+    "label": "docker-version",
+    "passed": true,
+    "exitCode": 0
+  },
+  {
+    "label": "http-build",
+    "passed": true,
+    "exitCode": 0
+  },
+  {
+    "label": "prebuilt-runtime-dependencies",
+    "passed": true,
+    "exitCode": 0
+  },
+  {
+    "label": "pull-node",
+    "passed": true,
+    "exitCode": 0
+  },
+  {
+    "label": "pull-caddy",
+    "passed": true,
+    "exitCode": 0
+  },
+  {
+    "label": "pull-postgres",
+    "passed": true,
+    "exitCode": 0
+  },
+  {
+    "label": "source",
+    "passed": true,
+    "exitCode": 0
+  },
+  {
+    "label": "build-api",
+    "passed": true,
+    "exitCode": 0
+  },
+  {
+    "label": "build-caddy",
+    "passed": true,
+    "exitCode": 0
+  },
+  {
+    "label": "installer-binary",
+    "passed": true,
+    "exitCode": 0
+  },
+  {
+    "label": "live-tests",
+    "passed": true,
+    "exitCode": 0
+  }
+]
