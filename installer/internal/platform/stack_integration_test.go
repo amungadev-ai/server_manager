@@ -104,6 +104,21 @@ func liveFailure(t *testing.T, d *Docker, s State, c secrets, err error) {
 		return
 	}
 	t.Log("stage failure: " + Code(err))
+	for _, path := range []string{"/", "/api/v1/health/ready", "/setup"} {
+		client := &http.Client{Timeout: 2 * time.Second, Transport: &http.Transport{Proxy: nil}, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}
+		r, e := client.Get("http://127.0.0.1:" + strconv.Itoa(s.Port) + path)
+		if e != nil {
+			t.Log("panel probe " + path + ": unreachable")
+		} else {
+			b, _ := io.ReadAll(io.LimitReader(r.Body, 240))
+			r.Body.Close()
+			t.Logf("panel probe %s: status %d body %s", path, r.StatusCode, string(b))
+		}
+		client.CloseIdleConnections()
+	}
+	if b, e := d.call(context.Background(), "container", "port", Name(s, "db")); e == nil {
+		t.Log("published panel mapping: " + string(b))
+	}
 	for _, part := range []string{"db", "migrate", "api", "caddy"} {
 		var v containerInfo
 		found, _ := d.inspect(context.Background(), "container", Name(s, part), &v)

@@ -39,6 +39,7 @@ func dockerFixture(t *testing.T) (*Docker, State, secrets, *containerInfo, map[s
 	v.HostConfig.PortBindings = map[string][]portBinding{"8080/tcp": {{HostIP: "127.0.0.1", HostPort: "18080"}}}
 	v.Mounts = []mountInfo{{Type: "volume", Name: Name(s, "data"), Destination: "/var/lib/postgresql", RW: true}}
 	v.NetworkSettings.Networks = map[string]json.RawMessage{Name(s, "control"): json.RawMessage(`{}`)}
+	v.NetworkSettings.Ports = map[string][]portBinding{"8080/tcp": {{HostIP: "127.0.0.1", HostPort: "18080"}}}
 	v.State.Running = true
 	volumeLabels := labels(s, "data")
 	d.runner = runFunc(func(_ context.Context, args []string, _ []byte) ([]byte, error) {
@@ -78,6 +79,8 @@ func TestDockerOwnedConfigurationIsRequiredBeforeReuse(t *testing.T) {
 		{"bindMount", func(v *containerInfo) { v.HostConfig.Binds = []string{"/:/host"} }},
 		{"hostDevice", func(v *containerInfo) { v.HostConfig.Devices = []json.RawMessage{json.RawMessage(`{}`)} }},
 		{"publicPort", func(v *containerInfo) { v.HostConfig.PortBindings["8080/tcp"][0].HostIP = "0.0.0.0" }},
+		{"unpublishedPort", func(v *containerInfo) { v.NetworkSettings.Ports = nil }},
+		{"effectivePublicPort", func(v *containerInfo) { v.NetworkSettings.Ports["8080/tcp"][0].HostIP = "0.0.0.0" }},
 		{"extraPort", func(v *containerInfo) {
 			v.HostConfig.PortBindings["5432/tcp"] = []portBinding{{HostIP: "127.0.0.1", HostPort: "5432"}}
 		}},
@@ -155,5 +158,52 @@ func TestDockerOutputBufferIsBounded(t *testing.T) {
 	}
 	if _, err := b.Write([]byte("x")); err == nil {
 		t.Fatal("output unbounded")
+	}
+}
+
+func TestMissingDataAfterAnAmbiguousFirstAttemptIsNotInitializedAgain(t *testing.T) {
+	d, s, c, _, _ := dockerFixture(t)
+	s.Stages = []Stage{{Name: Database, Attempts: 1, Status: "failed"}}
+	writes := 0
+	d.runner = runFunc(func(_ context.Context, a []string, _ []byte) ([]byte, error) {
+		if a[1] == "inspect" {
+			return nil, errors.New("absent")
+		}
+		writes++
+		return nil, nil
+	})
+	if _, err := d.Check(context.Background(), Database, s, c); err == nil || err.Error() != "database_data_missing" || writes != 0 {
+		t.Fatal("ambiguous database attempt permitted reinitialization", err)
+	}
+}
+
+func TestNewVolumeIsRecheckedBeforeItCanBeMounted(t *testing.T) {
+	d, s, _, _, _ := dockerFixture(t)
+	inspections := 0
+	d.runner = runFunc(func(_ context.Context, a []string, _ []byte) ([]byte, error) {
+		if a[1] == "inspect" {
+			inspections++
+			if inspections == 1 {
+				return nil, errors.New("absent")
+			}
+			return json.Marshal([]volumeInfo{{Driver: "local", Labels: map[string]string{"foreign": "true"}}})
+		}
+		return []byte("created"), nil
+	})
+	if err := d.ensureVolume(context.Background(), s, "data"); err == nil || err.Error() != "resource_foreign" || inspections != 2 {
+		t.Fatal("new volume ownership not rechecked", err)
+	}
+}
+
+func TestOlderOrUnknownDockerCannotClaimLoopbackPublicationSafety(t *testing.T) {
+	for _, version := range []string{"27.5.1", "20.10.0", "unknown"} {
+		t.Run(version, func(t *testing.T) {
+			d, s, c, _, _ := dockerFixture(t)
+			calls := 0
+			d.runner = runFunc(func(_ context.Context, a []string, _ []byte) ([]byte, error) { calls++; return []byte(version), nil })
+			if _, err := d.Check(context.Background(), Images, s, c); err == nil || err.Error() != "daemon_unsupported" || calls != 1 {
+				t.Fatal("unsupported Docker accepted", err)
+			}
+		})
 	}
 }

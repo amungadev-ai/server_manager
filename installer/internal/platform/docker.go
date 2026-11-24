@@ -168,7 +168,10 @@ type containerInfo struct {
 		Running  bool
 		ExitCode int
 	}
-	NetworkSettings struct{ Networks map[string]json.RawMessage }
+	NetworkSettings struct {
+		Networks map[string]json.RawMessage
+		Ports    map[string][]portBinding
+	}
 }
 
 func labels(s State, component string) map[string]string {
@@ -194,7 +197,7 @@ func (d *Docker) network(ctx context.Context, s State) (bool, error) {
 	if !owned(n.Labels, s, "control") {
 		return false, errors.New("resource_foreign")
 	}
-	if !n.Internal || n.Driver != "bridge" || len(n.Options) != 0 {
+	if n.Internal || n.Driver != "bridge" || len(n.Options) != 0 {
 		return false, errors.New("resource_drift")
 	}
 	return true, nil
@@ -218,13 +221,37 @@ func (d *Docker) ensureVolume(ctx context.Context, s State, component string) er
 	if err != nil || found {
 		return err
 	}
-	if component == "data" && s.DatabaseIdentity != "" {
+	if component == "data" && priorData(s, false) {
 		return errors.New("database_data_missing")
 	}
 	args := append([]string{"volume", "create", "--driver=local"}, labelArgs(s, component)...)
 	args = append(args, Name(s, component))
 	_, err = d.call(ctx, args...)
-	return err
+	if err != nil {
+		return err
+	}
+	found, err = d.volume(ctx, s, component)
+	if err != nil {
+		return err
+	}
+	if !found {
+		return errors.New("resource_foreign")
+	}
+	return nil
+}
+
+// Before an action, any earlier DB attempt may have created durable data.
+// During the first persisted action only, a new volume is allowed once.
+func priorData(s State, beforeAction bool) bool {
+	if s.DatabaseIdentity != "" {
+		return true
+	}
+	for _, stage := range s.Stages {
+		if stage.Name == Database && (stage.EverComplete || stage.Attempts > 1 || (beforeAction && stage.Attempts > 0)) {
+			return true
+		}
+	}
+	return false
 }
 func (d *Docker) ref(component string) string {
 	switch component {
@@ -281,6 +308,17 @@ func (d *Docker) container(ctx context.Context, s State, component string, c sec
 		}
 		if len(v.NetworkSettings.Networks) != 1 || v.NetworkSettings.Networks[mode] == nil {
 			return v, false, errors.New("resource_drift")
+		}
+		if v.State.Running {
+			published := v.NetworkSettings.Ports["8080/tcp"]
+			if len(published) != 1 || published[0].HostIP != "127.0.0.1" || published[0].HostPort != strconv.Itoa(s.Port) {
+				return v, false, errors.New("publication_unavailable")
+			}
+			for port, bindings := range v.NetworkSettings.Ports {
+				if port != "8080/tcp" && len(bindings) > 0 {
+					return v, false, errors.New("resource_drift")
+				}
+			}
 		}
 	} else if len(h.PortBindings) != 0 {
 		return v, false, errors.New("resource_drift")
@@ -465,8 +503,13 @@ func (d *Docker) Check(ctx context.Context, step Step, s State, c secrets) (Obse
 	yes := Observation{Healthy: true}
 	switch step {
 	case Images:
-		if _, err := d.call(ctx, "info", "--format={{.ServerVersion}}"); err != nil {
+		version, err := d.call(ctx, "info", "--format={{.ServerVersion}}")
+		if err != nil {
 			return no, errors.New("daemon_unavailable")
+		}
+		major, err := strconv.Atoi(strings.SplitN(strings.TrimSpace(string(version)), ".", 2)[0])
+		if err != nil || major < 28 {
+			return no, errors.New("daemon_unsupported")
 		}
 		for _, ref := range []string{d.release.DatabaseImage, d.release.APIImage, d.release.CaddyImage} {
 			_, found, err := d.image(ctx, ref)
@@ -483,7 +526,7 @@ func (d *Docker) Check(ctx context.Context, step Step, s State, c secrets) (Obse
 		if err != nil {
 			return no, err
 		}
-		if !volume && s.DatabaseIdentity != "" {
+		if !volume && priorData(s, true) {
 			return no, errors.New("database_data_missing")
 		}
 		v, exists, err := d.container(ctx, s, "db", c)
@@ -570,7 +613,7 @@ func (d *Docker) Apply(ctx context.Context, step Step, s State, c secrets) error
 		if err != nil || found {
 			return err
 		}
-		args := append([]string{"network", "create", "--driver=bridge", "--internal"}, labelArgs(s, "control")...)
+		args := append([]string{"network", "create", "--driver=bridge"}, labelArgs(s, "control")...)
 		args = append(args, Name(s, "control"))
 		_, err = d.call(ctx, args...)
 		return err

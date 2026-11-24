@@ -179,6 +179,9 @@ func validState(s State, p plan.Verified, port int) bool {
 		return false
 	}
 	for i, x := range s.Stages {
+		if x.Name == Migrations && x.EverComplete && s.DatabaseIdentity == "" {
+			return false
+		}
 		if x.Name != Steps[i] || x.Attempts < 0 || x.Attempts > 128 || len(x.Diagnostic) > 48 {
 			return false
 		}
@@ -334,7 +337,7 @@ func Code(err error) string {
 		return ""
 	}
 	switch err.Error() {
-	case "installation_locked", "workspace_unsafe", "fresh_workspace_required", "journal_unavailable", "journal_invalid", "journal_binding", "preflight_binding", "journal_write_failed", "secret_unavailable", "secret_invalid", "secret_write_failed", "entropy_unavailable", "review_options", "repair_required", "attempt_limit", "postcondition_failed", "database_identity_changed", "database_data_missing", "schema_drift", "resource_foreign", "resource_drift", "daemon_unavailable", "image_unavailable", "dependency_unhealthy", "operation_interrupted", "docker_failed", "unit_files_unsafe":
+	case "installation_locked", "workspace_unsafe", "fresh_workspace_required", "journal_unavailable", "journal_invalid", "journal_binding", "preflight_binding", "journal_write_failed", "secret_unavailable", "secret_invalid", "secret_write_failed", "entropy_unavailable", "review_options", "repair_required", "attempt_limit", "postcondition_failed", "database_identity_changed", "database_data_missing", "schema_drift", "resource_foreign", "resource_drift", "daemon_unavailable", "daemon_unsupported", "publication_unavailable", "image_unavailable", "dependency_unhealthy", "operation_interrupted", "docker_failed", "unit_files_unsafe":
 		return err.Error()
 	}
 	return "operation_failed"
